@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import DefaultViewModel from "../default.viewModel";
 import MenuModel from "../../models/menu/menu.model";
 import {
@@ -17,11 +17,17 @@ import { faClipboard } from "@fortawesome/free-regular-svg-icons";
 import AlarmListDto from "../../dto/alarm/alarmList.dto";
 import UserMenuModel from "../../models/menu/userMenu.model";
 import pageUrlConfig from "../../../config/pageUrlConfig";
+import MachineDto from "../../dto/machine/machine.dto";
+import { AxiosError, AxiosResponse } from "axios";
+import { plainToInstance } from "class-transformer";
+import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
 
 interface IProps {}
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
+  public machines: MachineDto[] = [];
+  public processedQuantity: ProcessedQuantityDto[] = [];
   public alarm: AlarmListDto = {
     alarms: [
       {
@@ -167,10 +173,42 @@ export default class MainViewModel extends DefaultViewModel {
     ];
     makeObservable(this, {
       menus: observable,
+      machines: observable,
 
-      get: action,
+      getMachineList: action,
     });
   }
 
-  get = async () => {};
+  getMachineList = async () => {
+    await this.api
+      .get("/machine/currentList")
+      .then((result: AxiosResponse<MachineDto[]>) => {
+        runInAction(() => {
+          this.machines = result.data.map((data: MachineDto) =>
+            plainToInstance(MachineDto, data)
+          );
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  getProcessedQuantity = async () => {
+    await this.api
+      .get("/baro")
+      .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
+        runInAction(() => {
+          this.processedQuantity = result.data.map(
+            (data: ProcessedQuantityDto) =>
+              plainToInstance(ProcessedQuantityDto, data)
+          );
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
 }

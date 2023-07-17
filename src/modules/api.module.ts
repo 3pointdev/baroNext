@@ -29,13 +29,13 @@ export class ApiModule {
   private constructor() {
     this.commonHeader = {
       "Content-Type": "application/json",
-      Authorization: "",
+      "X-Access-Token": "",
     };
   }
 
   private setToken(): void {
     this.token = window.localStorage.getItem("token");
-    this.commonHeader.Authorization = this.token;
+    this.commonHeader["X-Access-Token"] = this.token;
   }
 
   private setAxiosInstance() {
