@@ -48,8 +48,6 @@ export default class AuthViewModel extends DefaultViewModel {
         profile_image: DefaultProfile.src,
       };
       this.user = plainToInstance(UserDto, storage);
-
-      console.log(this.user);
     });
   };
 
