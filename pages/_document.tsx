@@ -1,0 +1,50 @@
+import Document, { Html, Head, Main, NextScript } from "next/document";
+import { ServerStyleSheet } from "styled-components";
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx: any) {
+    const sheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage;
+    //styled component 로 작성된 css 도 preRender 하기위한,,
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App: any) => (props: any) =>
+            sheet.collectStyles(<App {...props} />),
+        });
+
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        host: ctx.req.headers["x-forwarded-server"] ?? ctx.req.headers.host,
+        styles: (
+          <>
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
+      };
+    } finally {
+      sheet.seal();
+    }
+  }
+
+  render() {
+    // const site = new Site();
+    const { __NEXT_DATA__ } = this.props;
+
+    return (
+      <Html>
+        <Head>
+          <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+
+export default MyDocument;
