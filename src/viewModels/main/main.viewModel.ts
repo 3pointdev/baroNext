@@ -21,35 +21,19 @@ import MachineDto from "../../dto/machine/machine.dto";
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
 import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
+import { SocketModule } from "../../modules/socket.module";
+import { ServerUrlType } from "../../../config/constants";
+import SocketTransformModule from "../../modules/socketTransform.module";
 
 interface IProps {}
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
+  public userMenu: UserMenuModel[] = [];
   public machines: MachineDto[] = [];
   public processedQuantity: ProcessedQuantityDto[] = [];
-  public alarm: AlarmListDto = {
-    alarms: [
-      {
-        id: 0,
-        thumbImage: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-        title: "알림타이틀",
-        content: "공지사항과 알림내용을 표시합니다.",
-        createdAt: "2022-09-14T09:25:43.511Z",
-        isRead: false,
-      },
-      {
-        id: 0,
-        thumbImage: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-        title: "알림타이틀",
-        content: "공지사항과 알림내용을 표시합니다.",
-        createdAt: "2022-09-14T09:25:43.511Z",
-        isRead: false,
-      },
-    ],
-    unRead: 1,
-  };
-  public userMenu: UserMenuModel[] = [];
+  public processChart: any = false;
+  public alarm: AlarmListDto = new AlarmListDto();
 
   constructor(props: IProps) {
     super(props);
@@ -139,6 +123,7 @@ export default class MainViewModel extends DefaultViewModel {
         ],
       },
     ];
+
     this.userMenu = [
       {
         title: "계정정보",
@@ -171,17 +156,49 @@ export default class MainViewModel extends DefaultViewModel {
         path: pageUrlConfig.setting,
       },
     ];
+
+    this.alarm = {
+      alarms: [
+        {
+          id: 0,
+          thumbImage: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
+          title: "알림타이틀",
+          content: "공지사항과 알림내용을 표시합니다.",
+          createdAt: "2022-09-14T09:25:43.511Z",
+          isRead: false,
+        },
+        {
+          id: 0,
+          thumbImage: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
+          title: "알림타이틀",
+          content: "공지사항과 알림내용을 표시합니다.",
+          createdAt: "2022-09-14T09:25:43.511Z",
+          isRead: false,
+        },
+      ],
+      unRead: 1,
+    };
     makeObservable(this, {
       menus: observable,
       machines: observable,
+      processedQuantity: observable,
+      processChart: observable,
 
       getMachineList: action,
+      getProcessedQuantity: action,
+      setChart: action,
     });
   }
 
+  onMessage = async (response: MessageEvent) => {
+    const data = await SocketTransformModule(response);
+
+    console.log(data);
+  };
+
   getMachineList = async () => {
     await this.api
-      .get("/machine/currentList")
+      .get(ServerUrlType.BARO, "/machine/currentList")
       .then((result: AxiosResponse<MachineDto[]>) => {
         runInAction(() => {
           this.machines = result.data.map((data: MachineDto) =>
@@ -197,18 +214,82 @@ export default class MainViewModel extends DefaultViewModel {
 
   getProcessedQuantity = async () => {
     await this.api
-      .get("/baro")
+      .get(ServerUrlType.BARO, "/baro")
       .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
         runInAction(() => {
-          this.processedQuantity = result.data.map(
-            (data: ProcessedQuantityDto) =>
-              plainToInstance(ProcessedQuantityDto, data)
+          const data = result.data.map((data: ProcessedQuantityDto) =>
+            plainToInstance(ProcessedQuantityDto, data)
           );
+          this.setChart(data);
+          this.processedQuantity = data;
         });
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
         return false;
       });
+  };
+
+  setChart = (data: ProcessedQuantityDto[]) => {
+    runInAction(() => {
+      this.processChart = {
+        options: {
+          maxBarThickness: 80,
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: (context) => {
+                  return "";
+                },
+                label: (context) => {
+                  let label = `${data[context.dataIndex].mid} : ${
+                    context.formattedValue
+                  }`;
+                  return label;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false,
+                tickLength: 8, // 눈금 길이를 지정합니다.
+              },
+              title: {
+                align: "end",
+                display: true,
+                text: "호기",
+              },
+              ticks: { padding: 0 },
+            },
+            y: {
+              title: {
+                align: "end",
+                display: true,
+                text: "총 가공 수량(개)",
+              },
+              ticks: {
+                padding: 0,
+                margin: 0,
+              },
+            },
+          },
+        },
+        data: {
+          labels: data.map((item) => item.machineNo),
+          datasets: [
+            {
+              data: data.map((item) => item.count),
+              backgroundColor: "rgba(0, 143, 251, 0.4)",
+            },
+          ],
+        },
+      };
+    });
   };
 }

@@ -6,10 +6,7 @@ import AccountModel from "../../models/login/account.model";
 import { ChangeEvent } from "react";
 import ContactModel from "../../models/login/contact.model";
 import UserDto from "../../dto/user/user.dto";
-import AuthModule from "../../modules/auth.module";
-import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
-import { ApiResponse } from "../../modules/api.module";
 
 interface IProps {}
 
@@ -18,7 +15,6 @@ export default class AuthViewModel extends DefaultViewModel {
   public contact: ContactModel = new ContactModel();
   public isContactReady: boolean = false;
   public isAutoLogin: boolean = false;
-  public user: UserDto = new UserDto();
 
   constructor(props: IProps) {
     super(props);
@@ -27,7 +23,6 @@ export default class AuthViewModel extends DefaultViewModel {
       contact: observable,
       isContactReady: observable,
       isAutoLogin: observable,
-      user: observable,
 
       checkContactReady: action,
       handleChangeContact: action,
@@ -36,20 +31,6 @@ export default class AuthViewModel extends DefaultViewModel {
       handleChangeAutoLogin: action,
     });
   }
-
-  initializeUser = () => {
-    runInAction(() => {
-      const storage = {
-        account: window.localStorage.account,
-        enterprise: window.localStorage.enterprise,
-        enterprise_id: window.localStorage.enterprise_id,
-        token: window.localStorage.token,
-        name: window.localStorage.name,
-        profile_image: DefaultProfile.src,
-      };
-      this.user = plainToInstance(UserDto, storage);
-    });
-  };
 
   handleChangeAccount = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -89,31 +70,14 @@ export default class AuthViewModel extends DefaultViewModel {
     //api contact
   };
 
-  insertLogin = async () => {
+  handleLogin = async () => {
     const params = {
       username: this.account.account,
       password: sha256(this.account.password),
-      sender: "/admin/id:1689298220196",
+      sender: this.senderId,
     };
 
-    await this.api
-      .post("/login/login", params)
-      .then((result: AxiosResponse<any>) => {
-        const user = plainToInstance(UserDto, {
-          ...result.data,
-          account: this.account.account,
-          profile_image: DefaultProfile.src,
-        });
-        runInAction(() => {
-          this.user = user;
-          AuthModule.saveStorage(user);
-          console.log(this.user);
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
+    this.insertLogin(params);
   };
 
   checkContactReady = () => {
@@ -127,13 +91,6 @@ export default class AuthViewModel extends DefaultViewModel {
       } else {
         this.isContactReady = false;
       }
-    });
-  };
-
-  insertLogout = () => {
-    runInAction(() => {
-      AuthModule.destroyStorage();
-      this.user = new UserDto();
     });
   };
 }

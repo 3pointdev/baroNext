@@ -147,7 +147,7 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeAutoLogin}
               value={authViewModel.isAutoLogin}
             />
-            <DefaultButton title="로그인" onClick={authViewModel.insertLogin} />
+            <DefaultButton title="로그인" onClick={authViewModel.handleLogin} />
             <Login.ContactUs>
               <p>아이디 및 비밀번호를 잊으셨나요?</p>
               <a onClick={handleToggleContactMode}>문의하기</a>

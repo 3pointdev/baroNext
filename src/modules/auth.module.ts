@@ -8,6 +8,7 @@ class AuthModule {
     window.localStorage.setItem("enterprise", user.enterprise);
     window.localStorage.setItem("enterprise_id", user.enterpriseId.toString());
     window.localStorage.setItem("name", user.name);
+    window.localStorage.setItem("sender", user.sender);
 
     window.location.replace("/");
   }
