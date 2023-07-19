@@ -80,27 +80,21 @@ class MyApp extends App<any, any, any> {
     });
   }
 
+  componentDidMount(): void {
+    this.mobxStore.mainViewModel.initializeUser();
+  }
+
   render() {
     const { Component, pageProps, headers } = this.props;
 
     return (
-      <>
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          />
-        </Head>
-        <Provider {...this.mobxStore}>
-          {this.props.router.pathname !== "/login" && (
-            <Header
-              mainViewModel={this.mobxStore.mainViewModel}
-              authViewModel={this.mobxStore.authViewModel}
-            />
-          )}
-          <Component {...pageProps} headers={headers} />
-        </Provider>
-      </>
+      <Provider {...this.mobxStore}>
+        {this.props.router.pathname !== "/login" && (
+          <Header mainViewModel={this.mobxStore.mainViewModel} />
+        )}
+
+        <Component {...pageProps} headers={headers} />
+      </Provider>
     );
   }
 }

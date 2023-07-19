@@ -1,37 +1,30 @@
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
 import SquareLogo from "public/images/logo/barofactory-square.svg";
 import styled from "styled-components";
 import MainViewModel from "../../src/viewModels/main/main.viewModel";
 import MenuModel from "../../src/models/menu/menu.model";
 import { NextRouter, useRouter } from "next/router";
 import SubMenuModel from "../../src/models/menu/subMenu.model";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Logo from "../image/logo";
 import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
 import { inject, observer } from "mobx-react";
-import AuthViewModel from "../../src/viewModels/auth/auth.viewModel";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import AlarmModal from "../modal/alarmModal";
 import UserModal from "../modal/userModal";
+import Linker from "../linker/linker";
 
 interface IProps {
   mainViewModel: MainViewModel;
-  authViewModel: AuthViewModel;
 }
 
 function Header(props: IProps) {
   const mainViewModel: MainViewModel = props.mainViewModel;
-  const authViewModel: AuthViewModel = props.authViewModel;
   const [hover, setHover] = useState("");
   const [isOpenAlarmModal, setIsOpenAlarmModal] = useState<boolean>(false);
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
-
-  useEffect(() => {
-    authViewModel.initializeUser();
-  }, []);
 
   const handleToggleAlarmModal = () => {
     setIsOpenAlarmModal(!isOpenAlarmModal);
@@ -44,12 +37,12 @@ function Header(props: IProps) {
   return (
     <HeaderContainer>
       <Head.Wrap>
-        <Link href={"/"}>
+        <Linker href={"/"}>
           <Head.Company>
             <Logo src={SquareLogo.src} alt="BAROFACTORY | 바로팩토리" />
-            <p>{authViewModel.user.name}</p>
+            <p>{mainViewModel.user.name}</p>
           </Head.Company>
-        </Link>
+        </Linker>
         <WorkEnvironmentBadge title="REACT" />
         <Head.User>
           <Head.Bell onClick={handleToggleAlarmModal}>
@@ -57,7 +50,7 @@ function Header(props: IProps) {
             <Head.Alarm>{mainViewModel.alarm.unRead}</Head.Alarm>
           </Head.Bell>
           <Head.Profile
-            src={authViewModel.user.profileImage}
+            src={mainViewModel.user.profileImage}
             alt="profile"
             onClick={handleToggleUserModal}
           />
@@ -79,8 +72,8 @@ function Header(props: IProps) {
                 }
                 isMain={item.path === "/"}
               >
-                <a
-                  href={item.subMenu.length < 1 ? item.path : undefined}
+                <Linker
+                  href={item.subMenu.length < 1 ? item.path : ""}
                   onMouseEnter={() => setHover(item.name)}
                   onMouseLeave={() => setHover("")}
                 >
@@ -88,7 +81,7 @@ function Header(props: IProps) {
                     <FontAwesomeIcon icon={item.icon} />
                     <p>{item.title}</p>
                   </div>
-                </a>
+                </Linker>
                 {item.subMenu.length > 0 && (
                   <>
                     <Navi.DropDownIcon icon={faAngleDown} />
@@ -103,7 +96,7 @@ function Header(props: IProps) {
                         {item.subMenu.map((sub: SubMenuModel, key) => {
                           return (
                             <li key={`sub_menu_${key}`}>
-                              <a href={sub.path}>{sub.title}</a>
+                              <Linker href={sub.path}>{sub.title}</Linker>
                             </li>
                           );
                         })}
@@ -124,9 +117,9 @@ function Header(props: IProps) {
       />
       <UserModal
         onClick={handleToggleUserModal}
-        onClickLogout={authViewModel.insertLogout}
+        onClickLogout={mainViewModel.insertLogout}
         active={isOpenUserModal}
-        data={authViewModel.user}
+        data={mainViewModel.user}
         menus={mainViewModel.userMenu}
         alarm={mainViewModel.alarm.unRead}
       />
@@ -134,9 +127,11 @@ function Header(props: IProps) {
   );
 }
 
-export default inject("mainViewModel", "authViewModel")(observer(Header));
+export default inject("mainViewModel")(observer(Header));
 
 const HeaderContainer = styled.header`
+  position: relative;
+  z-index: 999;
   width: 100%;
   height: 128px;
   display: flex;
