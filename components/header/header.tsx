@@ -40,7 +40,7 @@ function Header(props: IProps) {
         <Linker href={"/"}>
           <Head.Company>
             <Logo src={SquareLogo.src} alt="BAROFACTORY | 바로팩토리" />
-            <p>{mainViewModel.user.name}</p>
+            <p>{mainViewModel.auth.name}</p>
           </Head.Company>
         </Linker>
         <WorkEnvironmentBadge title="REACT" />
@@ -50,7 +50,7 @@ function Header(props: IProps) {
             <Head.Alarm>{mainViewModel.alarm.unRead}</Head.Alarm>
           </Head.Bell>
           <Head.Profile
-            src={mainViewModel.user.profileImage}
+            src={mainViewModel.auth.profileImage}
             alt="profile"
             onClick={handleToggleUserModal}
           />
@@ -119,7 +119,7 @@ function Header(props: IProps) {
         onClick={handleToggleUserModal}
         onClickLogout={mainViewModel.insertLogout}
         active={isOpenUserModal}
-        data={mainViewModel.user}
+        data={mainViewModel.auth}
         menus={mainViewModel.userMenu}
         alarm={mainViewModel.alarm.unRead}
       />

@@ -4,6 +4,7 @@ interface IProps {
   src: string;
   alt?: string;
   size?: number[];
+  color?: string;
 }
 
 export default function Logo({ src, alt = "", size = [50, 30] }: IProps) {

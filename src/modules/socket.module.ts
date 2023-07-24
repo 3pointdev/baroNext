@@ -5,11 +5,9 @@ import { AxiosResponse } from "axios";
 import SocketHandlerModule from "./socketTransform.module";
 import TransmitterDto from "../dto/transmitters/transmitters.dto";
 import { plainToInstance } from "class-transformer";
-import MachineStatDto from "../dto/machine/stat.dto";
 
 interface IProps {
   onMessage: (response: MessageEvent) => void;
-  senderId: string;
   company: string;
   isAll?: boolean;
 }
@@ -26,14 +24,14 @@ export class SocketModule {
   public sender: string;
   public onMessage: (response: MessageEvent) => void;
 
-  constructor({ onMessage, senderId, company, isAll = false }: IProps) {
-    this.api = ApiModule.getInstance(senderId);
-    this.url = `${
-      process.env.NEXT_PUBLIC_WEBSOCKET_URL
-    }${senderId}?ent=${company}&view=${isAll ? "all" : "noti"}`;
+  constructor({ onMessage, company, isAll = false }: IProps) {
+    this.api = ApiModule.getInstance();
+    this.sender = window.localStorage.sender;
+    this.url = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}${
+      this.sender
+    }?ent=${company}&view=${isAll ? "all" : "noti"}`;
     this.connect = this.connect.bind(this);
     this.token = window.localStorage.token;
-    this.sender = senderId;
     this.onMessage = onMessage;
   }
 
@@ -75,6 +73,7 @@ export class SocketModule {
   };
 
   public getMachineStat = () => {
+    // setTimeout(() => {
     this.api
       .post(ServerUrlType.APIS, "/api/cloud/installedTransmitters")
       .then((result: AxiosResponse<ServerResponse<TransmitterDto[]>>) => {
@@ -89,11 +88,11 @@ export class SocketModule {
             .post(ServerUrlType.EDGE, "/api/edge/edge_machine_stat", {
               transmitter: item.id,
             })
-            .then((result: AxiosResponse<MachineStatDto>) => {
-              const data = plainToInstance(MachineStatDto, result.data);
-              console.log(data);
+            .then((result: AxiosResponse) => {
+              // console.log(result);
             });
         });
       });
+    // }, 2000);
   };
 }

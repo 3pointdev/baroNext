@@ -7,7 +7,6 @@ import axios, {
   RawAxiosRequestHeaders,
 } from "axios";
 import { plainToInstance } from "class-transformer";
-import { serialize } from "object-to-formdata";
 import { ServerUrlType } from "../../config/constants";
 
 export interface ApiResponse<T> {
@@ -28,14 +27,12 @@ export class ApiModule {
   private axios: AxiosInstance = axios.create({});
   private token: string | null = "";
   private commonHeader: RawAxiosRequestHeaders;
-  public senderId: string;
 
-  private constructor(senderId: string) {
+  private constructor() {
     this.commonHeader = {
       "Content-Type": "application/json",
       "X-Access-Token": "",
     };
-    this.senderId = senderId;
   }
 
   private setToken(): void {
@@ -52,16 +49,17 @@ export class ApiModule {
     });
   }
 
-  public static getInstance(senderId: string): ApiModule {
-    return this.instance || (this.instance = new this(senderId));
+  public static getInstance(): ApiModule {
+    return this.instance || (this.instance = new this());
   }
 
   async get<T>(server: ServerUrlType, url: string, params?: T) {
+    const sender = window.localStorage.sender;
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
     return await this.axios
       .get(url, {
-        params: { ...params, sender: this.senderId },
+        params: { ...params, sender: sender },
       })
       .then(this.handleSuccess)
       .catch(this.handleError);
@@ -73,35 +71,33 @@ export class ApiModule {
     params?: T,
     config?: AxiosRequestConfig
   ) {
-    let data;
-    data = { ...params, sender: this.senderId };
-
-    // 대상이 파일이라면 콘텐츠타입을 변경해주는 로직
-    // if (this.isFileParams(params)) {
-    //   data = serialize(params);
-    // }
+    const sender = window.localStorage.sender;
 
     this.setAxiosInstance(server);
     return await this.axios
-      .post(url, data, config)
+      .post(url, { ...params, sender: sender }, config)
       .then(this.handleSuccess)
       .catch(this.handleError);
   }
 
   async put<T>(server: ServerUrlType, url: string, params?: T) {
+    const sender = window.localStorage.sender;
+
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
     return await this.axios
-      .put(url, { ...params, sender: this.senderId })
+      .put(url, { params: { ...params, sender: sender } })
       .then(this.handleSuccess)
       .catch(this.handleError);
   }
 
   async patch<T>(server: ServerUrlType, url: string, params?: T) {
+    const sender = window.localStorage.sender;
+
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
     return await this.axios
-      .patch(url, { ...params, sender: this.senderId })
+      .patch(url, { params: { ...params, sender: sender } })
       .then(this.handleSuccess)
       .catch(this.handleError);
   }

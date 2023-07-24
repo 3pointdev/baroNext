@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { MouseEventHandler } from "react";
-import UserDto from "../../src/dto/user/user.dto";
+import AuthDto from "../../src/dto/auth/auth.dto";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UserMenuModel from "../../src/models/menu/userMenu.model";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 interface IProps {
-  data: UserDto;
+  data: AuthDto;
   onClick: MouseEventHandler;
   onClickLogout: MouseEventHandler;
   active: boolean;

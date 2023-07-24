@@ -1,30 +1,38 @@
 import AuthViewModel from "../viewModels/auth/auth.viewModel";
-import DefaultViewModel from "../viewModels/default.viewModel";
+import DefaultViewModel, {
+  IDefaultProps,
+} from "../viewModels/default.viewModel";
 import MainViewModel from "../viewModels/main/main.viewModel";
 import { configure } from "mobx";
+import UserViewModel from "../viewModels/user/user.viewModel";
+
+const isServer = typeof window === "undefined";
 
 let store: any = null;
 configure({ enforceActions: "observed" });
 
-export interface MobxInitProps {}
-
 export class RootStore {
   //public 뷰모델네임 : 뷰모델타입;
-  public defaultViewModel: DefaultViewModel;
   public mainViewModel: MainViewModel;
   public authViewModel: AuthViewModel;
+  public userViewModel: UserViewModel;
 
-  constructor(initialData: MobxInitProps) {
+  constructor(initialData: IDefaultProps) {
     const initData = Object.assign(initialData, {});
     //this.뷰모델네임 = new 뷰모델(initData);
-    this.defaultViewModel = new DefaultViewModel(initData);
     this.mainViewModel = new MainViewModel(initData);
     this.authViewModel = new AuthViewModel(initData);
+    this.userViewModel = new UserViewModel(initData);
   }
 }
 
-export default function initializeStore(initData: MobxInitProps) {
-  store = new RootStore(initData);
+export default function initializeStore(initData: IDefaultProps) {
+  if (isServer) {
+    return new RootStore(initData);
+  }
+  if (store === null) {
+    store = new RootStore(initData);
+  }
 
   return store;
 }
