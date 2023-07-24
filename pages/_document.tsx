@@ -2,21 +2,21 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx: any) {
+  static async getInitialProps(context: any) {
     const sheet = new ServerStyleSheet();
-    const originalRenderPage = ctx.renderPage;
-    //styled component 로 작성된 css 도 preRender 하기위한,,
+    const originalRenderPage = context.renderPage;
     try {
-      ctx.renderPage = () =>
+      context.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App: any) => (props: any) =>
             sheet.collectStyles(<App {...props} />),
         });
 
-      const initialProps = await Document.getInitialProps(ctx);
+      const initialProps = await Document.getInitialProps(context);
       return {
         ...initialProps,
-        host: ctx.req.headers["x-forwarded-server"] ?? ctx.req.headers.host,
+        host:
+          context.req.headers["x-forwarded-server"] ?? context.req.headers.host,
         styles: (
           <>
             {initialProps.styles}
@@ -30,9 +30,6 @@ class MyDocument extends Document {
   }
 
   render() {
-    // const site = new Site();
-    const { __NEXT_DATA__ } = this.props;
-
     return (
       <Html>
         <Head>
@@ -41,9 +38,9 @@ class MyDocument extends Document {
             name="viewport"
             content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           />
-          <title>바로팩토리</title>
         </Head>
         <body>
+          <title>바로팩토리</title>
           <Main />
           <NextScript />
         </body>

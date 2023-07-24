@@ -1,21 +1,30 @@
 import { Expose } from "class-transformer";
 
 export default class UserDto {
-  @Expose({ name: "account" })
-  public readonly account: string = "";
+  @Expose({ name: "address" })
+  public readonly address: string = "";
+
+  @Expose({ name: "ent_number" })
+  public readonly entNumber: string = "";
+
+  @Expose({ name: "id" })
+  public readonly id: number = 0;
+
+  @Expose({ name: "manager" })
+  public readonly manager: string = "";
 
   @Expose({ name: "name" })
   public readonly name: string = "";
 
-  @Expose({ name: "enterprise_id" })
-  public readonly enterpriseId: number = 0;
+  @Expose({ name: "part" })
+  public readonly part: string = "";
 
-  @Expose({ name: "enterprise" })
-  public readonly enterprise: string = "";
+  @Expose({ name: "phone" })
+  public readonly phone: number = 0;
 
-  @Expose({ name: "token" })
-  public readonly token: string = "";
+  @Expose({ name: "rank" })
+  public readonly rank: string = "";
 
-  @Expose({ name: "profile_image" })
-  public readonly profileImage?: string = "";
+  @Expose({ name: "role" })
+  public readonly role: string = "";
 }

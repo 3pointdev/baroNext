@@ -14,7 +14,7 @@ class PageUrlConfig {
   public machineInfo = "/machine/info";
   public monitor = "/monitor";
   public monitorSetting = "/monitor/setting";
-  public company = "/company";
+  public my = "/my";
   public invoices = "/";
   public alarm = "/alarm";
   public functionExplain = "/";

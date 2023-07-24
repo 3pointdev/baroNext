@@ -1,59 +1,14 @@
-// import { Provider } from "mobx-react";
-// import Header from "../components/header/header";
-// import initializeStore from "../src/mobx/store";
-// import "../styles/globals.css";
-// import type { AppProps } from "next/app";
-// import App from "next/app";
-// import { library } from "@fortawesome/fontawesome-svg-core";
-// import { fas } from "@fortawesome/free-solid-svg-icons";
-// import { far } from "@fortawesome/free-regular-svg-icons";
-// import { faFontAwesome } from "@fortawesome/free-brands-svg-icons";
-// import { Router, useRouter } from "next/router";
-
-// library.add(fas, far, faFontAwesome);
-
-// class MyApp extends App<AppProps> {
-//   public mobxStore;
-//   public router;
-//   static async getInitialProps(appContext: any) {
-//     const appProps = await App.getInitialProps(appContext);
-//     return {
-//       ...appProps,
-//     };
-//   }
-
-//   constructor(props: any) {
-//     super(props);
-//     this.mobxStore = initializeStore({});
-//     this.router = this.props.router;
-//   }
-
-//   render() {
-//     const { Component, pageProps } = this.props;
-
-//     return (
-//       <Provider {...this.mobxStore}>
-//         {this.router.pathname !== "/login" && (
-//           <Header mainViewModel={this.mobxStore.mainViewModel} />
-//         )}
-//         <Component {...pageProps} />
-//       </Provider>
-//     );
-//   }
-// }
-
-// export default MyApp;
-
+import "reflect-metadata";
 import { Provider } from "mobx-react";
 import App from "next/app";
-import Head from "next/head";
 import React from "react";
-import initializeStore from "../src/mobx/store";
+import initializeStore, { RootStore } from "../src/mobx/store";
 import "styles/globals.css";
 import Header from "../components/header/header";
+import { IDefaultProps } from "../src/viewModels/default.viewModel";
 
 class MyApp extends App<any, any, any> {
-  public mobxStore;
+  public mobxStore: RootStore;
 
   static async getInitialProps(appContext: any) {
     const appProps = await App.getInitialProps(appContext);
@@ -61,35 +16,34 @@ class MyApp extends App<any, any, any> {
       typeof window === "undefined"
         ? appContext.ctx.req.headers
         : window.navigator?.userAgent;
-
     return {
       ...appProps,
       headers: headers,
     };
   }
 
-  constructor(props: any) {
+  constructor(props: IDefaultProps) {
     super(props);
 
     this.mobxStore = initializeStore({
       headers: props.headers,
       host: props.headers.host,
       userAgent: props.headers["user-agent"],
-      env: props.env,
       router: props.router,
     });
   }
 
   componentDidMount(): void {
+    window.localStorage.sender = `/admin/id:${new Date().getTime()}`;
     this.mobxStore.mainViewModel.initializeUser();
   }
 
   render() {
     const { Component, pageProps, headers } = this.props;
-
+    const notUseHeader = ["/login", "/monitoring"];
     return (
       <Provider {...this.mobxStore}>
-        {this.props.router.pathname !== "/login" && (
+        {!notUseHeader.includes(this.props.router.pathname) && (
           <Header mainViewModel={this.mobxStore.mainViewModel} />
         )}
 

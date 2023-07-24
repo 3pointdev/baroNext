@@ -33,7 +33,7 @@ export default function AlarmModal({ list, count, active, onClick }: IProps) {
                 </Item.TextWrap>
               </Item.Left>
               <Item.CreatedAt>
-                {timeModule.format(item.createdAt)}
+                {timeModule.toString(item.createdAt)}
               </Item.CreatedAt>
             </Item.Wrap>
           );

@@ -14,6 +14,11 @@ import {
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
 import moment from "moment";
+import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
+import MachineDto from "../src/dto/machine/machine.dto";
+import IsEmpty from "../components/warning/isEmpty";
+import PageContainer from "../components/container/pageContainer";
+import DoneMachine from "../components/machine/DoneSoonList";
 
 ChartJS.register(
   CategoryScale,
@@ -24,13 +29,17 @@ ChartJS.register(
   Legend
 );
 
-function MainView(props: any) {
-  const mainViewModel: MainViewModel = props.mainViewModel;
+interface IProps {
+  mainViewModel: MainViewModel;
+}
+
+function MainView(props: IProps) {
+  const mainViewModel = props.mainViewModel;
   const [time, setTime] = useState<string>("");
 
-  function getFormattedTime() {
+  const getFormattedTime = () => {
     return moment().format("YYYY.MM.DD HH:mm:ss");
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,9 +47,7 @@ function MainView(props: any) {
     }, 1000);
 
     setTime(getFormattedTime());
-    mainViewModel.getMachineList();
-    mainViewModel.getProcessedQuantity();
-    mainViewModel.initializeSocket(mainViewModel.onMessage);
+    mainViewModel.initialize();
 
     return () => {
       clearInterval(interval);
@@ -51,11 +58,11 @@ function MainView(props: any) {
   }, []);
 
   return (
-    <Container.Page>
+    <PageContainer>
       <Container.Time>{time}</Container.Time>
       <Container.RowFlex>
         <Container.Chart>
-          <p>기계별 가공 수량</p>
+          <SectionTitle>기계별 가공 수량</SectionTitle>
           {mainViewModel.processChart ? (
             <Bar
               options={mainViewModel.processChart.options}
@@ -63,29 +70,37 @@ function MainView(props: any) {
             />
           ) : (
             <div>
-              <p>가공 기계가 없습니다.</p>
+              <SectionTitle>가공 기계가 없습니다.</SectionTitle>
             </div>
           )}
         </Container.Chart>
         <Container.Imminent>
-          <p>공정 임박 기계</p>
+          <SectionTitle>공정 임박 기계</SectionTitle>
+          <DoneMachine list={mainViewModel.machines} />
         </Container.Imminent>
       </Container.RowFlex>
-    </Container.Page>
+      <Container.MachineTable>
+        <SectionTitle>전체 공정 현황</SectionTitle>
+        <MachineWrap>
+          {mainViewModel.machines.map((machine: MachineDto, key: number) => {
+            return (
+              <RealTimeMachineItem
+                data={machine}
+                key={`real_time_machine_${key}`}
+              />
+            );
+          })}
+        </MachineWrap>
+      </Container.MachineTable>
+    </PageContainer>
   );
 }
 
 export default inject("mainViewModel")(observer(MainView));
 
 const Container = {
-  Page: styled.div`
-    margin: 0 auto;
-    max-width: 1200px;
-    height: 100vh;
-    background: #f7f8f8;
-    padding: 32px;
-  `,
   RowFlex: styled.div`
+    margin: 0 auto;
     display: flex;
     gap: 32px;
   `,
@@ -95,9 +110,10 @@ const Container = {
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: -16px;
   `,
   Chart: styled.section`
+  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
     flex-shrink:0;
     background: #fff;
     border-radius: 8px;
@@ -109,37 +125,48 @@ const Container = {
     justify-content: space-between;
     padding: 24px;
 
-    & p {
-      width: 100%;
-      font-weight: 600;
-      text-align: center;
-    }
-
     & canvas {
       max-width: 690px !important;
       max-height: 428px !important;
       margin: -12px 0 0 -12px;
-  }`,
+  }
+  `,
   Imminent: styled.section`
+    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
     background: #fff;
     border-radius: 8px;
-    width: 100%;
+    min-width: 382px;
     height 410px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 24px;
 
-    & p {
-      width: 100%;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    & canvas {
-      max-width: 690px !important;
-      max-height: 428px !important;
-      margin: -12px 0 0 -12px;
-  }`,
+  `,
+  MachineTable: styled.section`
+    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    width: 1152px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 24px;
+  `,
 };
+
+const SectionTitle = styled.p`
+  width: 100%;
+  font-weight: 600;
+  text-align: center;
+`;
+
+const MachineWrap = styled.div`
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+`;

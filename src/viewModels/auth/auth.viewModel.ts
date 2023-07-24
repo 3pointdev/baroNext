@@ -1,14 +1,9 @@
-import DefaultProfile from "public/images/profile/default-profile.jpg";
 import sha256 from "sha256";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel from "../default.viewModel";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import AccountModel from "../../models/login/account.model";
 import { ChangeEvent } from "react";
 import ContactModel from "../../models/login/contact.model";
-import UserDto from "../../dto/user/user.dto";
-import { plainToInstance } from "class-transformer";
-
-interface IProps {}
 
 export default class AuthViewModel extends DefaultViewModel {
   public account: AccountModel = new AccountModel();
@@ -16,7 +11,7 @@ export default class AuthViewModel extends DefaultViewModel {
   public isContactReady: boolean = false;
   public isAutoLogin: boolean = false;
 
-  constructor(props: IProps) {
+  constructor(props: IDefaultProps) {
     super(props);
     makeObservable(this, {
       account: observable,
@@ -60,7 +55,6 @@ export default class AuthViewModel extends DefaultViewModel {
 
   handleChangeAutoLogin = (event: ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target;
-    console.log(checked);
     runInAction(() => {
       this.isAutoLogin = checked;
     });
@@ -74,7 +68,7 @@ export default class AuthViewModel extends DefaultViewModel {
     const params = {
       username: this.account.account,
       password: sha256(this.account.password),
-      sender: this.senderId,
+      sender: window.localStorage.sender,
     };
 
     this.insertLogin(params);

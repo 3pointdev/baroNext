@@ -1,7 +1,7 @@
 import moment from "moment";
 
 class TimeModule {
-  public format(time: string) {
+  public toString(time: string) {
     const date = moment(time);
     const now = moment();
 
@@ -29,6 +29,37 @@ class TimeModule {
 
     const daysDiff = now.diff(date, "days");
     return `${daysDiff}일 전`;
+  }
+
+  public getRemainingTime(targetDateTime: string) {
+    const targetMoment = moment(targetDateTime, "YYYY-MM-DD HH:mm:ss");
+    const currentMoment = moment();
+
+    const duration = moment.duration(targetMoment.diff(currentMoment));
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.asMinutes()) % 60;
+    const seconds = Math.floor(duration.asSeconds()) % 60;
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  }
+
+  public msToHHMM(ms: number) {
+    const duration = moment.duration(ms);
+    const hours = Math.floor(duration.asHours());
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+
+    if (hours > 0) {
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    } else {
+      return `${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
   }
 }
 
