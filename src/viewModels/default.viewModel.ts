@@ -34,7 +34,7 @@ export default class DefaultViewModel {
     });
   }
 
-  initializeUser = () => {
+  initializeAuth = () => {
     runInAction(() => {
       const storage = {
         account: window.localStorage.account,

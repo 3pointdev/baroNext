@@ -16,9 +16,9 @@ import styled from "styled-components";
 import moment from "moment";
 import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
 import MachineDto from "../src/dto/machine/machine.dto";
-import IsEmpty from "../components/warning/isEmpty";
 import PageContainer from "../components/container/pageContainer";
 import DoneMachine from "../components/machine/DoneSoonList";
+import MachineViewModel from "../src/viewModels/machine/machine.viewModel";
 
 ChartJS.register(
   CategoryScale,
@@ -30,11 +30,11 @@ ChartJS.register(
 );
 
 interface IProps {
-  mainViewModel: MainViewModel;
+  machineViewModel: MachineViewModel;
 }
 
 function MainView(props: IProps) {
-  const mainViewModel = props.mainViewModel;
+  const machineViewModel = props.machineViewModel;
   const [time, setTime] = useState<string>("");
 
   const getFormattedTime = () => {
@@ -42,17 +42,22 @@ function MainView(props: IProps) {
   };
 
   useEffect(() => {
+    setTime(getFormattedTime());
     const interval = setInterval(() => {
       setTime(getFormattedTime());
     }, 1000);
+    const initialize = async () => {
+      await machineViewModel.getMachineList();
+      machineViewModel.getProcessedQuantity();
+      machineViewModel.initializeSocket(machineViewModel.onMessage);
+    };
 
-    setTime(getFormattedTime());
-    mainViewModel.initialize();
+    initialize();
 
     return () => {
       clearInterval(interval);
-      if (mainViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
-        mainViewModel.socket.disconnect();
+      if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
+        machineViewModel.socket.disconnect();
       }
     };
   }, []);
@@ -63,10 +68,10 @@ function MainView(props: IProps) {
       <Container.RowFlex>
         <Container.Chart>
           <SectionTitle>기계별 가공 수량</SectionTitle>
-          {mainViewModel.processChart ? (
+          {machineViewModel.processChart ? (
             <Bar
-              options={mainViewModel.processChart.options}
-              data={mainViewModel.processChart.data}
+              options={machineViewModel.processChart.options}
+              data={machineViewModel.processChart.data}
             />
           ) : (
             <div>
@@ -76,13 +81,13 @@ function MainView(props: IProps) {
         </Container.Chart>
         <Container.Imminent>
           <SectionTitle>공정 임박 기계</SectionTitle>
-          <DoneMachine list={mainViewModel.machines} />
+          <DoneMachine list={machineViewModel.machines} />
         </Container.Imminent>
       </Container.RowFlex>
       <Container.MachineTable>
         <SectionTitle>전체 공정 현황</SectionTitle>
         <MachineWrap>
-          {mainViewModel.machines.map((machine: MachineDto, key: number) => {
+          {machineViewModel.machines.map((machine: MachineDto, key: number) => {
             return (
               <RealTimeMachineItem
                 data={machine}
@@ -96,7 +101,7 @@ function MainView(props: IProps) {
   );
 }
 
-export default inject("mainViewModel")(observer(MainView));
+export default inject("machineViewModel")(observer(MainView));
 
 const Container = {
   RowFlex: styled.div`

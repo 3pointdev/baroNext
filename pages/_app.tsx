@@ -35,12 +35,12 @@ class MyApp extends App<any, any, any> {
 
   componentDidMount(): void {
     window.localStorage.sender = `/admin/id:${new Date().getTime()}`;
-    this.mobxStore.mainViewModel.initializeUser();
+    this.mobxStore.mainViewModel.initializeAuth();
   }
 
   render() {
     const { Component, pageProps, headers } = this.props;
-    const notUseHeader = ["/login", "/monitoring"];
+    const notUseHeader = ["/login", "/monitoring3", "/monitoring2"];
     return (
       <Provider {...this.mobxStore}>
         {!notUseHeader.includes(this.props.router.pathname) && (
