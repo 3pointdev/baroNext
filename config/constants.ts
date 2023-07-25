@@ -35,6 +35,22 @@ export type MachineExecutionType =
   (typeof MachineExecutionType)[keyof typeof MachineExecutionType];
 
 /**
+ * 머신구분타입
+ */
+export const MachineStateType = {
+  OFF: "off",
+  MODIFY: "modify",
+  ALARM: "alarm",
+  RUNNING: "runing",
+  READY: "ready",
+  EMERGENCY_STOP: "emergency_stop",
+  SUCCESS: "success",
+  WAIT: "wait",
+} as const;
+export type MachineStateType =
+  (typeof MachineStateType)[keyof typeof MachineStateType];
+
+/**
  * 바이너리 메시지 타입
  */
 export const BinaryMessageType = {

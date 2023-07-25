@@ -1,17 +1,19 @@
 import { inject, observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import MainViewModel from "../../src/viewModels/main/main.viewModel";
 import React from "react";
 import styled from "styled-components";
 import moment from "moment";
 import BarofactorySquare from "../../public/images/logo/barofactory-square";
+import MachineDto from "../../src/dto/machine/machine.dto";
+import MachineViewModel from "../../src/viewModels/machine/machine.viewModel";
+import MonitoringRow from "../../components/table/monitoringRow";
 
 interface IProps {
-  mainViewModel: MainViewModel;
+  machineViewModel: MachineViewModel;
 }
 
-function MonitoringView(props: IProps) {
-  const mainViewModel = props.mainViewModel;
+function Monitoring3View(props: IProps) {
+  const machineViewModel = props.machineViewModel;
   const [time, setTime] = useState<string>("");
 
   const getFormattedTime = () => {
@@ -19,17 +21,23 @@ function MonitoringView(props: IProps) {
   };
 
   useEffect(() => {
+    setTime(getFormattedTime());
     const interval = setInterval(() => {
       setTime(getFormattedTime());
     }, 1000);
 
-    setTime(getFormattedTime());
-    mainViewModel.initialize();
+    const initialize = async () => {
+      await machineViewModel.getMachineList();
+      machineViewModel.initializeAuth();
+      machineViewModel.initializeSocket(machineViewModel.onMessage);
+    };
+
+    initialize();
 
     return () => {
       clearInterval(interval);
-      if (mainViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
-        mainViewModel.socket.disconnect();
+      if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
+        machineViewModel.socket.disconnect();
       }
     };
   }, []);
@@ -42,14 +50,14 @@ function MonitoringView(props: IProps) {
           <Header.Time>{time}</Header.Time>
         </Header.LeftSide>
         <Header.Title>전체공정현황</Header.Title>
-        <Header.Enterprise>{mainViewModel.auth.name}</Header.Enterprise>
+        <Header.Enterprise>{machineViewModel.auth.name}</Header.Enterprise>
       </Header.Wrap>
       <Article.Wrap>
         <Article.Head>
           <tr>
             <th>호기</th>
-            <th>기계명</th>
-            <th>공정</th>
+            <th className="align_left">기계명</th>
+            <th className="align_left">공정</th>
             <th>진행률</th>
             <th>완료/목표</th>
             <th>공정 시작일</th>
@@ -58,13 +66,19 @@ function MonitoringView(props: IProps) {
             <th>구분</th>
           </tr>
         </Article.Head>
-        <Article.Body></Article.Body>
+        <Article.Body>
+          {machineViewModel.machines.map((data: MachineDto, key: number) => {
+            return (
+              <MonitoringRow data={data} key={`monitoring_table_row_${key}`} />
+            );
+          })}
+        </Article.Body>
       </Article.Wrap>
     </MonitoringContainer>
   );
 }
 
-export default inject("mainViewModel")(observer(MonitoringView));
+export default inject("machineViewModel")(observer(Monitoring3View));
 
 const MonitoringContainer = styled.div`
   background: #2e3257;
@@ -107,11 +121,30 @@ const Header = {
 const Article = {
   Wrap: styled.table`
     width: 100vw;
+    border-collapse: collapse;
+    & * {
+      white-space: nowrap;
+    }
   `,
   Head: styled.thead`
     width: 100vw;
+    height: 36px;
+    text-align: center;
+    backgorund: #c4c4c4;
     & th {
       background: #c4c4c4;
+      min-width: 42px;
+    }
+
+    & .align_left {
+      padding-left: 8px;
+      text-align: left;
+    }
+
+    & * {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
     }
   `,
   Body: styled.tbody``,

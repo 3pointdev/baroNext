@@ -2,7 +2,6 @@ import { runInAction } from "mobx";
 import { ApiModule, ServerResponse } from "./api.module";
 import { ServerUrlType } from "../../config/constants";
 import { AxiosResponse } from "axios";
-import SocketHandlerModule from "./socketTransform.module";
 import TransmitterDto from "../dto/transmitters/transmitters.dto";
 import { plainToInstance } from "class-transformer";
 

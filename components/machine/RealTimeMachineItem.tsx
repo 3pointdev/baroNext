@@ -5,6 +5,7 @@ import moment, { now } from "moment";
 import { useEffect, useState } from "react";
 import timeModule from "../../src/modules/time.module";
 import { MachineExecutionType } from "../../config/constants";
+import machineStatusModule from "../../src/modules/machineStatus.module";
 
 interface IProps {
   data: MachineDto;
@@ -15,29 +16,7 @@ export default function RealTimeMachineItem(props: IProps) {
   const [color, setColor] = useState<string>("red");
 
   useEffect(() => {
-    switch (data.data.execution) {
-      case MachineExecutionType.ACTIVE:
-        setColor("#6ebd33");
-        break;
-      case MachineExecutionType.OFF:
-        setColor("#d5d7da");
-        break;
-      case MachineExecutionType.TRIGGERED:
-        setColor("#e8661c");
-        break;
-      case MachineExecutionType.STOPPED:
-        setColor("#f5b117");
-        break;
-      case MachineExecutionType.READY:
-        setColor("#f5b117");
-        break;
-      case MachineExecutionType.INTERRUPTED:
-        setColor("#f5b117");
-        break;
-      default:
-        setColor("#d5d7da");
-        break;
-    }
+    setColor(machineStatusModule.ToColorStatus(data.execution));
   }, [data]);
 
   return (

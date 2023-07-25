@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
+import { makeObservable, observable } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import MenuModel from "../../models/menu/menu.model";
 import {
@@ -17,26 +17,10 @@ import { faClipboard } from "@fortawesome/free-regular-svg-icons";
 import AlarmListDto from "../../dto/alarm/alarmList.dto";
 import UserMenuModel from "../../models/menu/userMenu.model";
 import pageUrlConfig from "../../../config/pageUrlConfig";
-import MachineDto from "../../dto/machine/machine.dto";
-import { AxiosError, AxiosResponse } from "axios";
-import { plainToInstance } from "class-transformer";
-import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
-import {
-  BinaryMessageType,
-  ServerUrlType,
-  SocketResponseType,
-} from "../../../config/constants";
-import SocketTransformModule from "../../modules/socketTransform.module";
-import dataTransformModule from "../../modules/dataTransform.module";
-import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
-import timeModule from "../../modules/time.module";
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
   public userMenu: UserMenuModel[] = [];
-  public machines: MachineDto[] = [];
-  public processedQuantity: ProcessedQuantityDto[] = [];
-  public processChart: any = false;
   public alarm: AlarmListDto = new AlarmListDto();
 
   constructor(props: IDefaultProps) {
@@ -184,201 +168,8 @@ export default class MainViewModel extends DefaultViewModel {
     };
     makeObservable(this, {
       menus: observable,
-      machines: observable,
-      processedQuantity: observable,
-      processChart: observable,
+      userMenu: observable,
       alarm: observable,
-
-      getMachineList: action,
-      getProcessedQuantity: action,
-      setChart: action,
-      setMachineData: action,
-      updateMachineData: action,
     });
   }
-
-  async initialize() {
-    this.getProcessedQuantity();
-    await this.getMachineList();
-    this.initializeSocket(this.onMessage);
-  }
-
-  onMessage = async (response: MessageEvent) => {
-    const message = await SocketTransformModule(response);
-
-    switch (message?.response) {
-      case SocketResponseType.MACHINE:
-        //object
-        this.setMachineData(message.data);
-        break;
-      case SocketResponseType.CONNECT:
-        break;
-      case SocketResponseType.CLOSED:
-        break;
-      default:
-        //binary
-        this.updateMachineData(message);
-        break;
-    }
-  };
-
-  getMachineList = async () => {
-    await this.api
-      .get(ServerUrlType.BARO, "/machine/currentList")
-      .then((result: AxiosResponse<any[]>) => {
-        runInAction(() => {
-          const newMachines = result.data.map((item) => {
-            const matchMachine = this.machines.find(
-              (machine) => machine.id === item.mkey
-            );
-            return dataTransformModule(item, matchMachine, true);
-          });
-
-          this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  getProcessedQuantity = async () => {
-    await this.api
-      .get(ServerUrlType.BARO, "/baro")
-      .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
-        runInAction(() => {
-          const data = result.data.map((data: ProcessedQuantityDto) =>
-            plainToInstance(ProcessedQuantityDto, data)
-          );
-          this.setChart(data);
-          this.processedQuantity = data;
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  setChart = (data: ProcessedQuantityDto[]) => {
-    runInAction(() => {
-      this.processChart = {
-        options: {
-          maxBarThickness: 80,
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                title: (context) => {
-                  return "";
-                },
-                label: (context) => {
-                  let label = `${data[context.dataIndex].mid} : ${
-                    context.formattedValue
-                  }`;
-                  return label;
-                },
-              },
-            },
-          },
-          scales: {
-            x: {
-              grid: {
-                display: false,
-                tickLength: 8, // 눈금 길이를 지정합니다.
-              },
-              title: {
-                align: "end",
-                display: true,
-                text: "호기",
-              },
-              ticks: { padding: 0 },
-            },
-            y: {
-              title: {
-                align: "end",
-                display: true,
-                text: "총 가공 수량(개)",
-              },
-              ticks: {
-                padding: 0,
-                margin: 0,
-              },
-            },
-          },
-        },
-        data: {
-          labels: data.map((item) => item.machineNo),
-          datasets: [
-            {
-              data: data.map((item) => item.count),
-              backgroundColor: "rgba(0, 143, 251, 0.4)",
-            },
-          ],
-        },
-      };
-    });
-  };
-
-  setMachineData = (data) => {
-    runInAction(() => {
-      const newMachines = data.map((item) => {
-        const matchMachine = this.machines.find(
-          (machine) => +machine.id === +item.Id
-        );
-
-        return dataTransformModule(item, matchMachine, false);
-      });
-      this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
-    });
-  };
-
-  updateMachineData = (message) => {
-    switch (message.type) {
-      case BinaryMessageType.NOTI:
-        const newMachineList = this.machines;
-        const targetIndex = newMachineList.findIndex(
-          (machine: MachineDto) => machine.id === message.target
-        );
-
-        // MachineDto에 해당하는 키와 값을 업데이트
-        const machineData = newMachineList[targetIndex];
-        for (const key in message.updates) {
-          const matchingMachineKey = Object.keys(machineData).find(
-            (realTimeKey) => realTimeKey.toLowerCase() === key
-          );
-          machineData[matchingMachineKey] = message.updates[key].value;
-        }
-
-        // RealTimeDataDto에 해당하는 키와 값을 업데이트
-        const realTimeData = newMachineList[targetIndex].data;
-
-        for (const key in message.rtd) {
-          const matchingRealTimeKey = Object.keys(realTimeData).find(
-            (realTimeKey) => realTimeKey.toLowerCase() === message.rtd[key].key
-          );
-
-          realTimeData[matchingRealTimeKey] = message.rtd[key].value;
-        }
-
-        newMachineList[targetIndex] = machineData;
-        newMachineList[targetIndex].data = realTimeData;
-
-        runInAction(() => {
-          this.machines = newMachineList;
-        });
-
-        break;
-      case BinaryMessageType.PART_COUNT:
-        break;
-      case BinaryMessageType.MESSAGE:
-        break;
-      case BinaryMessageType.ALARM:
-        break;
-    }
-  };
 }

@@ -1,6 +1,12 @@
 import { Expose } from "class-transformer";
 
 export default class RealTimeDataDto {
+  @Expose({ name: "machineNo" })
+  public machineNo: number = 0;
+
+  @Expose({ name: "Id" })
+  public id: string = "";
+
   @Expose({ name: "S1load" })
   public s1Load: string = "";
 
@@ -19,35 +25,17 @@ export default class RealTimeDataDto {
   @Expose({ name: "Zload" })
   public zLoad: string = "";
 
-  @Expose({ name: "block" })
-  public block: string = "";
-
-  @Expose({ name: "estop" })
-  public eStop: string = "";
-
-  @Expose({ name: "execution" })
-  public execution: string = "";
-
   @Expose({ name: "f_command" })
   public fCommand: string = "";
 
   @Expose({ name: "line" })
   public line: string = "";
 
-  @Expose({ name: "mode" })
-  public mode: string = "";
-
-  @Expose({ name: "part_count" })
-  public partCount: string = "";
-
   @Expose({ name: "path_feedrate" })
   public pathFeedrate: string = "";
 
   @Expose({ name: "path_position" })
   public pathPosition: string = "";
-
-  @Expose({ name: "plan_count" })
-  public planCount: string = "";
 
   @Expose({ name: "program_comment" })
   public programComment: string = "";
@@ -84,15 +72,6 @@ export default class RealTimeDataDto {
 
   @Expose({ name: "Yload" })
   public yLoad: string = "";
-
-  @Expose({ name: "block2" })
-  public block2: string = "";
-
-  @Expose({ name: "execution2" })
-  public execution2: string = "";
-
-  @Expose({ name: "mode2" })
-  public mode2: string = "";
 
   @Expose({ name: "path_position2" })
   public pathPosition2: string = "";
