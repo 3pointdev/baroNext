@@ -2,12 +2,13 @@ import sha256 from "sha256";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import AccountModel from "../../models/login/account.model";
-import { ChangeEvent } from "react";
-import ContactModel from "../../models/login/contact.model";
+import { ChangeEvent, KeyboardEvent } from "react";
+import { ServerUrlType } from "../../../config/constants";
+import FindAccountModel from "../../models/login/contact.model";
 
 export default class AuthViewModel extends DefaultViewModel {
   public account: AccountModel = new AccountModel();
-  public contact: ContactModel = new ContactModel();
+  public findAccount: FindAccountModel = new FindAccountModel();
   public isContactReady: boolean = false;
   public isAutoLogin: boolean = false;
 
@@ -15,13 +16,13 @@ export default class AuthViewModel extends DefaultViewModel {
     super(props);
     makeObservable(this, {
       account: observable,
-      contact: observable,
+      findAccount: observable,
       isContactReady: observable,
       isAutoLogin: observable,
 
       checkContactReady: action,
       handleChangeContact: action,
-      handleChangeContactCategory: action,
+      handleChangeCategory: action,
       handleChangeAccount: action,
       handleChangeAutoLogin: action,
     });
@@ -39,16 +40,16 @@ export default class AuthViewModel extends DefaultViewModel {
     const { name, value } = event.target;
 
     runInAction(() => {
-      this.contact = { ...this.contact, [name]: value };
+      this.findAccount = { ...this.findAccount, [name]: value };
       this.checkContactReady();
     });
   };
 
-  handleChangeContactCategory = (event: ChangeEvent<HTMLSelectElement>) => {
+  handleChangeCategory = (event: ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
     runInAction(() => {
-      this.contact = { ...this.contact, category: +value };
+      this.findAccount = { ...this.findAccount, inquiry: value };
       this.checkContactReady();
     });
   };
@@ -60,8 +61,18 @@ export default class AuthViewModel extends DefaultViewModel {
     });
   };
 
-  insertContact = () => {
-    //api contact
+  insertContact = async () => {
+    await this.api
+      .post(ServerUrlType.BARO, "/login/findId", {
+        ...this.findAccount,
+        sender: window.localStorage.sender,
+      })
+      .then((result) => {
+        console.log("result : ", result);
+      })
+      .catch((error) => {
+        console.log("error : ", error);
+      });
   };
 
   handleLogin = async () => {
@@ -77,14 +88,22 @@ export default class AuthViewModel extends DefaultViewModel {
   checkContactReady = () => {
     runInAction(() => {
       if (
-        this.contact.company.length > 0 &&
-        this.contact.phone.length > 9 &&
-        this.contact.category !== 0
+        this.findAccount.company.length > 0 &&
+        this.findAccount.contact.length > 9 &&
+        this.findAccount.inquiry !== ""
       ) {
         this.isContactReady = true;
       } else {
         this.isContactReady = false;
       }
     });
+  };
+
+  handleKeyDownEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    const { key } = event;
+
+    if (key === "Enter") {
+      this.handleLogin();
+    }
   };
 }

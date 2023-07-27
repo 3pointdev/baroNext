@@ -1,6 +1,7 @@
 import {
   ChangeEventHandler,
   HTMLInputTypeAttribute,
+  KeyboardEventHandler,
   ReactElement,
   RefObject,
 } from "react";
@@ -16,6 +17,7 @@ interface IProps {
   readOnly?: boolean;
   reference?: RefObject<HTMLInputElement>;
   children?: ReactElement | ReactElement[];
+  onKeyDown?: KeyboardEventHandler;
 }
 
 export default function DefaultInput({
@@ -28,6 +30,7 @@ export default function DefaultInput({
   readOnly = false,
   reference,
   children,
+  onKeyDown,
 }: IProps) {
   return (
     <InputWrap>
@@ -40,6 +43,7 @@ export default function DefaultInput({
         required={requied}
         readOnly={readOnly}
         ref={reference}
+        onKeyDown={onKeyDown}
       />
       <ChildrenWrap>{children}</ChildrenWrap>
     </InputWrap>

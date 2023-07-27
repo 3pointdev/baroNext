@@ -16,6 +16,10 @@ class AuthModule {
     window.localStorage.clear();
     window.location.replace("/login");
   }
+
+  public isLogin() {
+    return window.localStorage.token !== undefined;
+  }
 }
 
 export default new AuthModule();

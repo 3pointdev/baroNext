@@ -8,6 +8,7 @@ import axios, {
 } from "axios";
 import { plainToInstance } from "class-transformer";
 import { ServerUrlType } from "../../config/constants";
+import authModule from "./auth.module";
 
 export interface ApiResponse<T> {
   data: T;
@@ -54,6 +55,13 @@ export class ApiModule {
   }
 
   async get<T>(server: ServerUrlType, url: string, params?: T) {
+    if (
+      !authModule.isLogin() &&
+      url !== "/login/login" &&
+      url !== "/login/findId"
+    ) {
+      throw "please login";
+    }
     const sender = window.localStorage.sender;
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
@@ -71,6 +79,12 @@ export class ApiModule {
     params?: T,
     config?: AxiosRequestConfig
   ) {
+    if (
+      !authModule.isLogin() &&
+      url !== "/login/login" &&
+      url !== "/login/findId"
+    )
+      throw "please login";
     const sender = window.localStorage.sender;
 
     this.setAxiosInstance(server);
@@ -81,6 +95,12 @@ export class ApiModule {
   }
 
   async put<T>(server: ServerUrlType, url: string, params?: T) {
+    if (
+      !authModule.isLogin() &&
+      url !== "/login/login" &&
+      url !== "/login/findId"
+    )
+      throw "please login";
     const sender = window.localStorage.sender;
 
     this.commonHeader["Content-Type"] = "application/json";
@@ -92,6 +112,12 @@ export class ApiModule {
   }
 
   async patch<T>(server: ServerUrlType, url: string, params?: T) {
+    if (
+      !authModule.isLogin() &&
+      url !== "/login/login" &&
+      url !== "/login/findId"
+    )
+      throw "please login";
     const sender = window.localStorage.sender;
 
     this.commonHeader["Content-Type"] = "application/json";
@@ -103,6 +129,12 @@ export class ApiModule {
   }
 
   async delete(server: ServerUrlType, url: string) {
+    if (
+      !authModule.isLogin() &&
+      url !== "/login/login" &&
+      url !== "/login/findId"
+    )
+      throw "please login";
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
     return await this.axios
