@@ -10,7 +10,6 @@ import {
   SocketResponseType,
 } from "../../../config/constants";
 import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
-import timeModule from "../../modules/time.module";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
@@ -33,6 +32,14 @@ export default class MachineViewModel extends DefaultViewModel {
       setChart: action,
     });
   }
+
+  // 모니터번호(path)에 따라 렌더링할 인덱스 범위를 계산
+  setRenderRange = () => {
+    const monitor = +this.router.query.monitor;
+    const start = (monitor - 1) * 4;
+    const end = monitor * 4;
+    return { start, end };
+  };
 
   onMessage = async (response: MessageEvent) => {
     if (typeof response.data === "object") {
@@ -274,7 +281,7 @@ export default class MachineViewModel extends DefaultViewModel {
       prdct_end: matchData.prdctEnd,
       start_ymdt: matchData.startYmdt,
       pause: matchData.pause,
-      doneTime: matchData.doneTime,
+      doneTime: matchData.active * (item.PlanCount - item.PartCount),
     };
     const plainRealTimeData = {
       Id: item.Id,
@@ -321,10 +328,14 @@ export default class MachineViewModel extends DefaultViewModel {
       (data) => +data.id === +dataArray[4]
     );
 
+    if (matchData === undefined || matchRTData === undefined) {
+      throw "아직 머신상태가 수신되지 않았습니다.";
+    }
+
     for (let i = 6; i < dataArray.length; i = i + 2) {
       const targetKey = dataArray[i].toLowerCase().replace("_", "");
       const RtKey = Object.keys(matchRTData).find(
-        (key) => key.toLowerCase().replace("_", "") === targetKey
+        (key: string) => key.toLowerCase().replace("_", "") === targetKey
       );
       if (RtKey) {
         matchRTData[RtKey] = dataArray[i + 1];
@@ -337,6 +348,9 @@ export default class MachineViewModel extends DefaultViewModel {
         }
       }
     }
+
+    matchData.doneTime =
+      matchData.active * (matchData.planCount - matchData.partCount);
 
     return { machine: matchData, rtd: matchRTData };
   }

@@ -9,6 +9,9 @@ export default function WorkEnvironmentBadge({ title }: IProps) {
 }
 
 const Badge = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
   padding: 0 16px;
   height: 34px;
   display: flex;

@@ -6,7 +6,7 @@ import MainViewModel from "../../src/viewModels/main/main.viewModel";
 import MenuModel from "../../src/models/menu/menu.model";
 import { NextRouter, useRouter } from "next/router";
 import SubMenuModel from "../../src/models/menu/subMenu.model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../image/logo";
 import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
 import { inject, observer } from "mobx-react";
@@ -14,6 +14,8 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import AlarmModal from "../modal/alarmModal";
 import UserModal from "../modal/userModal";
 import Linker from "../linker/linker";
+import pageUrlConfig from "../../config/pageUrlConfig";
+import authModule from "../../src/modules/auth.module";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -25,6 +27,12 @@ function Header(props: IProps) {
   const [isOpenAlarmModal, setIsOpenAlarmModal] = useState<boolean>(false);
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
+
+  useEffect(() => {
+    if (!authModule.isLogin()) {
+      router.push(pageUrlConfig.login);
+    }
+  }, []);
 
   const handleToggleAlarmModal = () => {
     setIsOpenAlarmModal(!isOpenAlarmModal);
@@ -109,20 +117,24 @@ function Header(props: IProps) {
           })}
         </Navi.MenuWrap>
       </Navi.Wrap>
-      <AlarmModal
-        onClick={handleToggleAlarmModal}
-        active={isOpenAlarmModal}
-        list={mainViewModel.alarm.alarms}
-        count={mainViewModel.alarm.unRead}
-      />
-      <UserModal
-        onClick={handleToggleUserModal}
-        onClickLogout={mainViewModel.insertLogout}
-        active={isOpenUserModal}
-        data={mainViewModel.auth}
-        menus={mainViewModel.userMenu}
-        alarm={mainViewModel.alarm.unRead}
-      />
+      {mainViewModel.auth.enterpriseId && (
+        <>
+          <AlarmModal
+            onClick={handleToggleAlarmModal}
+            active={isOpenAlarmModal}
+            list={mainViewModel.alarm.alarms}
+            count={mainViewModel.alarm.unRead}
+          />
+          <UserModal
+            onClick={handleToggleUserModal}
+            onClickLogout={mainViewModel.insertLogout}
+            active={isOpenUserModal}
+            data={mainViewModel.auth}
+            menus={mainViewModel.userMenu}
+            alarm={mainViewModel.alarm.unRead}
+          />
+        </>
+      )}
     </HeaderContainer>
   );
 }
@@ -250,13 +262,13 @@ const Navi = {
     position: absolute;
     margin-top: 18px;
     top: 0px;
-    left: 12px;
+    left: 0px;
     display: flex;
     flex-direction: column;
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-    width: 112px;
+    width: 140px;
     overflow: hidden;
     font-size: 16px;
     height: 0px !important;
@@ -264,6 +276,7 @@ const Navi = {
 
     &.active {
       height: ${({ count }) => count * 44}px !important;
+      top: 16px;
     }
 
     & li {
@@ -276,6 +289,7 @@ const Navi = {
   `,
   MenuModal: styled.div`
     position: absolute;
+    top: 16px;
     left: 0px;
     width: 100%;
     height: 100% !important;

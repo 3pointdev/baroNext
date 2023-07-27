@@ -17,6 +17,7 @@ import DefaultButton from "../../components/button/defaultButton";
 import Checkbox from "../../components/input/checkbox";
 import Selector from "../../components/input/selector";
 import SelectorOption from "../../components/input/selectorOption";
+import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 interface IProps {
   authViewModel: AuthViewModel;
@@ -70,7 +71,7 @@ function LoginView(props: IProps) {
           <>
             {isMount && (
               <Login.BackWard onClick={handleToggleContactMode}>
-                <FontAwesomeIcon icon="fas fa-arrow-right-from-bracket" />
+                <FontAwesomeIcon icon={faArrowRightToBracket} />
               </Login.BackWard>
             )}
             <Login.TextWrap>
@@ -82,25 +83,25 @@ function LoginView(props: IProps) {
             </Login.TextWrap>
             <DefaultInput
               type="text"
-              value={authViewModel.contact.company}
+              value={authViewModel.findAccount.company}
               name="company"
               onChange={authViewModel.handleChangeContact}
               placeholder="회사명"
             />
             <DefaultInput
               type="text"
-              value={authViewModel.contact.phone}
-              name="phone"
+              value={authViewModel.findAccount.contact}
+              name="contact"
               onChange={authViewModel.handleChangeContact}
               placeholder="등록된 연락처"
             />
             <Selector
-              value={authViewModel.contact.category}
-              onChange={authViewModel.handleChangeContactCategory}
+              value={authViewModel.findAccount.inquiry}
+              onChange={authViewModel.handleChangeCategory}
             >
-              <SelectorOption title="문의 내용" value={0} disabled />
-              <SelectorOption title="아이디 문의" value={1} />
-              <SelectorOption title="비밀번호 문의" value={2} />
+              <SelectorOption title="문의 내용" value={""} disabled />
+              <SelectorOption title="아이디 문의" value={"id"} />
+              <SelectorOption title="비밀번호 문의" value={"password"} />
             </Selector>
             <DefaultButton
               title="요청하기"
@@ -135,6 +136,7 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeAccount}
               placeholder="비밀번호"
               reference={inputRef}
+              onKeyDown={authViewModel.handleKeyDownEnter}
             >
               <FontAwesomeIcon
                 icon={viewPassword ? faEye : faEyeSlash}

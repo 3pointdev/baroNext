@@ -6,6 +6,9 @@ import initializeStore, { RootStore } from "../src/mobx/store";
 import "styles/globals.css";
 import Header from "../components/header/header";
 import { IDefaultProps } from "../src/viewModels/default.viewModel";
+import authModule from "../src/modules/auth.module";
+import { Router } from "next/router";
+import pageUrlConfig from "../config/pageUrlConfig";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
@@ -36,6 +39,10 @@ class MyApp extends App<any, any, any> {
   componentDidMount(): void {
     window.localStorage.sender = `/admin/id:${new Date().getTime()}`;
     this.mobxStore.mainViewModel.initializeAuth();
+
+    if (!authModule.isLogin() && this.props.router.pathname !== "/login") {
+      this.props.router.push(pageUrlConfig.login);
+    }
   }
 
   render() {
