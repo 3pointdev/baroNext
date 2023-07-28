@@ -14,10 +14,10 @@ import {
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
 import moment from "moment";
-import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
+import RealTimeMachineItem from "../components/machine/realTimeMachineItem";
 import MachineDto from "../src/dto/machine/machine.dto";
 import PageContainer from "../components/container/pageContainer";
-import DoneMachine from "../components/machine/DoneSoonList";
+import DoneMachine from "../components/machine/doneSoonList";
 import MachineViewModel from "../src/viewModels/machine/machine.viewModel";
 
 ChartJS.register(

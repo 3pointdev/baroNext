@@ -11,10 +11,10 @@ export default function PageContainer({ children }: IProps) {
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 100vw;
+  width: calc(100vw - 32px);
   height: calc(100vh - 192px);
   background: #f7f7f9;
-  padding: 32px 0;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   gap: 32px;

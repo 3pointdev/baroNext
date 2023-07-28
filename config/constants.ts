@@ -61,3 +61,14 @@ export const BinaryMessageType = {
 } as const;
 export type BinaryMessageType =
   (typeof BinaryMessageType)[keyof typeof BinaryMessageType];
+
+/**
+ * DatePicker 버튼타입
+ */
+export const DatePickerButtonType = {
+  TODAY: "today",
+  NEXT: "next",
+  PREV: "prev",
+} as const;
+export type DatePickerButtonType =
+  (typeof DatePickerButtonType)[keyof typeof DatePickerButtonType];

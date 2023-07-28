@@ -24,7 +24,7 @@ export default function Linker(props: IProps) {
   } = props;
 
   return (
-    <div style={boxStyle}>
+    <LinkerContainer style={boxStyle}>
       <Link
         href={href}
         style={style}
@@ -33,6 +33,18 @@ export default function Linker(props: IProps) {
       >
         {children}
       </Link>
-    </div>
+    </LinkerContainer>
   );
 }
+
+const LinkerContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
+  & a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+`;
