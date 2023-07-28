@@ -16,6 +16,7 @@ import UserModal from "../modal/userModal";
 import Linker from "../linker/linker";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import authModule from "../../src/modules/auth.module";
+import CircleButton from "../button/circleButton";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -53,10 +54,9 @@ function Header(props: IProps) {
         </Linker>
         <WorkEnvironmentBadge title="REACT" />
         <Head.User>
-          <Head.Bell onClick={handleToggleAlarmModal}>
-            <FontAwesomeIcon icon={faBell} />
+          <CircleButton icon={faBell} onClick={handleToggleAlarmModal}>
             <Head.Alarm>{mainViewModel.alarm.unRead}</Head.Alarm>
-          </Head.Bell>
+          </CircleButton>
           <Head.Profile
             src={mainViewModel.auth.profileImage}
             alt="profile"
@@ -177,21 +177,7 @@ const Head = {
     align-items: center;
     gap: 12px;
   `,
-  Bell: styled.button`
-    position: relative;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 24px;
-    background: 0;
-    border: 0;
-    transition: all 0.4s;
-    cursor: pointer;
 
-    &:hover {
-      background: #f5f5f5;
-    }
-  `,
   Alarm: styled.div`
     position: absolute;
     right: 0px;
@@ -227,10 +213,11 @@ const Navi = {
   MenuItem: styled.div<{ isMain?: boolean }>`
     flex-shrink: 0;
     position: relative;
-    width: ${({ isMain }) => (isMain ? "88px" : "120px")};
-    height: 27px;
-    padding: 10px;
+    width: ${({ isMain }) => (isMain ? "108px" : "140px")};
+    height: 47px;
+    padding: 0px;
     white-space: nowrap;
+    cursor: pointer;
 
     & p {
       padding-top: 4px;
@@ -245,6 +232,7 @@ const Navi = {
       height: 100%;
     }
     & svg {
+      padding-left: 12px;
       width: 24px;
       height: 24px;
     }
@@ -280,7 +268,11 @@ const Navi = {
     }
 
     & li {
-      padding: 12px;
+      padding: 6px;
+
+      & a {
+        padding: 6px;
+      }
 
       &:hover {
         background: #f5f5f5;

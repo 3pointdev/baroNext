@@ -6,6 +6,7 @@ import MainViewModel from "../viewModels/main/main.viewModel";
 import { configure } from "mobx";
 import UserViewModel from "../viewModels/user/user.viewModel";
 import MachineViewModel from "../viewModels/machine/machine.viewModel";
+import ReportViewModel from "../viewModels/report/report.viewModel";
 
 const isServer = typeof window === "undefined";
 
@@ -18,6 +19,7 @@ export class RootStore {
   public machineViewModel: MachineViewModel;
   public authViewModel: AuthViewModel;
   public userViewModel: UserViewModel;
+  public reportViewModel: ReportViewModel;
 
   constructor(initialData: IDefaultProps) {
     const initData = Object.assign(initialData, {});
@@ -26,6 +28,7 @@ export class RootStore {
     this.machineViewModel = new MachineViewModel(initData);
     this.authViewModel = new AuthViewModel(initData);
     this.userViewModel = new UserViewModel(initData);
+    this.reportViewModel = new ReportViewModel(initData);
   }
 }
 
