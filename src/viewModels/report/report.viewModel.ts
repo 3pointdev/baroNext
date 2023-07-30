@@ -32,6 +32,7 @@ export default class ReportViewModel extends DefaultViewModel {
       handleClickDay: action,
     });
   }
+
   InsertProductList = async () => {
     await this.api
       .post(ServerUrlType.BARO, "/product", this.productModel)
@@ -48,7 +49,7 @@ export default class ReportViewModel extends DefaultViewModel {
           );
         }
         runInAction(() => {
-          this.products = instance;
+          this.products = instance.sort((a, b) => a.machineNo - b.machineNo);
         });
       })
       .catch((error: AxiosError) => {

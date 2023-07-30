@@ -25,7 +25,7 @@ export default function DefaultButton({
   isActive = true,
   style,
   activeColor = "#3a79ec",
-  disableColor = "#63657801",
+  disableColor = "#63657840",
 }: IProps) {
   return (
     <Button
@@ -56,13 +56,14 @@ const Button = styled.button<{
   border-radius: 8px;
   cursor: pointer;
   ${({ dynamic, activeColor, disableColor }) =>
-    dynamic.isDynamic && dynamic.isActive === true
+    dynamic.isDynamic === true && dynamic.isActive === false
       ? `
-  background: ${activeColor};
-  border: 1px solid #BFBFBF;
-  `
+      background: ${disableColor};
+      border: 0;
+      
+      `
       : `
-  background: ${disableColor};
-  border: 0;
-  `}
+      background: ${activeColor};
+      border: 1px solid #BFBFBF;
+      `}
 `;

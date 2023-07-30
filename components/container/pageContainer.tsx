@@ -1,12 +1,13 @@
 import { ReactElement } from "react";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 
 interface IProps {
   children: ReactElement | ReactElement[];
+  style?: CSSProperties;
 }
 
-export default function PageContainer({ children }: IProps) {
-  return <Container>{children}</Container>;
+export default function PageContainer({ style, children }: IProps) {
+  return <Container style={style}>{children}</Container>;
 }
 
 const Container = styled.div`

@@ -62,6 +62,7 @@ export default function DatePickHeader({
 }
 
 const Container = styled.div`
+  flex-shrink: 0;
   width: calc(100% - 32px);
   background: #fff;
   box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
