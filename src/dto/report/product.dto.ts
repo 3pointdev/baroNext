@@ -2,8 +2,8 @@ import { Expose, Type } from "class-transformer";
 import ProductDataDto from "./productData.dto";
 
 export default class ProductDto {
-  @Expose({ name: "toogle" })
-  public readonly toogle: number = 0;
+  @Expose({ name: "toggle" })
+  public readonly toggle: number = 0;
 
   @Expose({ name: "name" })
   public readonly name: string = "";
