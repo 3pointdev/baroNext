@@ -5,11 +5,13 @@ import DefaultButton from "../button/defaultButton";
 import DefaultDatePicker from "../datePicker/defaultDatePicker";
 import moment from "moment";
 import { DatePickerButtonType } from "../../config/constants";
+import RangeDatePicker from "../datePicker/rangeDatePicker";
 
 interface IProps {
-  value: string;
-  onChange: (date: string) => void;
-  onClick: MouseEventHandler;
+  start: string;
+  end: string;
+  onChange: (date: string, type: string) => void;
+  title?: string;
   children?:
     | ReactElement
     | ReactElement[]
@@ -19,49 +21,26 @@ interface IProps {
     | number[];
 }
 
-export default function DatePickHeader({
-  value,
+export default function RangeDatePickHeader({
+  start,
+  end,
   onChange,
-  onClick,
+  title,
   children,
 }: IProps) {
-  const isToday = moment(new Date()).format("YYYY-MM-DD") !== value;
   return (
     <Container>
       <LeftSide.Wrap>
-        <AngleButton
-          onClick={onClick}
-          forLeft
-          value={DatePickerButtonType.PREV}
-        />
-        <span>{value}</span>
-        <AngleButton onClick={onClick} value={DatePickerButtonType.NEXT} />
-        <DefaultButton
-          title="오늘"
-          isActive={isToday}
-          style={{
-            color: "#000",
-            width: "64px",
-            height: "36px",
-            boxShadow: "none",
-            fontSize: "16px",
-          }}
-          dynamic
-          disableColor="#63657840"
-          activeColor="#fff"
-          onClick={onClick}
-          value={DatePickerButtonType.TODAY}
-        />
+        <RangeDatePicker start={start} end={end} onChange={onChange} />
       </LeftSide.Wrap>
-      <RightSide.Wrap>
-        {children}
-        <DefaultDatePicker selected={value} onChange={onChange} />
-      </RightSide.Wrap>
+      {title && <Title>{title}</Title>}
+      <RightSide.Wrap>{children}</RightSide.Wrap>
     </Container>
   );
 }
 
 const Container = styled.div`
+  position: relative;
   flex-shrink: 0;
   width: calc(100% - 32px);
   background: #fff;
@@ -80,7 +59,6 @@ const LeftSide = {
     height: 100%;
     display: flex;
     align-items: center;
-    gap: 8px;
 
     & span {
       text-align: center;
@@ -97,3 +75,10 @@ const RightSide = {
     gap: 16px;
   `,
 };
+
+const Title = styled.h2`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+`;
