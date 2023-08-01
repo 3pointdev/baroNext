@@ -3,13 +3,15 @@ import styled from "styled-components";
 
 interface IProps {
   title: string;
-  value?: string;
+  dataId?: string | number;
+  value?: string | number;
   onClick?: MouseEventHandler | undefined;
   dynamic?: boolean;
   isActive?: boolean;
   style?: CSSProperties;
   activeColor?: string;
   disableColor?: string;
+  alwaysHandling?: boolean;
 }
 
 interface Dynamic {
@@ -18,19 +20,30 @@ interface Dynamic {
 }
 
 export default function DefaultButton({
+  dataId,
   value,
   title,
   onClick,
   dynamic = false,
+  alwaysHandling = false,
   isActive = true,
   style,
   activeColor = "#3a79ec",
   disableColor = "#63657840",
 }: IProps) {
+  let isActiveHandling = null;
+
+  if (alwaysHandling || !dynamic) {
+    isActiveHandling = onClick;
+  } else if (dynamic && isActive) {
+    isActiveHandling = onClick;
+  }
+
   return (
     <Button
+      data-id={dataId}
       value={value}
-      onClick={dynamic && !isActive ? null : onClick}
+      onClick={isActiveHandling}
       dynamic={{ isDynamic: dynamic, isActive: isActive }}
       style={style}
       activeColor={activeColor}

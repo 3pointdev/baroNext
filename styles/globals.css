@@ -13,3 +13,25 @@ body,
   padding: 0;
   overflow: hidden;
 }
+
+/* styles.css (또는 해당하는 CSS 파일) */
+.card-animation-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.card-animation-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.card-animation-exit {
+  opacity: 1;
+}
+
+.card-animation-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}

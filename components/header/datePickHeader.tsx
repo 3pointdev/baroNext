@@ -92,5 +92,8 @@ const LeftSide = {
   `,
 };
 const RightSide = {
-  Wrap: styled.div``,
+  Wrap: styled.div`
+    display: flex;
+    gap: 16px;
+  `,
 };

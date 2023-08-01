@@ -5,7 +5,7 @@ import { plainToInstance } from "class-transformer";
 import { DatePickerButtonType, ServerUrlType } from "../../../config/constants";
 import moment from "moment";
 import ProductModel from "../../models/product/product.model";
-import { MouseEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
 import ProductDto from "../../dto/report/product.dto";
 import LotDto from "../../dto/report/lot.dto";
 
@@ -17,6 +17,7 @@ export default class ReportViewModel extends DefaultViewModel {
   public products: ProductDto[] = [];
   public productModel: ProductModel = new ProductModel();
   public lotList: { [key: string]: ILotData };
+  public filterTarget: number = 0;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -25,6 +26,7 @@ export default class ReportViewModel extends DefaultViewModel {
       products: observable,
       productModel: observable,
       lotList: observable,
+      filterTarget: observable,
 
       InsertProductList: action,
       getLotData: action,
@@ -91,6 +93,7 @@ export default class ReportViewModel extends DefaultViewModel {
         day: moment(date).format("YYYY-MM-DD"),
       };
     });
+    this.InsertProductList();
   };
 
   handleClickDay = (event: MouseEvent<HTMLButtonElement>) => {
@@ -128,5 +131,34 @@ export default class ReportViewModel extends DefaultViewModel {
         break;
     }
     this.InsertProductList();
+  };
+
+  handleChangeFilter = (event: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    console.log(value);
+    runInAction(() => {
+      this.filterTarget = +value;
+    });
+  };
+
+  handleClickLotToggle = (event: MouseEvent<HTMLButtonElement>) => {
+    const { value, dataset } = event.currentTarget;
+
+    const newProducts = [];
+    for (let index = 0; index < this.products.length; index++) {
+      if (this.products[index].machineNo === dataset.id) {
+        newProducts[index] = { ...this.products[index], toggle: value };
+        this.getLotData(
+          this.productModel.day,
+          this.products[index].data[value].lot,
+          this.products[index].machineNo
+        );
+      } else {
+        newProducts[index] = this.products[index];
+      }
+    }
+    runInAction(() => {
+      this.products = newProducts;
+    });
   };
 }

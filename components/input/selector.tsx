@@ -1,15 +1,15 @@
-import { ChangeEventHandler, ReactElement } from "react";
+import { CSSProperties, ChangeEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
 interface IProps {
   children: ReactElement | ReactElement[];
-  value: string | number;
   onChange: ChangeEventHandler;
+  style?: CSSProperties;
 }
 
-export default function Selector({ children, value, onChange }: IProps) {
+export default function Selector({ children, onChange, style }: IProps) {
   return (
-    <SelectWrap value={value} onChange={onChange}>
+    <SelectWrap onChange={onChange} style={style}>
       {children}
     </SelectWrap>
   );
