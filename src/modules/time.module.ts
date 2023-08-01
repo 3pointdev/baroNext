@@ -78,6 +78,13 @@ class TimeModule {
       return `${mm}:${ss}`;
     }
   }
+
+  public getTimeDifferenceInMs(time1: string, time2: string) {
+    const date1 = moment(time1);
+    const date2 = moment(time2);
+    const timeDiffInMs = date2.diff(date1);
+    return timeDiffInMs;
+  }
 }
 
 export default new TimeModule();

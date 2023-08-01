@@ -145,6 +145,7 @@ const HeaderContainer = styled.header`
   position: relative;
   z-index: 999;
   width: 100%;
+  min-width: 604px;
   height: 128px;
   display: flex;
   flex-direction: column;

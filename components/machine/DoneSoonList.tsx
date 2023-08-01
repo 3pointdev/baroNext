@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import styled from "styled-components";
 import IsEmpty from "../warning/isEmpty";
-import ProgressCircle from "../progress/progress-circle";
+import ProgressCircle from "../progress/progressCircle";
 import timeModule from "../../src/modules/time.module";
 
 interface IProps {
