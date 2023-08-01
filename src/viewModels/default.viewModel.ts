@@ -8,12 +8,14 @@ import authModule from "../modules/auth.module";
 import { ServerUrlType } from "../../config/constants";
 import { SocketModule } from "../modules/socket.module";
 import { NextRouter } from "next/router";
+import IndicatorViewModel from "./indicator/indicator.viewModel";
 
 export interface IDefaultProps {
   headers: any;
   host: string;
   router: NextRouter;
   userAgent: string;
+  indicatorViewModel: IndicatorViewModel;
 }
 
 interface ILogin {
@@ -23,12 +25,14 @@ interface ILogin {
 }
 export default class DefaultViewModel {
   protected api: ApiModule;
+  protected indicatorViewModel: IndicatorViewModel;
   public auth: AuthDto = new AuthDto();
   public socket: SocketModule;
   public router: NextRouter;
   constructor(props: IDefaultProps) {
-    this.api = ApiModule.getInstance();
+    this.api = ApiModule.getInstance(props.indicatorViewModel);
     this.router = props.router;
+
     makeObservable(this, {
       auth: observable,
     });

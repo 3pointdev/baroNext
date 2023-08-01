@@ -1,8 +1,8 @@
-import { CSSProperties, MouseEventHandler } from "react";
+import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
 interface IProps {
-  title: string;
+  title: string | number | string[] | number[] | ReactElement | ReactElement[];
   dataId?: string | number;
   value?: string | number;
   onClick?: MouseEventHandler | undefined;

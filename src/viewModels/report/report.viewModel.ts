@@ -32,8 +32,18 @@ export default class ReportViewModel extends DefaultViewModel {
       getLotData: action,
       handleChangeDay: action,
       handleClickDay: action,
+      dataReset: action,
     });
   }
+
+  dataReset = () => {
+    runInAction(() => {
+      this.products = [];
+      this.productModel = new ProductModel();
+      this.lotList = {};
+      this.filterTarget = 0;
+    });
+  };
 
   InsertProductList = async () => {
     await this.api

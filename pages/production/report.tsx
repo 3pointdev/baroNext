@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PageContainer from "../../components/container/pageContainer";
-import DatePickHeader from "../../components/header/datePickHeader";
+import SingleDatePickHeader from "../../components/header/singleDatePickHeader";
 import { inject, observer } from "mobx-react";
 import ReportViewModel from "../../src/viewModels/report/report.viewModel";
 import ProductDto from "../../src/dto/report/product.dto";
@@ -26,12 +26,14 @@ function ReportView(props: IProps) {
   useEffect(() => {
     reportViewModel.InsertProductList();
 
-    return () => {};
+    return () => {
+      reportViewModel.dataReset();
+    };
   }, []);
 
   return (
     <PageContainer style={{ gap: "16px", overflow: "auto" }}>
-      <DatePickHeader
+      <SingleDatePickHeader
         value={reportViewModel.productModel.day}
         onChange={reportViewModel.handleChangeDay}
         onClick={reportViewModel.handleClickDay}
@@ -62,7 +64,7 @@ function ReportView(props: IProps) {
             )}
           </>
         </Selector>
-      </DatePickHeader>
+      </SingleDatePickHeader>
       {reportViewModel.lotList && (
         <ReportCardWrap
           breakpointCols={breakPointColsObject}

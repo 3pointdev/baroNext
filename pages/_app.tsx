@@ -9,6 +9,7 @@ import { IDefaultProps } from "../src/viewModels/default.viewModel";
 import authModule from "../src/modules/auth.module";
 import { Router } from "next/router";
 import pageUrlConfig from "../config/pageUrlConfig";
+import LoadingIndicator from "../components/indicator/loadingIndicator";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
@@ -33,6 +34,7 @@ class MyApp extends App<any, any, any> {
       host: props.headers.host,
       userAgent: props.headers["user-agent"],
       router: props.router,
+      indicatorViewModel: props.indicatorViewModel,
     });
   }
 
@@ -53,7 +55,9 @@ class MyApp extends App<any, any, any> {
         {!notUseHeader.includes(this.props.router.pathname) && (
           <Header mainViewModel={this.mobxStore.mainViewModel} />
         )}
-
+        <LoadingIndicator
+          indicatorViewModel={this.mobxStore.indicatorViewModel}
+        />
         <Component {...pageProps} headers={headers} />
       </Provider>
     );

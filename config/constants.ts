@@ -72,3 +72,13 @@ export const DatePickerButtonType = {
 } as const;
 export type DatePickerButtonType =
   (typeof DatePickerButtonType)[keyof typeof DatePickerButtonType];
+
+/**
+ * DatePickerRange 타입
+ */
+export const DatePickerRangeType = {
+  START: "startDay",
+  END: "endDay",
+} as const;
+export type DatePickerRangeType =
+  (typeof DatePickerRangeType)[keyof typeof DatePickerRangeType];
