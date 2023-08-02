@@ -7,25 +7,25 @@ import { ServerUrlType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
 import MachineDto from "../../dto/machine/machine.dto";
 import { plainToInstance } from "class-transformer";
-
-export interface ILotData {
-  [key: string]: LotDto[];
-}
+import RecordDto from "../../dto/record/record.dto";
+import { ITableHeader } from "../../../components/table/defaultTable";
+import { Ref } from "react";
 
 export default class RecordViewModel extends DefaultViewModel {
   public recordModel: RecordModel = new RecordModel();
-  public tableHeader: string[] = ["기계명", "품명", "생산/목표"];
-  public tableData: string[][] = [
-    ["abc", "aa", "cc/cc"],
-    ["abc", "aa", "cc/cc"],
-    ["abc", "aa", "cc/cc"],
-  ];
+  public tableHeader: ITableHeader[] = [];
+  public list: RecordDto[] = [];
 
   constructor(props: IDefaultProps) {
     super(props);
-
+    this.tableHeader = [
+      { title: "기계명", column: "mid", align: "center" },
+      { title: "품명", column: "program", align: "left" },
+      { title: "생산/목표", column: "count", align: "center" },
+    ];
     makeObservable(this, {
       recordModel: observable,
+      list: observable,
 
       handleChangeDay: action,
     });
@@ -53,8 +53,18 @@ export default class RecordViewModel extends DefaultViewModel {
         ServerUrlType.BARO,
         `report/${this.recordModel.startDay}/${this.recordModel.endDay}`
       )
-      .then((result: AxiosResponse<MachineDto[]>) => {
-        console.log(result.data);
+      .then((result: AxiosResponse) => {
+        const data = result.data.map((item) =>
+          plainToInstance(RecordDto, {
+            mid: item.mid,
+            program: item.program,
+            count: `${item.count} / ${item.plan_count}`,
+          })
+        );
+
+        runInAction(() => {
+          this.list = data;
+        });
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);

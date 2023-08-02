@@ -13,7 +13,7 @@ export default function PageContainer({ style, children }: IProps) {
 const Container = styled.div`
   margin: 0 auto;
   width: calc(100vw - 32px);
-  height: calc(100vh - 192px);
+  height: calc(100vh - 176px);
   background: #f7f7f9;
   padding: 24px 16px;
   display: flex;

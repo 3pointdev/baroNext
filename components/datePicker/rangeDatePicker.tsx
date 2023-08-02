@@ -98,7 +98,7 @@ export default function RangeDatePicker({ start, end, onChange }: IProps) {
           </Calendar.Header>
         )}
       />
-
+      <p>~</p>
       <EndCalendarIcon icon={faCalendar} />
       <Picker
         selectsEnd
@@ -154,9 +154,10 @@ const Container = styled.div`
   position: relative;
   display: flex;
   gap: 16px;
-
+  align-items: center;
   //달력 Wrapper
   & .react-datepicker__tab-loop {
+    z-index: 101;
     position: absolute;
 
     & .react-datepicker {
