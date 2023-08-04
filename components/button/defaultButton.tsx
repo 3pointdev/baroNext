@@ -17,6 +17,7 @@ interface IProps {
 interface Dynamic {
   isDynamic: boolean;
   isActive: boolean;
+  isAlwaysHandling: boolean;
 }
 
 export default function DefaultButton({
@@ -44,7 +45,11 @@ export default function DefaultButton({
       data-id={dataId}
       value={value}
       onClick={isActiveHandling}
-      dynamic={{ isDynamic: dynamic, isActive: isActive }}
+      dynamic={{
+        isDynamic: dynamic,
+        isActive: isActive,
+        isAlwaysHandling: alwaysHandling,
+      }}
       style={style}
       activeColor={activeColor}
       disableColor={disableColor}
@@ -68,15 +73,20 @@ const Button = styled.button<{
   box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
   border-radius: 8px;
   cursor: pointer;
-  ${({ dynamic, activeColor, disableColor }) =>
-    dynamic.isDynamic === true && dynamic.isActive === false
-      ? `
-      background: ${disableColor};
-      border: 0;
-      
-      `
-      : `
-      background: ${activeColor};
-      border: 1px solid #BFBFBF;
-      `}
+
+  ${({ dynamic, activeColor, disableColor }) => {
+    if (dynamic.isDynamic === true && dynamic.isActive === false) {
+      if (!dynamic.isAlwaysHandling) {
+        return `background: ${disableColor};
+        border: 0;
+        cursor:default;`;
+      } else {
+        return `background: ${disableColor};
+        border: 0;`;
+      }
+    } else {
+      return `background: ${activeColor};
+      border: 1px solid #BFBFBF;`;
+    }
+  }}
 `;

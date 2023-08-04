@@ -7,11 +7,17 @@ interface IProps {
   onClick: MouseEventHandler;
   value?: string;
   forLeft?: boolean;
+  disable?: boolean;
 }
 
-export default function AngleButton({ onClick, value, forLeft }: IProps) {
+export default function AngleButton({
+  onClick,
+  value,
+  forLeft,
+  disable = false,
+}: IProps) {
   return (
-    <Button onClick={onClick} value={value}>
+    <Button onClick={onClick} value={value} disabled={disable}>
       <FontAwesomeIcon icon={forLeft ? faAngleLeft : faAngleRight} />
     </Button>
   );
@@ -34,5 +40,15 @@ const Button = styled.button`
 
   &:hover {
     background: #f0f0f0;
+  }
+
+  &:disabled {
+    cursor: default;
+    &:hover {
+      background: none;
+    }
+    & * {
+      color: #d9d9d9;
+    }
   }
 `;

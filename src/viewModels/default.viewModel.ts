@@ -1,4 +1,4 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import AuthDto from "../dto/auth/auth.dto";
 import { ApiModule } from "../modules/api.module";
 import { AxiosError, AxiosResponse } from "axios";
@@ -35,10 +35,13 @@ export default class DefaultViewModel {
 
     makeObservable(this, {
       auth: observable,
+      socket: observable,
+
+      popAuth: action,
     });
   }
 
-  initializeAuth = () => {
+  popAuth = () => {
     runInAction(() => {
       const storage = {
         account: window.localStorage.account,
@@ -51,9 +54,6 @@ export default class DefaultViewModel {
       this.auth = plainToInstance(AuthDto, storage);
     });
   };
-
-  //socket 1689811584467
-  //api 1689811584466
 
   insertLogin = async (params: ILogin) => {
     await this.api
@@ -83,12 +83,16 @@ export default class DefaultViewModel {
     });
   };
 
-  initializeSocket = (onMessage: (response: MessageEvent) => void) => {
+  initializeSocket = (
+    onMessage: (response: MessageEvent) => void,
+    onOpen: () => void
+  ) => {
+    this.popAuth();
     this.socket = new SocketModule({
       onMessage: onMessage,
       company: this.auth.enterprise,
       isAll: false,
     });
-    this.socket.connect();
+    this.socket.connect(onOpen);
   };
 }

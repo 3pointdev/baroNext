@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactElement } from "react";
+import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 import AngleButton from "../button/angleButton";
 import DefaultButton from "../button/defaultButton";
@@ -17,6 +17,7 @@ interface IProps {
     | string[]
     | number
     | number[];
+  style?: CSSProperties;
 }
 
 export default function SingleDatePickHeader({
@@ -24,10 +25,11 @@ export default function SingleDatePickHeader({
   onChange,
   onClick,
   children,
+  style,
 }: IProps) {
-  const isToday = moment(new Date()).format("YYYY-MM-DD") !== value;
+  const isToday = moment(new Date()).format("YYYY-MM-DD") === value;
   return (
-    <Container>
+    <Container style={style}>
       <LeftSide.Wrap>
         <AngleButton
           onClick={onClick}
@@ -35,10 +37,14 @@ export default function SingleDatePickHeader({
           value={DatePickerButtonType.PREV}
         />
         <span>{value}</span>
-        <AngleButton onClick={onClick} value={DatePickerButtonType.NEXT} />
+        <AngleButton
+          onClick={onClick}
+          value={DatePickerButtonType.NEXT}
+          disable={isToday}
+        />
         <DefaultButton
           title="오늘"
-          isActive={isToday}
+          isActive={!isToday}
           style={{
             color: "#000",
             width: "64px",

@@ -28,8 +28,11 @@ function Monitoring3View(props: IProps) {
 
     const initialize = async () => {
       await machineViewModel.getMachineList();
-      machineViewModel.initializeAuth();
-      machineViewModel.initializeSocket(machineViewModel.onMessage);
+
+      machineViewModel.initializeSocket(
+        machineViewModel.onMessage,
+        machineViewModel.onOpen
+      );
     };
 
     initialize();

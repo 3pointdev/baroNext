@@ -95,11 +95,8 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeContact}
               placeholder="등록된 연락처"
             />
-            <Selector
-              value={authViewModel.findAccount.inquiry}
-              onChange={authViewModel.handleChangeCategory}
-            >
-              <SelectorOption title="문의 내용" value={""} disabled />
+            <Selector onChange={authViewModel.handleChangeCategory}>
+              <SelectorOption title="문의 내용" value={""} selected disabled />
               <SelectorOption title="아이디 문의" value={"id"} />
               <SelectorOption title="비밀번호 문의" value={"password"} />
             </Selector>

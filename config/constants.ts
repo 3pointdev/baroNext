@@ -10,10 +10,22 @@ export const ServerUrlType = {
 export type ServerUrlType = (typeof ServerUrlType)[keyof typeof ServerUrlType];
 
 /**
+ * 엣지머신 소켓 요청데이터 타입
+ */
+export const EdgeMachineSocketDataType = {
+  NOTI: "noti",
+  ALL: "all",
+} as const;
+export type EdgeMachineSocketDataType =
+  (typeof EdgeMachineSocketDataType)[keyof typeof EdgeMachineSocketDataType];
+
+/**
  * 소켓 리스폰스 타입
  */
 export const SocketResponseType = {
   MACHINE: "EDGE_MACHINES_STAT",
+  CALL_FUNC: "CALL_FUNC_RESULT",
+  CALL_FUNC_FAIL: "CALL_FUNC_FAIL",
   CONNECT: "EDGE_CONNECT",
   CLOSED: "EDGE_CLOSED",
 } as const;
@@ -82,3 +94,13 @@ export const DatePickerRangeType = {
 } as const;
 export type DatePickerRangeType =
   (typeof DatePickerRangeType)[keyof typeof DatePickerRangeType];
+
+/**
+ * 정렬타입
+ */
+export const SortType = {
+  DEFAULT: "default",
+  ASCENDING: "ascending",
+  DESCENDING: "descending",
+} as const;
+export type SortType = (typeof SortType)[keyof typeof SortType];

@@ -208,17 +208,14 @@ export class ApiModule {
   // }
 
   private handleSuccess = <T>(response: AxiosResponse<T>): AxiosResponse<T> => {
-    if (typeof this.indicatorViewModel !== "undefined") {
-      this.indicatorViewModel.useIndicator(false);
-    }
+    this.indicatorViewModel.useIndicator(false);
+
     return response;
   };
 
   private handleError = (error: any): AxiosError => {
     const { data } = error.response;
-    if (typeof this.indicatorViewModel !== "undefined") {
-      this.indicatorViewModel.useIndicator(false);
-    }
+    this.indicatorViewModel.useIndicator(false);
     const errorDto = plainToInstance(AxiosError, data);
 
     throw errorDto;

@@ -10,7 +10,7 @@ class PageUrlConfig {
   public work = "/work";
   public workProgram = "/work/program";
   public machine = "/machine";
-  public machineAlarm = "/machine/alarm";
+  public machineAlarm = "/machine/notification";
   public machineInfo = "/machine/info";
   public monitor = "/monitor";
   public monitorSetting = "/monitor/setting";

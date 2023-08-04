@@ -1,8 +1,7 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { NextRouter } from "next/router";
 
 export default class IndicatorViewModel {
-  public indicator: boolean = false;
+  public indicator: number = 0;
   constructor() {
     makeObservable(this, {
       indicator: observable,
@@ -12,7 +11,11 @@ export default class IndicatorViewModel {
 
   public useIndicator = (state: boolean) => {
     runInAction(() => {
-      this.indicator = state;
+      if (state === true) {
+        this.indicator = this.indicator + 1;
+      } else {
+        this.indicator = this.indicator - 1;
+      }
     });
   };
 }

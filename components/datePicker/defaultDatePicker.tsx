@@ -140,6 +140,7 @@ const CalendarIcon = styled(FontAwesomeIcon)`
 `;
 
 const Picker = styled(DatePicker)`
+  z-index: 101;
   border: 1px solid #d8d8dd;
   border-radius: 8px;
   padding: 6px 10px;

@@ -30,8 +30,11 @@ function Monitoring2View(props: IProps) {
     const initialize = async () => {
       await machineViewModel.getMachineList();
       machineViewModel.setRenderRange();
-      machineViewModel.initializeAuth();
-      machineViewModel.initializeSocket(machineViewModel.onMessage);
+
+      machineViewModel.initializeSocket(
+        machineViewModel.onMessage,
+        machineViewModel.onOpen
+      );
     };
 
     initialize();
