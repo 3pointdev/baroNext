@@ -19,6 +19,7 @@ import MachineDto from "../src/dto/machine/machine.dto";
 import PageContainer from "../components/container/pageContainer";
 import DoneMachine from "../components/machine/doneSoonList";
 import MachineViewModel from "../src/viewModels/machine/machine.viewModel";
+import CardLayout from "../components/layout/cardLayout";
 
 ChartJS.register(
   CategoryScale,
@@ -49,7 +50,10 @@ function MainView(props: IProps) {
     const initialize = async () => {
       await machineViewModel.getMachineList();
       machineViewModel.getProcessedQuantity();
-      machineViewModel.initializeSocket(machineViewModel.onMessage);
+      machineViewModel.initializeSocket(
+        machineViewModel.onMessage,
+        machineViewModel.onOpen
+      );
     };
 
     initialize();
@@ -66,7 +70,15 @@ function MainView(props: IProps) {
     <PageContainer>
       <Container.Time>{time}</Container.Time>
       <Container.RowFlex>
-        <Container.Chart>
+        <CardLayout
+          style={{
+            width: " 690px",
+            height: "410px",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: " 24px",
+          }}
+        >
           <SectionTitle>기계별 가공 수량</SectionTitle>
           {machineViewModel.processChart ? (
             <Bar
@@ -78,13 +90,29 @@ function MainView(props: IProps) {
               <SectionTitle>가공 기계가 없습니다.</SectionTitle>
             </div>
           )}
-        </Container.Chart>
-        <Container.Imminent>
+        </CardLayout>
+        <CardLayout
+          style={{
+            minWidth: "382px",
+            gap: "32px",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+          }}
+        >
           <SectionTitle>공정 임박 기계</SectionTitle>
           <DoneMachine list={machineViewModel.machines} />
-        </Container.Imminent>
+        </CardLayout>
       </Container.RowFlex>
-      <Container.MachineTable>
+      <CardLayout
+        style={{
+          margin: "0 auto",
+          width: "1152px",
+          alignItems: "center",
+          gap: "32px",
+          padding: "24px",
+        }}
+      >
         <SectionTitle>전체 공정 현황</SectionTitle>
         <MachineWrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {
@@ -96,7 +124,7 @@ function MainView(props: IProps) {
             );
           })}
         </MachineWrap>
-      </Container.MachineTable>
+      </CardLayout>
     </PageContainer>
   );
 }
@@ -108,6 +136,11 @@ const Container = {
     margin: 0 auto;
     display: flex;
     gap: 32px;
+    & canvas {
+      max-width: 690px !important;
+      max-height: 428px !important;
+      margin: -12px 0 0 -12px;
+    }
   `,
   Time: styled.p`
     width: 100%;
@@ -116,51 +149,6 @@ const Container = {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: -16px;
-  `,
-  Chart: styled.section`
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-    flex-shrink:0;
-    background: #fff;
-    border-radius: 8px;
-    width: 690px;
-    height 410px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content: space-between;
-    padding: 24px;
-
-    & canvas {
-      max-width: 690px !important;
-      max-height: 428px !important;
-      margin: -12px 0 0 -12px;
-  }
-  `,
-  Imminent: styled.section`
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-    background: #fff;
-    border-radius: 8px;
-    min-width: 382px;
-    height 410px;
-    display:flex;
-    flex-direction:column;
-    gap:32px;
-    align-items:center;
-    justify-content: center;
-    padding: 24px;
-
-  `,
-  MachineTable: styled.section`
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 8px;
-    width: 1152px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 32px;
-    padding: 24px;
   `,
 };
 

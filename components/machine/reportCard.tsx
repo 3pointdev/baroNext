@@ -13,6 +13,7 @@ import {
   faBuildingCircleXmark,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
+import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   data: ProductDto;
@@ -44,34 +45,36 @@ export default function ReportCard({
         <Title.MachineNumber>{data.machineNo}</Title.MachineNumber>
         <Title.MachineName>{data.name}</Title.MachineName>
       </Title.Wrap>
-      <Layout>
+      <CardLayout>
         <LayoutTitle>오늘의 조업시간</LayoutTitle>
         <p>{`시작시간 : ${data.data[0].start}`}</p>
         <p>{`종료시간 : ${data.data[data.data.length - 1].end}`}</p>
-      </Layout>
-      <Layout>
+      </CardLayout>
+      <CardLayout>
         <LayoutTitle>LOT 변경</LayoutTitle>
-        {data.data.map((settingData: ProductDataDto, key: number) => {
-          const isNotFirst = key !== 0;
-          return (
-            <div key={`lot_item_${key}`}>
-              {isNotFirst && (
-                <LotChange.Item className="is_not_first">
-                  <LotChange.Program>세팅변경 시간</LotChange.Program>
-                  <LotChange.Time>{`${data.data[key - 1].end} ~ ${
-                    settingData.start
-                  }`}</LotChange.Time>
+        <>
+          {data.data.map((settingData: ProductDataDto, key: number) => {
+            const isNotFirst = key !== 0;
+            return (
+              <div key={`lot_item_${key}`}>
+                {isNotFirst && (
+                  <LotChange.Item className="is_not_first">
+                    <LotChange.Program>세팅변경 시간</LotChange.Program>
+                    <LotChange.Time>{`${data.data[key - 1].end} ~ ${
+                      settingData.start
+                    }`}</LotChange.Time>
+                  </LotChange.Item>
+                )}
+                <LotChange.Item>
+                  <LotChange.Program>{settingData.program}</LotChange.Program>
+                  <LotChange.Time>{`${settingData.start} ~ ${settingData.end}`}</LotChange.Time>
                 </LotChange.Item>
-              )}
-              <LotChange.Item>
-                <LotChange.Program>{settingData.program}</LotChange.Program>
-                <LotChange.Time>{`${settingData.start} ~ ${settingData.end}`}</LotChange.Time>
-              </LotChange.Item>
-            </div>
-          );
-        })}
-      </Layout>
-      <Layout>
+              </div>
+            );
+          })}
+        </>
+      </CardLayout>
+      <CardLayout>
         <ManageCycleTime.ButtonWrap>
           {data.data.map((settingData: ProductDataDto, key: number) => {
             console.log(active, key, active === key);
@@ -131,8 +134,8 @@ export default function ReportCard({
             <p>{timeModule.secToMMSS(data.data[active].idle)}</p>
           </ManageCycleTime.AverageItem>
         </ManageCycleTime.OperationCount>
-      </Layout>
-      <Layout>
+      </CardLayout>
+      <CardLayout>
         {lot && (
           <BarChart
             data={lot[data.data[active].lot]}
@@ -190,7 +193,7 @@ export default function ReportCard({
             <Graph.Time>{timeModule.msToHHMM(notWorkTime)}</Graph.Time>
           </div>
         </Graph.PercentWrap>
-      </Layout>
+      </CardLayout>
     </Container>
   );
 }
@@ -206,20 +209,6 @@ const Container = styled.div`
   gap: 12px;
   height: fit-content;
   margin-bottom: 16px;
-`;
-
-const Layout = styled.div`
-  position: relative;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  & p {
-    font-weight: 400;
-  }
 `;
 
 const LayoutTitle = styled.h4`

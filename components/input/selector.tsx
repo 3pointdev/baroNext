@@ -5,11 +5,17 @@ interface IProps {
   children: ReactElement | ReactElement[];
   onChange: ChangeEventHandler;
   style?: CSSProperties;
+  defaultValue?: string | number;
 }
 
-export default function Selector({ children, onChange, style }: IProps) {
+export default function Selector({
+  children,
+  onChange,
+  style,
+  defaultValue,
+}: IProps) {
   return (
-    <SelectWrap onChange={onChange} style={style}>
+    <SelectWrap onChange={onChange} style={style} defaultValue={defaultValue}>
       {children}
     </SelectWrap>
   );
@@ -28,6 +34,7 @@ const SelectWrap = styled.select`
   -moz-appearance: none;
   appearance: none;
   color: #6e6e6e;
+  flex-shrink: 0;
 
   background-image: linear-gradient(45deg, transparent 50%, gray 50%),
     linear-gradient(135deg, gray 50%, transparent 50%),

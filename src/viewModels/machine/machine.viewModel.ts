@@ -8,23 +8,50 @@ import {
   BinaryMessageType,
   ServerUrlType,
   SocketResponseType,
+  SortType,
 } from "../../../config/constants";
 import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
+import TransmitterDto from "../../dto/transmitters/transmitters.dto";
+import { ServerResponse } from "../../modules/api.module";
+import chartModule from "../../modules/chart.module";
+import mapperModule from "../../modules/mapper.module";
+import { ITableHeader } from "../../../components/table/defaultTable";
+import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
+import NotificationDto from "../../dto/machine/notification.dto";
+import NotificationModel from "../../models/machine/notification.model";
+import NotificationListDto from "../../dto/machine/notificationList.dto";
+import moment from "moment";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
   public realTimeData: RealTimeDataDto[] = [];
   public processedQuantity: ProcessedQuantityDto[] = [];
   public processChart: any = false;
+  public edgeData: TransmitterDto[] = [];
+
+  public machineSummary: MachineSummaryDto[] = [];
+  public tableHeader: ITableHeader[] = [];
+  public notiList: NotificationListDto = new NotificationListDto();
+  public notiModel: NotificationModel = new NotificationModel();
 
   constructor(props: IDefaultProps) {
     super(props);
-
+    this.tableHeader = [
+      { title: "기계명", column: "mid", align: "center", size: "20vw" },
+      { title: "알람일자", column: "date", align: "left", size: "20vw" },
+      { title: "알람내용", column: "message", align: "left", size: "55vw" },
+    ];
     makeObservable(this, {
       machines: observable,
       realTimeData: observable,
       processedQuantity: observable,
       processChart: observable,
+      edgeData: observable,
+      machineSummary: observable,
+      tableHeader: observable,
+      notiList: observable,
+      notiModel: observable,
 
       onMessage: action,
       getMachineList: action,
@@ -32,6 +59,29 @@ export default class MachineViewModel extends DefaultViewModel {
       setChart: action,
     });
   }
+
+  insertInstalledTransmitters = async () => {
+    await this.api
+      .post(ServerUrlType.APIS, "/api/cloud/installedTransmitters")
+      .then((result: AxiosResponse<ServerResponse<TransmitterDto[]>>) => {
+        const data = result.data.data.map((item) =>
+          plainToInstance(TransmitterDto, item)
+        );
+        runInAction(() => {
+          this.edgeData = data;
+        });
+
+        data.forEach((item: TransmitterDto) => {
+          this.insertMachineStat(item);
+        });
+      });
+  };
+
+  public insertMachineStat = async (item: TransmitterDto) => {
+    await this.api.post(ServerUrlType.EDGE, "/api/edge/edge_machine_stat", {
+      transmitter: item.id,
+    });
+  };
 
   // 모니터번호(path)에 따라 렌더링할 인덱스 범위를 계산
   setRenderRange = () => {
@@ -41,96 +91,6 @@ export default class MachineViewModel extends DefaultViewModel {
     return { start, end };
   };
 
-  onMessage = async (response: MessageEvent) => {
-    if (typeof response.data === "object") {
-      //바이너리 메시지
-      const updateData = await response.data.text();
-      const dataArray = updateData.split("|");
-      switch (dataArray[1]) {
-        case BinaryMessageType.NOTI:
-          const resultNoti = this.dataTransformForNoti(dataArray);
-          const newMachinesByNoti: MachineDto[] = [];
-          const newRealTimeDataByNoti: RealTimeDataDto[] = [];
-
-          for (let i = 0; i < this.machines.length; i++) {
-            if (this.machines[i].id === resultNoti.machine.id) {
-              newMachinesByNoti[i] = resultNoti.machine;
-              newRealTimeDataByNoti[i] = resultNoti.rtd;
-            } else {
-              newMachinesByNoti[i] = this.machines[i];
-              newRealTimeDataByNoti[i] = this.realTimeData[i];
-            }
-          }
-
-          runInAction(() => {
-            this.machines = newMachinesByNoti.sort(
-              (a, b) => a.machineNo - b.machineNo
-            );
-            this.realTimeData = newRealTimeDataByNoti.sort(
-              (a, b) => a.machineNo - b.machineNo
-            );
-          });
-          break;
-        case BinaryMessageType.PART_COUNT:
-          console.log("part", dataArray);
-          const resultPartCount = this.dataTransformForPartCount(dataArray);
-          const newMachinesByPartCount: MachineDto[] = [];
-
-          for (let i = 0; i < this.machines.length; i++) {
-            if (this.machines[i].id === resultPartCount.id) {
-              newMachinesByPartCount[i] = resultPartCount;
-            } else {
-              newMachinesByPartCount[i] = this.machines[i];
-            }
-          }
-
-          runInAction(() => {
-            this.machines = newMachinesByPartCount.sort(
-              (a, b) => a.machineNo - b.machineNo
-            );
-          });
-
-          break;
-        case BinaryMessageType.MESSAGE:
-          console.log("message");
-          break;
-        case BinaryMessageType.ALARM:
-          console.log("alarm");
-          break;
-      }
-    } else {
-      //오브젝트 메시지
-      const objectMessage = JSON.parse(response.data);
-
-      switch (objectMessage.response) {
-        case SocketResponseType.MACHINE:
-          //object
-          const newMachines: MachineDto[] = [];
-          const newRealTimeData: RealTimeDataDto[] = [];
-          for (let i = 0; i < objectMessage.data.length; i++) {
-            const result = this.dataTransformForMachineStat(
-              objectMessage.data[i]
-            );
-            newMachines.push(result.machine);
-            newRealTimeData.push(result.rtd);
-          }
-          runInAction(() => {
-            this.machines = newMachines.sort(
-              (a, b) => a.machineNo - b.machineNo
-            );
-            this.realTimeData = newRealTimeData.sort(
-              (a, b) => a.machineNo - b.machineNo
-            );
-          });
-          break;
-        case SocketResponseType.CONNECT:
-          break;
-        case SocketResponseType.CLOSED:
-          break;
-      }
-    }
-  };
-
   getMachineList = async () => {
     await this.api
       .get(ServerUrlType.BARO, "/machine/currentList")
@@ -138,7 +98,7 @@ export default class MachineViewModel extends DefaultViewModel {
         const data = result.data;
 
         const newMachines = data.map((item) =>
-          this.dataTransformForCurrentList(item)
+          mapperModule.currentListMapper(item)
         );
         runInAction(() => {
           this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
@@ -155,8 +115,8 @@ export default class MachineViewModel extends DefaultViewModel {
       .get(ServerUrlType.BARO, "/baro")
       .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
         runInAction(() => {
-          const data = result.data.map((data: ProcessedQuantityDto) =>
-            plainToInstance(ProcessedQuantityDto, data)
+          const data = result.data.map((item: ProcessedQuantityDto) =>
+            plainToInstance(ProcessedQuantityDto, item)
           );
           this.setChart(data);
           this.processedQuantity = data;
@@ -168,56 +128,295 @@ export default class MachineViewModel extends DefaultViewModel {
       });
   };
 
+  getList = async () => {
+    await this.api
+      .get(ServerUrlType.BARO, "/mon/mlist")
+      .then((result: AxiosResponse<MachineSummaryDto[]>) => {
+        const data = result.data.map((item: MachineSummaryDto) =>
+          plainToInstance(MachineSummaryDto, item)
+        );
+
+        runInAction(() => {
+          this.machineSummary = data;
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  insertListNotification = async (mid?: string) => {
+    await this.api
+      .post(ServerUrlType.BARO, "/alarm", {
+        start: this.notiModel.startDay,
+        end: this.notiModel.endDay,
+        mkey: this.notiModel.mkey === 0 ? "%" : this.notiModel.mkey,
+      })
+      .then((result: AxiosResponse<NotificationDto[]>) => {
+        const data = result.data.map((item: NotificationDto) => {
+          return { date: item.date, message: item.message, mid: item.mid };
+        });
+
+        const filterData = mid
+          ? this.machineFilter(mid, data)
+          : this.searchKeywordFilter(this.notiModel.searchKeyword, data);
+
+        runInAction(() => {
+          this.notiList = plainToInstance(NotificationListDto, {
+            sort: SortType.DESCENDING,
+            notifications: filterData,
+            machineFilter: "default",
+          });
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  searchKeywordFilter = (keyword: string, result: NotificationDto[]) => {
+    if (keyword === "") {
+      return result;
+    }
+
+    return result.filter((item: NotificationDto) =>
+      item.message.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+    );
+  };
+
+  machineFilter = (mid: string, result: NotificationDto[]) => {
+    return result.filter((item: NotificationDto) =>
+      item.mid.toLocaleLowerCase().includes(mid.toLocaleLowerCase())
+    );
+  };
+
+  handleChangeDay = (date: string, type: string) => {
+    runInAction(() => {
+      this.notiModel = {
+        ...this.notiModel,
+        [type]: moment(date).format("YYYY-MM-DD"),
+      };
+      this.insertListNotification();
+    });
+  };
+
+  handleChangeSort = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value === this.notiList.sort) return;
+
+    runInAction(() => {
+      this.notiList = {
+        notifications: [...this.notiList.notifications.reverse()],
+        machineFilter: "default",
+        sort: value,
+      };
+    });
+  };
+
+  handleChangeMachineFilter = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value === this.notiList.machineFilter) return;
+
+    runInAction(() => {
+      this.notiList = {
+        notifications: this.notiList.notifications,
+        sort: this.notiList.sort,
+        machineFilter: value,
+      };
+      this.insertListNotification(value);
+    });
+  };
+
+  handleChangeSearchKeyword = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    runInAction(() => {
+      this.notiModel = { ...this.notiModel, searchKeyword: value };
+    });
+  };
+
+  handleKeyDownSearch = (event: KeyboardEvent<HTMLInputElement>) => {
+    const { key } = event;
+
+    if (key === "Enter") {
+      this.insertListNotification();
+    }
+  };
+  handleClickSearch = (event: MouseEvent<SVGSVGElement>) => {
+    this.insertListNotification();
+  };
+
+  // ********************소켓******************** //
+  // ********************소켓******************** //
+  // ********************소켓******************** //
+  // ********************소켓******************** //
+  // ********************소켓******************** //
+
+  onOpen = () => {
+    console.log("WebSocket connected!!");
+
+    //소켓 연결완료 후 사용자가 소켓서버 이용을 시작함을 서버에 알리는 이벤트
+    this.socket.sendEvent({ token: this.auth.token });
+
+    this.insertInstalledTransmitters();
+  };
+
+  onMessage = async (response: MessageEvent) => {
+    if (typeof response.data === "object") {
+      //바이너리 메시지
+      const updateData = await response.data.text();
+      const dataArray = updateData.split("|");
+      switch (dataArray[1]) {
+        case BinaryMessageType.NOTI:
+          const mappingNoti = mapperModule.notiMapper(
+            dataArray,
+            this.machines,
+            this.realTimeData
+          );
+          this.handleNoti(mappingNoti);
+          break;
+        case BinaryMessageType.PART_COUNT:
+          const mappingPartCount = mapperModule.partCountMapper(
+            dataArray,
+            this.machines
+          );
+          this.handlePartCount(mappingPartCount);
+          break;
+        case BinaryMessageType.MESSAGE:
+          console.log("message");
+          break;
+        case BinaryMessageType.ALARM:
+          console.log("alarm");
+          break;
+      }
+    } else {
+      //오브젝트 메시지
+      const objectMessage = JSON.parse(response.data);
+
+      switch (objectMessage.response) {
+        case SocketResponseType.MACHINE:
+          //object
+          this.handleMachineStat(objectMessage.data);
+          break;
+        case SocketResponseType.CONNECT:
+          break;
+        case SocketResponseType.CLOSED:
+          break;
+      }
+    }
+  };
+
+  handleNoti = (mappingNoti: { machine: MachineDto; rtd: RealTimeDataDto }) => {
+    const newMachinesByNoti: MachineDto[] = [];
+    const newRealTimeDataByNoti: RealTimeDataDto[] = [];
+
+    for (let i = 0; i < this.machines.length; i++) {
+      if (this.machines[i].id === mappingNoti.machine.id) {
+        newMachinesByNoti[i] = mappingNoti.machine;
+        newRealTimeDataByNoti[i] = mappingNoti.rtd;
+      } else {
+        newMachinesByNoti[i] = this.machines[i];
+        newRealTimeDataByNoti[i] = this.realTimeData[i];
+      }
+    }
+
+    runInAction(() => {
+      this.machines = newMachinesByNoti.sort(
+        (a, b) => a.machineNo - b.machineNo
+      );
+      this.realTimeData = newRealTimeDataByNoti.sort(
+        (a, b) => a.machineNo - b.machineNo
+      );
+    });
+  };
+
+  handlePartCount = (mappingPartCount: MachineDto) => {
+    const newMachinesByPartCount: MachineDto[] = [];
+
+    for (let i = 0; i < this.machines.length; i++) {
+      if (this.machines[i].id === mappingPartCount.id) {
+        newMachinesByPartCount[i] = mappingPartCount;
+      } else {
+        newMachinesByPartCount[i] = this.machines[i];
+      }
+    }
+
+    runInAction(() => {
+      this.machines = newMachinesByPartCount.sort(
+        (a, b) => a.machineNo - b.machineNo
+      );
+    });
+  };
+
+  handleMachineStat = (statArray) => {
+    const newMachines: MachineDto[] = [];
+    const newRealTimeData: RealTimeDataDto[] = [];
+    for (let i = 0; i < statArray.length; i++) {
+      const result = mapperModule.machineStatMapper(
+        statArray[i],
+        this.machines
+      );
+      newMachines.push(result.machine);
+      newRealTimeData.push(result.rtd);
+    }
+    runInAction(() => {
+      this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
+      this.realTimeData = newRealTimeData.sort(
+        (a, b) => a.machineNo - b.machineNo
+      );
+    });
+  };
+
+  // ********************차트******************** //
+  // ********************차트******************** //
+  // ********************차트******************** //
+  // ********************차트******************** //
+  // ********************차트******************** //
+
   setChart = (data: ProcessedQuantityDto[]) => {
     runInAction(() => {
       this.processChart = {
-        options: {
-          maxBarThickness: 80,
-          responsive: true,
-          plugins: {
-            legend: {
+        options: chartModule.setChart({
+          tooltip: {
+            callback: {
+              title: (context) => {
+                return "";
+              },
+              label: (context) => {
+                let label = `${data[context.dataIndex].mid} : ${
+                  context.formattedValue
+                }`;
+                return label;
+              },
+            },
+          },
+          x: {
+            grid: {
               display: false,
+              tickLength: 8, // 눈금 길이를 지정합니다.
             },
-            tooltip: {
-              callbacks: {
-                title: (context) => {
-                  return "";
-                },
-                label: (context) => {
-                  let label = `${data[context.dataIndex].mid} : ${
-                    context.formattedValue
-                  }`;
-                  return label;
-                },
-              },
+            title: {
+              align: "end",
+              display: true,
+              text: "호기",
+            },
+            ticks: { padding: 0 },
+          },
+          y: {
+            title: {
+              align: "end",
+              display: true,
+              text: "총 가공 수량(개)",
+            },
+            ticks: {
+              padding: 0,
+              margin: 0,
             },
           },
-          scales: {
-            x: {
-              grid: {
-                display: false,
-                tickLength: 8, // 눈금 길이를 지정합니다.
-              },
-              title: {
-                align: "end",
-                display: true,
-                text: "호기",
-              },
-              ticks: { padding: 0 },
-            },
-            y: {
-              title: {
-                align: "end",
-                display: true,
-                text: "총 가공 수량(개)",
-              },
-              ticks: {
-                padding: 0,
-                margin: 0,
-              },
-            },
-          },
-        },
+          thickness: 80,
+        }),
         data: {
           labels: data.map((item) => item.machineNo),
           datasets: [
@@ -230,138 +429,4 @@ export default class MachineViewModel extends DefaultViewModel {
       };
     });
   };
-
-  dataTransformForCurrentList(item) {
-    const plainData = {
-      active: item.active_time,
-      machine_no: item.machine_no,
-      Mid: item.mid,
-      Id: item.mkey,
-      PartCount: item.process_count,
-      PlanCount: item.plan_count,
-      prdct_end: item.prdct_end,
-      start_ymdt: item.start_ymdt,
-      Block: item.process,
-      Program: item.process.includes("(")
-        ? item.process.split("(")[1].replace(")", "")
-        : item.process,
-      wait: item.wait,
-      pause: false,
-    };
-
-    return plainToInstance(MachineDto, plainData);
-  }
-
-  dataTransformForMachineStat(item) {
-    const matchData = this.machines.find((data) => +data.id === +item.Id);
-
-    const plainMachineData = {
-      Alarm: item.Alarm,
-      active: matchData.active,
-      wait: matchData.wait,
-      Block: item.Block,
-      CycleTime: item.CycleTime,
-      Estop: item.Estop,
-      Execution: item.Execution,
-      ExecutionTime: item.ExecutionTime,
-      Id: item.Id,
-      Mcode: item.Mcode,
-      Message: item.Message,
-      MessageTime: item.MessageEvent,
-      Mid: item.Mid,
-      Mode: item.Mode,
-      ModeTime: item.ModeTime,
-      PartCount: item.PartCount,
-      PlanCount: item.PlanCount,
-      Power: item.Power,
-      Program: item.Program.includes("(")
-        ? item.Program.split("(")[1].replace(")", "")
-        : item.Program,
-      machine_no: matchData.machineNo,
-      prdct_end: matchData.prdctEnd,
-      start_ymdt: matchData.startYmdt,
-      pause: matchData.pause,
-      doneTime: matchData.active * (item.PlanCount - item.PartCount),
-    };
-    const plainRealTimeData = {
-      Id: item.Id,
-      machineNo: matchData.machineNo,
-      S1load: item.Data.S1load,
-      S1speed: item.Data.S1speed,
-      Xact: item.Data.Xact,
-      Xload: item.Data.Xload,
-      Zact: item.Data.Zact,
-      Zload: item.Data.Zload,
-      f_command: item.Data.f_command,
-      line: item.Data.line,
-      path_feedrate: item.Data.path_feedrate,
-      path_position: item.Data.path_position,
-      program_comment: item.Data.program_comment,
-      tool_id: item.Data.tool_id,
-      Bact: item.Data.Bact,
-      Bload: item.Data.Bload,
-      Cact: item.Data.Cact,
-      Cload: item.Data.Cload,
-      S2load: item.Data.S2load,
-      S2speed: item.Data.S2speed,
-      S320load: item.Data.S320load,
-      S320speed: item.Data.S320speed,
-      Yact: item.Data.Yact,
-      Yload: item.Data.Yload,
-      path_position2: item.Data.path_position2,
-      program_comment2: item.Data.program_comment2,
-      tool_id2: item.Data.tool_id2,
-    };
-
-    return {
-      machine: plainToInstance(MachineDto, plainMachineData),
-      rtd: plainToInstance(RealTimeDataDto, plainRealTimeData),
-    };
-  }
-
-  dataTransformForNoti(dataArray: string[]): {
-    machine: MachineDto;
-    rtd: RealTimeDataDto;
-  } {
-    const matchData = this.machines.find((data) => +data.id === +dataArray[4]);
-    const matchRTData = this.realTimeData.find(
-      (data) => +data.id === +dataArray[4]
-    );
-
-    if (matchData === undefined || matchRTData === undefined) {
-      throw "아직 머신상태가 수신되지 않았습니다.";
-    }
-
-    for (let i = 6; i < dataArray.length; i = i + 2) {
-      const targetKey = dataArray[i].toLowerCase().replace("_", "");
-      const RtKey = Object.keys(matchRTData).find(
-        (key: string) => key.toLowerCase().replace("_", "") === targetKey
-      );
-      if (RtKey) {
-        matchRTData[RtKey] = dataArray[i + 1];
-      } else {
-        const MachineKey = Object.keys(matchData).find(
-          (key) => key.toLowerCase().replace("_", "") === targetKey
-        );
-        if (MachineKey) {
-          matchData[MachineKey] = dataArray[i + 1];
-        }
-      }
-    }
-
-    matchData.doneTime =
-      matchData.active * (matchData.planCount - matchData.partCount);
-
-    return { machine: matchData, rtd: matchRTData };
-  }
-  dataTransformForPartCount(dataArray: string[]) {
-    const matchData = this.machines.find((data) => +data.id === +dataArray[13]);
-
-    matchData.active = +dataArray[11];
-    matchData.partCount = +dataArray[5];
-    matchData.planCount = +dataArray[6];
-    matchData.wait = +dataArray[10];
-
-    return matchData;
-  }
 }

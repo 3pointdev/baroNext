@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import styled from "styled-components";
 import LotDto from "../../src/dto/report/lot.dto";
+import chartModule from "../../src/modules/chart.module";
 
 ChartJS.register(
   LinearScale,
@@ -66,63 +67,56 @@ export default function LotBarChart({ data = [], averageLotTime }: IProps) {
     ],
   };
 
-  // 차트 옵션 설정
-  const chartOptions = {
-    maintainAspectRatio: false,
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        enabled: false,
-      },
-      labels: { padding: 430 },
+  const chartOptions = chartModule.setChart({
+    tooltip: {
+      enabled: false,
     },
-    scales: {
-      x: {
+    x: {
+      display: false,
+      grid: {
         display: false,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          display: false,
-        },
-        max: 45, // 축의 최대값을 강제합니다.
-        min: 0, // 축의 최소값을 강제합니다.
       },
-      y: {
+      ticks: {
         display: false,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          display: false,
-        },
-        beginAtZero: true,
-        max: 200,
-        min: 0,
       },
+      max: 45, // 축의 최대값을 강제합니다.
+      min: 0, // 축의 최소값을 강제합니다.
     },
-  };
-
+    y: {
+      display: false,
+      grid: {
+        display: false,
+      },
+      ticks: {
+        display: false,
+      },
+      beginAtZero: true,
+      max: 200,
+      min: 0,
+    },
+    aspect: false,
+  });
   return (
-    <>
+    <Container>
       <TitleBadge>준비교체 그래프</TitleBadge>
-      <Container count={data.length}>
-        <CrossLine />
+      <CrossLine />
+      <ChartWrap count={data.length}>
         <Bar data={chartData} options={chartOptions} />
-      </Container>
-    </>
+      </ChartWrap>
+    </Container>
   );
 }
 
-const Container = styled.div<{ count: number }>`
+const Container = styled.div`
+  position: relative;
+`;
+
+const ChartWrap = styled.div<{ count: number }>`
   position: relative;
   overflow-y: hidden;
   overflow-x: auto;
   height: 104px;
-  max-width: 30vw;
+  max-width: 100%;
   margin-top: 32px;
 
   & canvas {
@@ -131,17 +125,12 @@ const Container = styled.div<{ count: number }>`
     min-width: ${({ count }) => count * 6}px !important;
     max-height: 100%;
   }
-
-  @media screen and (max-width: 1440px) {
-    max-width: 43vw;
-  }
 `;
 
 const CrossLine = styled.div`
   position: absolute;
-  top: 50%;
+  top: 61%;
   z-index: 1;
-
   width: 100%;
   border: 1px dashed orange;
 `;
@@ -149,7 +138,7 @@ const CrossLine = styled.div`
 const TitleBadge = styled.div`
   position: absolute;
   right: 16px;
-  top: 16px;
+  top: 0px;
   border: 1px solid #eaeaec;
   background: none;
   border-radius: 8px;

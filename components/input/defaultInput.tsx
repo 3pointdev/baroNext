@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   ChangeEventHandler,
   HTMLInputTypeAttribute,
   KeyboardEventHandler,
@@ -18,6 +19,8 @@ interface IProps {
   reference?: RefObject<HTMLInputElement>;
   children?: ReactElement | ReactElement[];
   onKeyDown?: KeyboardEventHandler;
+  boxstyle?: CSSProperties;
+  style?: CSSProperties;
 }
 
 export default function DefaultInput({
@@ -31,10 +34,13 @@ export default function DefaultInput({
   reference,
   children,
   onKeyDown,
+  boxstyle,
+  style,
 }: IProps) {
   return (
-    <InputWrap>
+    <InputWrap style={boxstyle}>
       <InputColumn
+        style={style}
         type={type}
         value={value}
         name={name}
@@ -53,6 +59,11 @@ const InputWrap = styled.div`
   height: 56px;
   width: 100%;
   position: relative;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   & .view_password_icon {
     width: 24px;
     height: 24px;

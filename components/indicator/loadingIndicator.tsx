@@ -1,8 +1,6 @@
 import { inject, observer } from "mobx-react";
-import MainViewModel from "../../src/viewModels/main/main.viewModel";
 import styled, { keyframes } from "styled-components";
 import IndicatorViewModel from "../../src/viewModels/indicator/indicator.viewModel";
-import { useEffect } from "react";
 
 interface IProps {
   indicatorViewModel: IndicatorViewModel;
@@ -10,7 +8,7 @@ interface IProps {
 
 function LoadingIndicator({ indicatorViewModel }: IProps) {
   return (
-    <Background className={indicatorViewModel.indicator ? "active" : ""}>
+    <Background className={indicatorViewModel.indicator > 0 ? "active" : ""}>
       <div className="wrapper">
         <div className="circle"></div>
         <div className="circle"></div>

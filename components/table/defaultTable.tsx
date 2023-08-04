@@ -1,19 +1,28 @@
-import { Ref, useEffect, useState } from "react";
+import { ReactElement, Ref, useEffect, useState } from "react";
 import styled from "styled-components";
 
 export interface ITableHeader {
   title: string;
   column: string;
   align: "left" | "center" | "right" | "justify" | "char" | undefined;
+  size?: string;
 }
 
 interface IProps {
   header: ITableHeader[];
   data: any[];
-  recordRef: Ref<HTMLTableElement>;
+  recordRef?: Ref<HTMLTableElement>;
+  isRowSpan?: boolean;
+  resultCount?: string | string[];
 }
 
-export default function DefaultTable({ header, data, recordRef }: IProps) {
+export default function DefaultTable({
+  header,
+  data,
+  recordRef,
+  isRowSpan = true,
+  resultCount,
+}: IProps) {
   const [mergedCells, setMergedCells] = useState([]);
 
   // 연속된 셀들을 찾는 함수 정의
@@ -34,9 +43,10 @@ export default function DefaultTable({ header, data, recordRef }: IProps) {
   };
 
   useEffect(() => {
-    const mergedArray = findConsecutiveCells(header[0].column);
-
-    setMergedCells(mergedArray);
+    if (isRowSpan) {
+      const mergedArray = findConsecutiveCells(header[0].column);
+      setMergedCells(mergedArray);
+    }
   }, [data]);
 
   if (data.length < 1) return <></>;
@@ -47,12 +57,21 @@ export default function DefaultTable({ header, data, recordRef }: IProps) {
         <tr>
           {header.map((head: ITableHeader, key: number) => {
             return (
-              <th key={`table_header_${head.title}_${key}`} align={head.align}>
+              <th
+                key={`table_header_${head.title}_${key}`}
+                align={head.align}
+                style={{ width: head.size }}
+              >
                 {head.title}
               </th>
             );
           })}
         </tr>
+        {resultCount && (
+          <ChildrenWrap>
+            <td>{resultCount}</td>
+          </ChildrenWrap>
+        )}
       </Table.Head>
       <Table.Body>
         {data.map((item: any, key: number) => {
@@ -72,7 +91,7 @@ export default function DefaultTable({ header, data, recordRef }: IProps) {
                   <td
                     key={`table_body_row_data_${inkey}`}
                     align={head.align}
-                    rowSpan={shouldMerge ? thisMergeCount : 1}
+                    rowSpan={isRowSpan && shouldMerge ? thisMergeCount : 1}
                     className={
                       head.column === header[0].column ? "first_child" : ""
                     }
@@ -99,12 +118,14 @@ const Table = {
     position: sticky;
     top: 0;
     z-index: 100;
+
     & tr {
       height: 48px;
       background: rgb(216, 228, 251);
       font-size: 14px;
       color: black;
     }
+
     & tr th {
       padding: 0 16px;
     }
@@ -115,6 +136,15 @@ const Table = {
       border-bottom: thin solid rgba(0, 0, 0, 0.12);
       font-size: 14px;
       font-weight: 400;
+
+      &:hover {
+        background: rgb(230, 230, 230);
+        font-weight: 600;
+
+        & td.first_child {
+          background: rgb(213, 220, 233);
+        }
+      }
     }
 
     & tr td {
@@ -130,3 +160,14 @@ const Table = {
     }
   `,
 };
+
+const ChildrenWrap = styled.tr`
+  background: none !important;
+  position: absolute;
+  right: 16px;
+  top: 4px;
+  z-index: 111;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 42px;
+`;

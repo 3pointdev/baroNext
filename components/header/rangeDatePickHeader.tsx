@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactElement } from "react";
+import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 import AngleButton from "../button/angleButton";
 import DefaultButton from "../button/defaultButton";
@@ -12,6 +12,8 @@ interface IProps {
   end: string;
   onChange: (date: string, type: string) => void;
   title?: string;
+  style?: CSSProperties;
+  childrenStyle?: CSSProperties;
   children?:
     | ReactElement
     | ReactElement[]
@@ -27,14 +29,16 @@ export default function RangeDatePickHeader({
   onChange,
   title,
   children,
+  style,
+  childrenStyle,
 }: IProps) {
   return (
-    <Container>
+    <Container style={style}>
       <LeftSide.Wrap>
         <RangeDatePicker start={start} end={end} onChange={onChange} />
       </LeftSide.Wrap>
       {title && <Title>{title}</Title>}
-      <RightSide.Wrap>{children}</RightSide.Wrap>
+      <RightSide.Wrap style={childrenStyle}>{children}</RightSide.Wrap>
     </Container>
   );
 }

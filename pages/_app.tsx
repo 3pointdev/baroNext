@@ -40,7 +40,7 @@ class MyApp extends App<any, any, any> {
 
   componentDidMount(): void {
     window.localStorage.sender = `/admin/id:${new Date().getTime()}`;
-    this.mobxStore.mainViewModel.initializeAuth();
+    this.mobxStore.mainViewModel.popAuth();
 
     if (!authModule.isLogin() && this.props.router.pathname !== "/login") {
       this.props.router.push(pageUrlConfig.login);

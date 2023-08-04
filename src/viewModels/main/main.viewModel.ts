@@ -51,16 +51,16 @@ export default class MainViewModel extends DefaultViewModel {
             path: pageUrlConfig.productionRecord,
             title: "생산이력",
           },
-          {
-            name: "production_share",
-            path: pageUrlConfig.productionShare,
-            title: "생산일정 공유",
-          },
-          {
-            name: "production_status",
-            path: pageUrlConfig.productionStatus,
-            title: "생산공유 현황",
-          },
+          // {
+          //   name: "production_share",
+          //   path: pageUrlConfig.productionShare,
+          //   title: "생산일정 공유",
+          // },
+          // {
+          //   name: "production_status",
+          //   path: pageUrlConfig.productionStatus,
+          //   title: "생산공유 현황",
+          // },
         ],
       },
       {
