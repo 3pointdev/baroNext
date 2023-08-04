@@ -1,34 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+#프로젝트
 
-## Getting Started
+####개발환경
 
-First, run the development server:
+- nodejs 20.4.0
+- react 18.2.0
+- nextjs 13.2.1
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+####개발 스크립트
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 의존성 설치가 필요한 경우 yarn install or npm install 실행
+- yarn or npm 사용
+- yarn dev 혹은 npm run dev
+- 스크립트는 package.json 에서 확인 및 편집가능
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+####배포 스크립트
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 의존성 설치가 필요한 경우 yarn install or npm install 실행
+- yarn or npm 사용
+- yarn build 후 yarn start 혹은 npm run build 후 npm run start
+- 스크립트는 package.json 에서 확인 및 편집가능
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+####프로젝트 주요 경로
 
-## Learn More
+- /resource/components 모든 컴포넌트가 포함된 경로
+- /resource/config url,상수 등 모든 설정이 포함된 경로
+- /resource/modules 자주 사용되는 기능 함수 모듈 경로
+- /resource/pages next.js router 경로
+- /resource/public font, image 같은 asset 이 존재하는 경로
+- /resource/styles CSS 경로 \* styled-components 사용으로 각 View, Component에 스타일이 적용되어 있음.
+- /resource/src/dto 서버 요청 관련 DTO
+- /resource/src/mobx mobx(state 관리) 관련
+- /resource/src/models 서버 응답 관련 모델
+- /resource/src/viewModels ViewModel 관련
 
-To learn more about Next.js, take a look at the following resources:
+#참고
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+####리팩토링
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- 초기 개발된 환경은 VueJS 기반으로 개발이 진행됬으며, 현 소스코드는 타입 스트립트로 전환 및 프로젝트 구조를 부분 리팩토링을 진행하고 있는 상태
+- 명확한 타입 정의, 기존 수많은 분기점 대신 의존성을 주입하여 사용하는 방식으로 변경, 중복 코딩된 소스 코드 재사용 및 캡슐화가 목적
 
-## Deploy on Vercel
+####사이트 설정
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- /app/pages/\_app.js 에서 처리됨
