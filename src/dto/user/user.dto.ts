@@ -27,4 +27,7 @@ export default class UserDto {
 
   @Expose({ name: "role" })
   public readonly role: string = "";
+
+  @Expose({ name: "profile_image" })
+  public readonly profileImage: string = "";
 }

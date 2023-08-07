@@ -10,6 +10,7 @@ import ReportViewModel from "../viewModels/report/report.viewModel";
 import RecordViewModel from "../viewModels/record/record.viewModel";
 import IndicatorViewModel from "../viewModels/indicator/indicator.viewModel";
 import ProgramViewModel from "../viewModels/program/program.viewModel";
+import MonitorViewModel from "../viewModels/monitor/monitor.viewModel";
 
 const isServer = typeof window === "undefined";
 
@@ -26,6 +27,7 @@ export class RootStore {
   public reportViewModel: ReportViewModel;
   public recordViewModel: RecordViewModel;
   public programViewModel: ProgramViewModel;
+  public monitorViewModel: MonitorViewModel;
 
   constructor(initialData: IDefaultProps) {
     this.indicatorViewModel = new IndicatorViewModel();
@@ -40,6 +42,7 @@ export class RootStore {
     this.recordViewModel = new RecordViewModel(initData);
     this.reportViewModel = new ReportViewModel(initData);
     this.programViewModel = new ProgramViewModel(initData);
+    this.monitorViewModel = new MonitorViewModel(initData);
   }
 }
 
