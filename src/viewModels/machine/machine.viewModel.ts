@@ -22,6 +22,8 @@ import NotificationModel from "../../models/machine/notification.model";
 import NotificationListDto from "../../dto/machine/notificationList.dto";
 import moment from "moment";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import { Alert } from "../../modules/alert.module";
+import Swal from "sweetalert2";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
@@ -130,7 +132,7 @@ export default class MachineViewModel extends DefaultViewModel {
 
   getList = async () => {
     await this.api
-      .get(ServerUrlType.BARO, "/mon/mlist")
+      .get(ServerUrlType.BARO, "/machine")
       .then((result: AxiosResponse<MachineSummaryDto[]>) => {
         const data = result.data.map((item: MachineSummaryDto) =>
           plainToInstance(MachineSummaryDto, item)
@@ -146,7 +148,7 @@ export default class MachineViewModel extends DefaultViewModel {
       });
   };
 
-  insertListNotification = async (mid?: string) => {
+  insertListNotification = async () => {
     await this.api
       .post(ServerUrlType.BARO, "/alarm", {
         start: this.notiModel.startDay,
@@ -158,17 +160,35 @@ export default class MachineViewModel extends DefaultViewModel {
           return { date: item.date, message: item.message, mid: item.mid };
         });
 
-        const filterData = mid
-          ? this.machineFilter(mid, data)
-          : this.searchKeywordFilter(this.notiModel.searchKeyword, data);
+        let filterData = this.searchKeywordFilter(
+          this.notiModel.searchKeyword,
+          data
+        );
+
+        if (filterData.length < 1) {
+          filterData = [
+            { mid: "-", date: "-", message: "검색 된 데이터가 없습니다." },
+          ];
+        }
 
         runInAction(() => {
           this.notiList = plainToInstance(NotificationListDto, {
             sort: SortType.DESCENDING,
             notifications: filterData,
-            machineFilter: "default",
           });
         });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  update = async (updateModel) => {
+    await this.api
+      .patch(ServerUrlType.BARO, "/machine", updateModel)
+      .then((result: AxiosResponse) => {
+        this.getList();
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
@@ -183,12 +203,6 @@ export default class MachineViewModel extends DefaultViewModel {
 
     return result.filter((item: NotificationDto) =>
       item.message.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
-    );
-  };
-
-  machineFilter = (mid: string, result: NotificationDto[]) => {
-    return result.filter((item: NotificationDto) =>
-      item.mid.toLocaleLowerCase().includes(mid.toLocaleLowerCase())
     );
   };
 
@@ -209,23 +223,19 @@ export default class MachineViewModel extends DefaultViewModel {
     runInAction(() => {
       this.notiList = {
         notifications: [...this.notiList.notifications.reverse()],
-        machineFilter: "default",
         sort: value,
       };
+      this.notiModel = { ...this.notiModel, mkey: 0 };
     });
   };
 
   handleChangeMachineFilter = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    if (value === this.notiList.machineFilter) return;
+    if (+value === this.notiModel.mkey) return;
 
     runInAction(() => {
-      this.notiList = {
-        notifications: this.notiList.notifications,
-        sort: this.notiList.sort,
-        machineFilter: value,
-      };
-      this.insertListNotification(value);
+      this.notiModel = { ...this.notiModel, mkey: +value };
+      this.insertListNotification();
     });
   };
 
@@ -246,6 +256,53 @@ export default class MachineViewModel extends DefaultViewModel {
   };
   handleClickSearch = (event: MouseEvent<SVGSVGElement>) => {
     this.insertListNotification();
+  };
+
+  handleClickEdit = (event: MouseEvent<HTMLDivElement>) => {
+    const { id } = event.currentTarget.dataset;
+    const target = this.machineSummary.find(
+      (machine: MachineSummaryDto) => machine.id === +id
+    );
+
+    Alert.freeFormat({
+      title: "기계 정보 수정",
+      html:
+        '<input type="number" id="numberInput" class="swal2-input" placeholder="기계 번호" value="' +
+        target.machineNo +
+        '" required>' +
+        '<input type="text" id="textInput" class="swal2-input" placeholder="기계 이름" value="' +
+        target.mid +
+        '" required>',
+      cancel: "취소",
+      confirm: "저장",
+      callback: () => {
+        const numberInput = document.getElementById("numberInput").value;
+        const textInput = document.getElementById("textInput").value;
+
+        // 유효성 검사
+        if (!numberInput && !textInput) {
+          Swal.showValidationMessage("입력 된 정보가 없습니다.");
+        }
+
+        return { numberInput, textInput };
+      },
+    }).then(
+      (result: {
+        isConfirmed: boolean;
+        isDenied: boolean;
+        isDismissed: boolean;
+        value: { numberInput: number; textInput: string };
+      }) => {
+        if (result.isConfirmed) {
+          this.update({
+            active: false,
+            id: id,
+            machine_no: result.value.numberInput,
+            name: result.value.textInput,
+          });
+        }
+      }
+    );
   };
 
   // ********************소켓******************** //

@@ -1,12 +1,15 @@
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MouseEventHandler, ReactElement } from "react";
+import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
 interface IProps {
   onClick: MouseEventHandler;
-  value?: string;
+  value?: string | number;
   icon: IconDefinition;
+  iconStyle?: CSSProperties;
+  style?: CSSProperties;
   children?:
     | ReactElement
     | ReactElement[]
@@ -21,10 +24,12 @@ export default function CircleButton({
   value,
   icon,
   children,
+  iconStyle,
+  style,
 }: IProps) {
   return (
-    <Button onClick={onClick} value={value}>
-      <FontAwesomeIcon icon={icon} />
+    <Button onClick={onClick} value={value} style={style}>
+      <FontAwesomeIcon icon={icon} style={iconStyle} />
       {children}
     </Button>
   );

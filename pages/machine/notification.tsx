@@ -25,6 +25,15 @@ function MachineNotificationView(props: IProps) {
     machineViewModel.insertListNotification();
   }, []);
 
+  const selectorStyle = {
+    backgroundImage: `linear-gradient(45deg, transparent 50%, gray 50%),
+linear-gradient(135deg, gray 50%, transparent 50%)`,
+    backgroundPosition: `calc(100% - 16px) calc(1em + 2px),
+calc(100% - 8px) calc(1em + 2px), calc(100% - 2.5em) 0.5em`,
+    width: "120px",
+    height: "42px",
+  };
+
   return (
     <PageContainer style={{ gap: "16px" }}>
       <RangeDatePickHeader
@@ -36,14 +45,7 @@ function MachineNotificationView(props: IProps) {
       >
         <Selector
           onChange={machineViewModel.handleChangeSort}
-          style={{
-            backgroundImage: `linear-gradient(45deg, transparent 50%, gray 50%),
-    linear-gradient(135deg, gray 50%, transparent 50%)`,
-            backgroundPosition: `calc(100% - 16px) calc(1em + 2px),
-    calc(100% - 8px) calc(1em + 2px), calc(100% - 2.5em) 0.5em`,
-            width: "120px",
-            height: "42px",
-          }}
+          style={selectorStyle}
           defaultValue={SortType.DESCENDING}
         >
           <SelectorOption title="최신순" value={SortType.DESCENDING} />
@@ -51,24 +53,17 @@ function MachineNotificationView(props: IProps) {
         </Selector>
         <Selector
           onChange={machineViewModel.handleChangeMachineFilter}
-          style={{
-            backgroundImage: `linear-gradient(45deg, transparent 50%, gray 50%),
-    linear-gradient(135deg, gray 50%, transparent 50%)`,
-            backgroundPosition: `calc(100% - 16px) calc(1em + 2px),
-    calc(100% - 8px) calc(1em + 2px), calc(100% - 2.5em) 0.5em`,
-            width: "120px",
-            height: "42px",
-          }}
-          defaultValue={"default"}
+          style={selectorStyle}
+          defaultValue={0}
         >
           <>
-            <SelectorOption title="전체보기" value={"default"} />
+            <SelectorOption title="전체보기" value={0} />
             {machineViewModel.machineSummary.map(
               (machine: MachineSummaryDto, key: number) => {
                 return (
                   <SelectorOption
                     title={machine.mid}
-                    value={machine.mid}
+                    value={machine.id}
                     key={`machine_mid_filter_${key}`}
                   />
                 );

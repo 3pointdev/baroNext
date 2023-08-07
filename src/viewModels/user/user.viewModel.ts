@@ -8,6 +8,7 @@ import { ServerUrlType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
 import UserDto from "../../dto/user/user.dto";
 import { plainToInstance } from "class-transformer";
+import DefaultProfile from "public/images/profile/default-profile.jpg";
 
 export default class UserViewModel extends DefaultViewModel {
   public user: UserDto = new UserDto();
@@ -26,7 +27,10 @@ export default class UserViewModel extends DefaultViewModel {
       .get(ServerUrlType.BARO, "/mypage")
       .then((result: AxiosResponse<any>) => {
         runInAction(() => {
-          this.user = plainToInstance(UserDto, result.data[0]);
+          this.user = plainToInstance(UserDto, {
+            ...result.data[0],
+            profile_image: DefaultProfile.src,
+          });
         });
       })
       .catch((error: AxiosError) => {

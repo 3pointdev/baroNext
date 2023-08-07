@@ -7,7 +7,7 @@ import MachineViewModel from "../../src/viewModels/machine/machine.viewModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import MachineDto from "../../src/dto/machine/machine.dto";
-import Monitoring2Item from "../../components/machine/monitoring2Item";
+import Monitoring2Item from "../../components/machine/Monitoring2Item";
 
 interface IProps {
   machineViewModel: MachineViewModel;

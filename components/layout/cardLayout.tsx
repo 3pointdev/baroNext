@@ -11,11 +11,17 @@ interface IProps {
     | number[];
   style?: CSSProperties;
   onClick?: MouseEventHandler;
+  className?: string;
 }
 
-export default function CardLayout({ style, children, onClick }: IProps) {
+export default function CardLayout({
+  style,
+  children,
+  onClick,
+  className,
+}: IProps) {
   return (
-    <Layout style={style} onClick={onClick}>
+    <Layout style={style} onClick={onClick} className={className}>
       {children}
     </Layout>
   );

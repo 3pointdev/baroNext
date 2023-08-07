@@ -5,9 +5,6 @@ export default class NotificationListDto {
   @Expose({ name: "sort" })
   public sort: string = "";
 
-  @Expose({ name: "machineFilter" })
-  public machineFilter: string = "default";
-
   @Expose({ name: "notifications" })
   @Type(() => NotificationDto)
   public notifications: NotificationDto[] = [];

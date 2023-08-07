@@ -127,12 +127,12 @@ export class ApiModule {
       url !== "/login/findId"
     )
       throw "please login";
-    const sender = window.localStorage.sender;
+    // const sender = window.localStorage.sender;
 
     this.commonHeader["Content-Type"] = "application/json";
     this.setAxiosInstance(server);
     return await this.axios
-      .patch(url, { params: { ...params, sender: sender } })
+      .patch(url, params)
       .then(this.handleSuccess)
       .catch(this.handleError);
   }

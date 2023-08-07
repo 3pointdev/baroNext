@@ -13,7 +13,7 @@ class PageUrlConfig {
   public machineAlarm = "/machine/notification";
   public machineInfo = "/machine/info";
   public monitor = "/monitor";
-  public monitorSetting = "/monitor/setting";
+  public monitoringSetting = "/monitoring/setting";
   public my = "/my";
   public invoices = "/";
   public alarm = "/alarm";
