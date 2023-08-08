@@ -104,3 +104,13 @@ export const SortType = {
   DESCENDING: "descending",
 } as const;
 export type SortType = (typeof SortType)[keyof typeof SortType];
+
+/**
+ * 유효성 검사 타입
+ */
+export const ValidType = {
+  PASS: 0,
+  DEFAULT: 1,
+  FAIL: 2,
+} as const;
+export type ValidType = (typeof ValidType)[keyof typeof ValidType];

@@ -3,10 +3,12 @@ import {
   ChangeEventHandler,
   HTMLInputTypeAttribute,
   KeyboardEventHandler,
+  MouseEventHandler,
   ReactElement,
   RefObject,
 } from "react";
 import styled from "styled-components";
+import { ValidType } from "../../config/constants";
 
 interface IProps {
   type: HTMLInputTypeAttribute;
@@ -14,6 +16,7 @@ interface IProps {
   name?: string;
   placeholder?: string;
   onChange?: ChangeEventHandler;
+  onClick?: MouseEventHandler;
   requied?: boolean;
   readOnly?: boolean;
   reference?: RefObject<HTMLInputElement>;
@@ -21,6 +24,9 @@ interface IProps {
   onKeyDown?: KeyboardEventHandler;
   boxstyle?: CSSProperties;
   style?: CSSProperties;
+  useLabel?: boolean;
+  validState?: number;
+  validText?: string;
 }
 
 export default function DefaultInput({
@@ -28,7 +34,9 @@ export default function DefaultInput({
   value,
   name = "",
   placeholder = "",
+  useLabel = false,
   onChange,
+  onClick,
   requied = false,
   readOnly = false,
   reference,
@@ -36,22 +44,48 @@ export default function DefaultInput({
   onKeyDown,
   boxstyle,
   style,
+  validState = ValidType.PASS,
+  validText,
 }: IProps) {
   return (
-    <InputWrap style={boxstyle}>
+    <InputWrap style={boxstyle} onClick={onClick}>
       <InputColumn
         style={style}
         type={type}
         value={value}
         name={name}
         onChange={onChange}
-        placeholder={placeholder}
         required={requied}
         readOnly={readOnly}
         ref={reference}
         onKeyDown={onKeyDown}
+        id={name}
+        placeholder={useLabel ? "" : placeholder}
+        isOnValue={value.length > 0}
+        autoComplete="new-password"
+        className={readOnly ? "readonly" : ""}
       />
-      <ChildrenWrap>{children}</ChildrenWrap>
+      {useLabel && (
+        <Placeholder htmlFor={name} className={readOnly ? "readonly" : ""}>
+          {placeholder}
+        </Placeholder>
+      )}
+      {validText && (
+        <ValidLabel
+          htmlFor={name}
+          isViewAble={validState > ValidType.PASS}
+          className={
+            validState === ValidType.FAIL
+              ? readOnly
+                ? "readonly fail"
+                : "fail"
+              : ""
+          }
+        >
+          {validText}
+        </ValidLabel>
+      )}
+      {children && <ChildrenWrap>{children}</ChildrenWrap>}
     </InputWrap>
   );
 }
@@ -92,7 +126,7 @@ const ChildrenWrap = styled.p`
   }
 `;
 
-const InputColumn = styled.input`
+const InputColumn = styled.input<{ isOnValue: boolean }>`
   background: #fff;
   border: 1px solid #d8d8dd !important;
   border-radius: 8px;
@@ -102,7 +136,72 @@ const InputColumn = styled.input`
   font-size: 16px;
   font-weight: 400;
 
-  &::placeholder {
-    color: #6e6e6e;
+  &:active + label,
+  &:focus + label {
+    left: 8px;
+    top: -8px;
+    color: #3a79ec !important;
+  }
+
+  & + label {
+    ${({ isOnValue }) =>
+      isOnValue
+        ? `left: 8px;
+      top: -8px;
+      color: #3a79ec !important;`
+        : ``}
+  }
+
+  /* Change the white to any color */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
+
+  &.readonly {
+    background: #d9d9d9;
+  }
+`;
+
+const Placeholder = styled.label`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 12px;
+  color: #bfbfbf;
+  transition: all 0.4s ease;
+  cursor: text;
+  background: #fff;
+  padding: 0 8px;
+  border-radius: 8px;
+
+  &.readonly {
+    background: #d9d9d9;
+    color: #a0a0a0;
+  }
+`;
+
+const ValidLabel = styled.label<{ isViewAble: boolean }>`
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  font-size: 12px;
+  color: #bfbfbf;
+  transition: all 0.4s ease;
+  cursor: text;
+  background: #fff;
+  padding: 0 8px;
+  border-radius: 8px;
+  opacity: ${({ isViewAble }) => (isViewAble ? "1" : "0")};
+
+  &.readonly {
+    background: #d9d9d9;
+    color: #a0a0a0;
+  }
+
+  &.fail {
+    color: red;
   }
 `;
