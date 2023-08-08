@@ -25,5 +25,5 @@ class ChartModule {
     };
   }
 }
-
-export default new ChartModule();
+const chartInstance = new ChartModule();
+export default chartInstance;

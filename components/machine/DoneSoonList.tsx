@@ -21,9 +21,6 @@ export default function DoneMachine({ list }: IProps) {
     }
 
     setDoneMachine(newMachine.sort((a, b) => a.doneTime - b.doneTime));
-
-    //임시데이터코드
-    // setDoneMachine([list[7], list[6]]);
   }, [list]);
 
   return (
@@ -33,7 +30,7 @@ export default function DoneMachine({ list }: IProps) {
           <ProgressCircle
             maxValue={3600000}
             minValue={0}
-            value={doneMachine[0]?.doneTime}
+            value={3600000 - doneMachine[0]?.doneTime}
             innerText={timeModule.msToHHMM(doneMachine[0]?.doneTime)}
           />
           <SoonList>

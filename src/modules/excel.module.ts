@@ -55,4 +55,5 @@ class ExcelModule {
   }
 }
 
-export default new ExcelModule();
+const excelInstance = new ExcelModule();
+export default excelInstance;

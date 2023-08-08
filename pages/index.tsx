@@ -14,10 +14,10 @@ import {
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
 import moment from "moment";
-import RealTimeMachineItem from "../components/machine/realTimeMachineItem";
+import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
 import MachineDto from "../src/dto/machine/machine.dto";
 import PageContainer from "../components/container/pageContainer";
-import DoneMachine from "../components/machine/doneSoonList";
+import DoneMachine from "../components/machine/DoneSoonList";
 import MachineViewModel from "../src/viewModels/machine/machine.viewModel";
 import CardLayout from "../components/layout/cardLayout";
 
@@ -50,10 +50,6 @@ function MainView(props: IProps) {
     const initialize = async () => {
       await machineViewModel.getMachineList();
       machineViewModel.getProcessedQuantity();
-      machineViewModel.initializeSocket(
-        machineViewModel.onMessage,
-        machineViewModel.onOpen
-      );
     };
 
     initialize();

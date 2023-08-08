@@ -16,6 +16,7 @@ export default function RealTimeMachineItem(props: IProps) {
   const [color, setColor] = useState<string>("red");
 
   useEffect(() => {
+    console.log(data.execution);
     setColor(machineStatusModule.ToColorStatus(data.execution));
   }, [data]);
 

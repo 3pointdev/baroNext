@@ -5,6 +5,7 @@ import AccountModel from "../../models/login/account.model";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { ServerUrlType } from "../../../config/constants";
 import FindAccountModel from "../../models/login/contact.model";
+import { Alert } from "../../modules/alert.module";
 
 export default class AuthViewModel extends DefaultViewModel {
   public account: AccountModel = new AccountModel();
@@ -67,11 +68,11 @@ export default class AuthViewModel extends DefaultViewModel {
         ...this.findAccount,
         sender: window.localStorage.sender,
       })
-      .then((result) => {
+      .then((result: any) => {
         console.log("result : ", result);
-      })
-      .catch((error) => {
-        console.log("error : ", error);
+        if (result.data.code === 500) {
+          Alert.alert("요청하신 계정 또는 연락처를 찾을 수 없습니다.");
+        }
       });
   };
 

@@ -21,5 +21,5 @@ class AuthModule {
     return window.localStorage.token !== undefined;
   }
 }
-
-export default new AuthModule();
+const authInstance = new AuthModule();
+export default authInstance;

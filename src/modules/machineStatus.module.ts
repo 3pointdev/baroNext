@@ -97,4 +97,5 @@ class MachineStatusModule {
   }
 }
 
-export default new MachineStatusModule();
+const machineStatusInstance = new MachineStatusModule();
+export default machineStatusInstance;
