@@ -87,4 +87,5 @@ class TimeModule {
   }
 }
 
-export default new TimeModule();
+const timeInstance = new TimeModule();
+export default timeInstance;

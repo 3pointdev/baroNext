@@ -14,7 +14,7 @@ class MapperModule {
       prdct_end: plainData.prdct_end,
       start_ymdt: plainData.start_ymdt,
       Block: plainData.process,
-      Program: plainData.process.includes("(")
+      Program: plainData.process?.includes("(")
         ? plainData.process.split("(")[1].replace(")", "")
         : plainData.process,
       wait: plainData.wait,
@@ -130,7 +130,7 @@ class MapperModule {
 
     matchData.doneTime =
       matchData.active * (matchData.planCount - matchData.partCount);
-
+    console.log(matchData, matchRTData);
     return { machine: matchData, rtd: matchRTData };
   }
 
@@ -146,4 +146,5 @@ class MapperModule {
   }
 }
 
-export default new MapperModule();
+const mapperInstance = new MapperModule();
+export default mapperInstance;

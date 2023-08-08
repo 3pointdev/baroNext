@@ -15,6 +15,7 @@ import {
 import styled from "styled-components";
 import LotDto from "../../src/dto/report/lot.dto";
 import chartModule from "../../src/modules/chart.module";
+import timeModule from "../../src/modules/time.module";
 
 ChartJS.register(
   LinearScale,
@@ -69,7 +70,16 @@ export default function LotBarChart({ data = [], averageLotTime }: IProps) {
 
   const chartOptions = chartModule.setChart({
     tooltip: {
-      enabled: false,
+      callbacks: {
+        title: () => "",
+        label: (context) => {
+          const target = data[context.dataIndex];
+          const labelA = `교체시점 : ${target.end}`;
+          const labelB = `교체준비시간 : ${timeModule.msToHHMM(target.idle)}`;
+          const labelC = `교체효율 : ${persents[context.dataIndex]}%`;
+          return [labelA, labelB, labelC];
+        },
+      },
     },
     x: {
       display: false,

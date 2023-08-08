@@ -185,8 +185,10 @@ export default class UserViewModel extends DefaultViewModel {
     switch (key) {
       case "password":
         if (value.length >= 4) return ValidType.PASS;
+        break;
       case "passwordCheck":
         if (value.length >= 4 && password) return ValidType.PASS;
+        break;
       default:
         return ValidType.FAIL; // 지정된 키가 아닌 경우는 유효하지 않음
     }

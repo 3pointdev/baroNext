@@ -104,6 +104,7 @@ export default class MachineViewModel extends DefaultViewModel {
         );
         runInAction(() => {
           this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
+          this.initializeSocket(this.onMessage, this.onOpen);
         });
       })
       .catch((error: AxiosError) => {
@@ -276,15 +277,19 @@ export default class MachineViewModel extends DefaultViewModel {
       cancel: "취소",
       confirm: "저장",
       callback: () => {
-        const numberInput = document.getElementById("numberInput").value;
-        const textInput = document.getElementById("textInput").value;
+        const numberInput = document.getElementById(
+          "numberInput"
+        ) as HTMLInputElement;
+        const textInput = document.getElementById(
+          "textInput"
+        ) as HTMLInputElement;
 
         // 유효성 검사
-        if (!numberInput && !textInput) {
+        if (!numberInput.value && !textInput.value) {
           Swal.showValidationMessage("입력 된 정보가 없습니다.");
         }
 
-        return { numberInput, textInput };
+        return { numberInput: numberInput.value, textInput: textInput.value };
       },
     }).then(
       (result: {
@@ -327,6 +332,7 @@ export default class MachineViewModel extends DefaultViewModel {
       const dataArray = updateData.split("|");
       switch (dataArray[1]) {
         case BinaryMessageType.NOTI:
+          console.log("noti : ", dataArray);
           const mappingNoti = mapperModule.notiMapper(
             dataArray,
             this.machines,
@@ -342,10 +348,10 @@ export default class MachineViewModel extends DefaultViewModel {
           this.handlePartCount(mappingPartCount);
           break;
         case BinaryMessageType.MESSAGE:
-          console.log("message");
+          console.log("message", dataArray);
           break;
         case BinaryMessageType.ALARM:
-          console.log("alarm");
+          console.log("alarm", dataArray);
           break;
       }
     } else {
@@ -410,6 +416,7 @@ export default class MachineViewModel extends DefaultViewModel {
   handleMachineStat = (statArray) => {
     const newMachines: MachineDto[] = [];
     const newRealTimeData: RealTimeDataDto[] = [];
+
     for (let i = 0; i < statArray.length; i++) {
       const result = mapperModule.machineStatMapper(
         statArray[i],
@@ -437,14 +444,12 @@ export default class MachineViewModel extends DefaultViewModel {
       this.processChart = {
         options: chartModule.setChart({
           tooltip: {
-            callback: {
-              title: (context) => {
-                return "";
-              },
+            callbacks: {
+              title: () => "",
               label: (context) => {
-                let label = `${data[context.dataIndex].mid} : ${
-                  context.formattedValue
-                }`;
+                const target = data[context.dataIndex];
+                const label = `${target.mid} : ${target.count}`;
+
                 return label;
               },
             },
