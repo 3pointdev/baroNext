@@ -19,6 +19,7 @@ configure({ enforceActions: "observed" });
 
 export class RootStore {
   //public 뷰모델네임 : 뷰모델타입;
+  public defaultViewModel;
   public indicatorViewModel: IndicatorViewModel;
   public mainViewModel: MainViewModel;
   public machineViewModel: MachineViewModel;
@@ -35,6 +36,7 @@ export class RootStore {
       indicatorViewModel: this.indicatorViewModel,
     });
     //this.뷰모델네임 = new 뷰모델(initData);
+    this.defaultViewModel = new DefaultViewModel(initData);
     this.mainViewModel = new MainViewModel(initData);
     this.machineViewModel = new MachineViewModel(initData);
     this.authViewModel = new AuthViewModel(initData);
