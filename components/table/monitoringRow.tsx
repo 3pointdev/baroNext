@@ -2,6 +2,7 @@ import styled from "styled-components";
 import timeModule from "../../src/modules/time.module";
 import machineStatusModule from "../../src/modules/machineStatus.module";
 import MachineDto from "../../src/dto/machine/machine.dto";
+import moment from "moment";
 
 interface IProps {
   data: MachineDto;
@@ -20,16 +21,18 @@ export default function MonitoringRow({ data }: IProps) {
         <td className={`program ${progress >= 100 ? "redSign" : ""}`}>
           {data.program}
         </td>
-        <td
-          className={`progress ${progress >= 100 ? "redSign" : ""}`}
-        >{`${progress}%`}</td>
+        <td className={`progress ${progress >= 100 ? "redSign" : ""}`}>
+          {progress === Infinity ? "-" : `${progress}%`}
+        </td>
         <td className="count">
           <span className={`part ${progress >= 100 ? "redSign" : ""}`}>
             {data.partCount}
           </span>
           <span className="plan">{` / ${data.planCount}`}</span>
         </td>
-        <td className="start_date">{data.startYmdt.slice(5, 16)}</td>
+        <td className="start_date">
+          {moment(data.startYmdt).format("MM-DD hh:mm")}
+        </td>
         <td className="end_date">
           {data.planCount !== 0 && data.partCount <= data.planCount
             ? data.prdctEnd?.slice(5, 16)

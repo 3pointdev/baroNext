@@ -61,6 +61,8 @@ export class SocketModule {
   };
 
   public sendEvent = <T>(data: T) => {
-    this.socket.send(JSON.stringify(data));
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(data));
+    }
   };
 }
