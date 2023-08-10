@@ -46,7 +46,7 @@ function Header(props: IProps) {
   return (
     <HeaderContainer>
       <Head.Wrap>
-        <Linker href={"/"}>
+        <Linker href={"/"} boxStyle={{ width: "fit-content" }}>
           <Head.Company>
             <Logo src={SquareLogo.src} alt="BAROFACTORY | 바로팩토리" />
             <p>{mainViewModel.auth.name}</p>

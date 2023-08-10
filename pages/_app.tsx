@@ -49,7 +49,7 @@ class MyApp extends App<any, any, any> {
 
   render() {
     const { Component, pageProps, headers } = this.props;
-    const notUseHeader = ["/login", "/monitoring3", "/monitoring2"];
+    const notUseHeader = ["/login", "/monitoring/mon3", "/monitoring/mon2"];
     return (
       <Provider {...this.mobxStore}>
         {!notUseHeader.includes(this.props.router.pathname) && (
