@@ -1,2 +1,0 @@
-runtime: nodejs18 # or another supported version
-service: barofactory-next-product
