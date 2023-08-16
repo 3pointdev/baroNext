@@ -7,12 +7,16 @@
 !lib.a
 
 # ignore all files in the build/ directory
-/node_modules/
+node_modules/
+resource/node_modules/
+# /resource/node_modules
+resource/.next/
 # ignore doc/notes.txt, but not doc/server/arch.txt
 /build/
-app_dev.yaml
-app_prd.yaml
 /local/
+.env
+.env.development
+.env.production
 
 # ignore all .pdf files in the doc/ directory
 doc/**/*.pdf
