@@ -7,9 +7,9 @@
 !lib.a
 
 # ignore all files in the build/ directory
-/node_modules/
-/resource/node_modules
-/resource/.next
+node_modules/
+# /resource/node_modules
+.next/
 # ignore doc/notes.txt, but not doc/server/arch.txt
 /build/
 /local/
