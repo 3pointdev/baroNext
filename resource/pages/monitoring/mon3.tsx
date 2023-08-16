@@ -21,7 +21,6 @@ function Monitoring3View(props: IProps) {
   };
 
   useEffect(() => {
-    console.log("!!");
     setTime(getFormattedTime());
     const interval = setInterval(() => {
       setTime(getFormattedTime());
