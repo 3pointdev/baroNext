@@ -7,7 +7,6 @@ import "styles/globals.css";
 import Header from "../components/header/header";
 import { IDefaultProps } from "../src/viewModels/default.viewModel";
 import authModule from "../src/modules/auth.module";
-import { Router } from "next/router";
 import pageUrlConfig from "../config/pageUrlConfig";
 import LoadingIndicator from "../components/indicator/loadingIndicator";
 
