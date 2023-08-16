@@ -59,8 +59,8 @@ function Monitoring3View(props: IProps) {
         <Article.Head>
           <tr>
             <th>호기</th>
-            <th className="align_left">기계명</th>
-            <th className="align_left">공정</th>
+            <th className="align_left mid">기계명</th>
+            <th className="align_left lot">공정</th>
             <th>진행률</th>
             <th>완료/목표</th>
             <th>공정 시작일</th>
@@ -144,8 +144,16 @@ const Article = {
       text-align: left;
     }
 
+    & .mid {
+      max-width: 0px;
+    }
+
+    & .lot {
+      max-width: 0px;
+    }
+
     & * {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 600;
       color: #000;
     }
