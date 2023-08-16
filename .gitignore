@@ -10,8 +10,6 @@
 /node_modules/
 # ignore doc/notes.txt, but not doc/server/arch.txt
 /build/
-app_dev.yaml
-app_prd.yaml
 /local/
 
 # ignore all .pdf files in the doc/ directory
