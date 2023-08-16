@@ -1,0 +1,16 @@
+{
+  "/_document": "pages/_document.js",
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/": "pages/index.js",
+  "/login": "pages/login.js",
+  "/machine/info": "pages/machine/info.js",
+  "/machine/notification": "pages/machine/notification.js",
+  "/monitoring/mon2": "pages/monitoring/mon2.js",
+  "/monitoring/mon3": "pages/monitoring/mon3.js",
+  "/monitoring/setting": "pages/monitoring/setting.js",
+  "/my": "pages/my.js",
+  "/production/record": "pages/production/record.js",
+  "/production/report": "pages/production/report.js",
+  "/work/program": "pages/work/program.js"
+}

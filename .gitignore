@@ -11,6 +11,9 @@
 # ignore doc/notes.txt, but not doc/server/arch.txt
 /build/
 /local/
+.env
+.env.development
+.env.production
 
 # ignore all .pdf files in the doc/ directory
 doc/**/*.pdf
