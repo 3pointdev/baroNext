@@ -8,8 +8,9 @@
 
 # ignore all files in the build/ directory
 node_modules/
+resource/node_modules/
 # /resource/node_modules
-.next/
+resource/.next/
 # ignore doc/notes.txt, but not doc/server/arch.txt
 /build/
 /local/
