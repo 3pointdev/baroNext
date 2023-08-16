@@ -1,9 +1,0 @@
-runtime: nodejs20 # or another supported version
-
-service: barofactory-next-product
-# handlers:
-#   - url: /static
-#     static_dir: build/.next/static
-#   - url: /.*
-#     script: build/.next
-
