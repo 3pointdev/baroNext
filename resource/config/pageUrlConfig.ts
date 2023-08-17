@@ -13,7 +13,9 @@ class PageUrlConfig {
   public machineAlarm = "/machine/notification";
   public machineInfo = "/machine/info";
   public monitor = "/monitor";
-  public monitoringSetting = "/monitoring/setting";
+  public monitor2 = "/monitor/mon2";
+  public monitor3 = "/monitor/mon3";
+  public monitorSetting = "/monitoring/setting";
   public my = "/my";
   public invoices = "/";
   public alarm = "/alarm";

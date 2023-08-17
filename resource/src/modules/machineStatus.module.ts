@@ -33,6 +33,8 @@ class MachineStatusModule {
         } else {
           return "대기 중";
         }
+      default:
+        return "";
     }
   }
 

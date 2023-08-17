@@ -24,9 +24,7 @@ class MapperModule {
     return plainToInstance(MachineDto, mapping);
   }
 
-  public machineStatMapper(plainData, currentData: MachineDto[]) {
-    const matchData = currentData.find((data) => +data.id === +plainData.Id);
-
+  public machineStatMapper(plainData, matchData: MachineDto) {
     const plainMachineData = {
       Alarm: plainData.Alarm,
       active: matchData.active,
@@ -94,19 +92,12 @@ class MapperModule {
 
   public notiMapper(
     dataArray: string[],
-    currentMachineData: MachineDto[],
-    currentRealTimeData: RealTimeDataDto[]
+    matchData: MachineDto,
+    matchRTData: RealTimeDataDto
   ): {
     machine: MachineDto;
     rtd: RealTimeDataDto;
   } {
-    const matchData = currentMachineData.find(
-      (data) => +data.id === +dataArray[4]
-    );
-    const matchRTData = currentRealTimeData.find(
-      (data) => +data.id === +dataArray[4]
-    );
-
     if (matchData === undefined || matchRTData === undefined) {
       throw "아직 머신상태가 수신되지 않았습니다.";
     }
@@ -134,9 +125,7 @@ class MapperModule {
     return { machine: matchData, rtd: matchRTData };
   }
 
-  public partCountMapper(dataArray: string[], currentData: MachineDto[]) {
-    const matchData = currentData.find((data) => +data.id === +dataArray[13]);
-
+  public partCountMapper(dataArray: string[], matchData: MachineDto) {
     matchData.active = +dataArray[11];
     matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];

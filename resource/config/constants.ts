@@ -1,3 +1,5 @@
+export const NUMBERSEENMONITORING2 = 4;
+
 /**
  * 서버주소 타입
  */

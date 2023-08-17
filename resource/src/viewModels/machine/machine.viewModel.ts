@@ -24,6 +24,8 @@ import moment from "moment";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { Alert } from "../../modules/alert.module";
 import Swal from "sweetalert2";
+import pageUrlConfig from "../../../config/pageUrlConfig";
+import MountedDto from "../../dto/monitor/mounted.dto";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
@@ -36,6 +38,7 @@ export default class MachineViewModel extends DefaultViewModel {
   public tableHeader: ITableHeader[] = [];
   public notiList: NotificationListDto = new NotificationListDto();
   public notiModel: NotificationModel = new NotificationModel();
+  public mountedList: MountedDto = new MountedDto();
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -54,13 +57,31 @@ export default class MachineViewModel extends DefaultViewModel {
       tableHeader: observable,
       notiList: observable,
       notiModel: observable,
+      mountedList: observable,
 
       onMessage: action,
       getMachineList: action,
       getProcessedQuantity: action,
       setChart: action,
+      getMounted: action,
     });
   }
+
+  getMounted = async () => {
+    await this.api
+      .post(ServerUrlType.APIS, "/api/cloud/monitorList", {
+        monitor: this.router.query.monitor,
+      })
+      .then((result: AxiosResponse<ServerResponse<MountedDto>>) => {
+        runInAction(() => {
+          this.mountedList = plainToInstance(MountedDto, result.data.data);
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
 
   insertInstalledTransmitters = async () => {
     await this.api
@@ -83,14 +104,6 @@ export default class MachineViewModel extends DefaultViewModel {
     await this.api.post(ServerUrlType.EDGE, "/api/edge/edge_machine_stat", {
       transmitter: item.id,
     });
-  };
-
-  // 모니터번호(path)에 따라 렌더링할 인덱스 범위를 계산
-  setRenderRange = () => {
-    const monitor = +this.router.query.monitor;
-    const start = (monitor - 1) * 4;
-    const end = monitor * 4;
-    return { start, end };
   };
 
   getMachineList = async () => {
@@ -321,7 +334,6 @@ export default class MachineViewModel extends DefaultViewModel {
 
     //소켓 연결완료 후 사용자가 소켓서버 이용을 시작함을 서버에 알리는 이벤트
     this.socket.sendEvent({ token: this.auth.token });
-
     this.insertInstalledTransmitters();
   };
 
@@ -333,19 +345,34 @@ export default class MachineViewModel extends DefaultViewModel {
       switch (dataArray[1]) {
         case BinaryMessageType.NOTI:
           console.log("noti : ", dataArray);
-          const mappingNoti = mapperModule.notiMapper(
-            dataArray,
-            this.machines,
-            this.realTimeData
+          const matchDataForNoti = this.machines.find(
+            (data) => +data.id === +dataArray[4]
           );
-          this.handleNoti(mappingNoti);
+          const matchRTDataForNoti = this.realTimeData.find(
+            (data) => +data.id === +dataArray[4]
+          );
+
+          if (matchDataForNoti) {
+            const mappingNoti = mapperModule.notiMapper(
+              dataArray,
+              matchDataForNoti,
+              matchRTDataForNoti
+            );
+            this.handleNoti(mappingNoti);
+          }
           break;
         case BinaryMessageType.PART_COUNT:
-          const mappingPartCount = mapperModule.partCountMapper(
-            dataArray,
-            this.machines
+          const matchDataForPartCount = this.machines.find(
+            (data) => +data.id === +dataArray[13]
           );
-          this.handlePartCount(mappingPartCount);
+
+          if (matchDataForPartCount) {
+            const mappingPartCount = mapperModule.partCountMapper(
+              dataArray,
+              matchDataForPartCount
+            );
+            this.handlePartCount(mappingPartCount);
+          }
           break;
         case BinaryMessageType.MESSAGE:
           console.log("message", dataArray);
@@ -418,18 +445,23 @@ export default class MachineViewModel extends DefaultViewModel {
     const newRealTimeData: RealTimeDataDto[] = [];
 
     for (let i = 0; i < statArray.length; i++) {
-      const result = mapperModule.machineStatMapper(
-        statArray[i],
-        this.machines
+      const matchData = this.machines.find(
+        (data) => +data.id === +statArray[i].Id
       );
-      newMachines.push(result.machine);
-      newRealTimeData.push(result.rtd);
+      if (matchData) {
+        const result = mapperModule.machineStatMapper(statArray[i], matchData);
+        newMachines.push(result.machine);
+        newRealTimeData.push(result.rtd);
+      }
     }
     runInAction(() => {
       this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
       this.realTimeData = newRealTimeData.sort(
         (a, b) => a.machineNo - b.machineNo
       );
+      if (this.router.pathname === pageUrlConfig.monitor2) {
+        this.setMountByMonitor();
+      }
     });
   };
 
@@ -489,6 +521,16 @@ export default class MachineViewModel extends DefaultViewModel {
           ],
         },
       };
+    });
+  };
+
+  setMountByMonitor = () => {
+    const newMachines = this.mountedList.machines.map((order: number) => {
+      return this.machines.find((machine: MachineDto) => +machine.id === order);
+    });
+
+    runInAction(() => {
+      this.machines = newMachines;
     });
   };
 }

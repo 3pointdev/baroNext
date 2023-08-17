@@ -7,12 +7,13 @@ import { instanceToPlain, plainToInstance } from "class-transformer";
 import { DropResult } from "react-beautiful-dnd";
 import { MouseEvent } from "react";
 import { Alert } from "../../modules/alert.module";
-import MonitorDto from "../../dto/monitor/monitor.dto";
 import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
+import MonitorNoticeDto from "../../dto/monitor/notice.dto";
 
 export default class MonitorViewModel extends DefaultViewModel {
   public list: MonitorListDto[] = [];
   public machineList: MachineSummaryDto[] = [];
+  public notice: string = "";
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -20,8 +21,11 @@ export default class MonitorViewModel extends DefaultViewModel {
     makeObservable(this, {
       list: observable,
       machineList: observable,
+      notice: observable,
 
       getList: action,
+      getListMachine: action,
+      getNotice: action,
     });
   }
 
@@ -35,6 +39,23 @@ export default class MonitorViewModel extends DefaultViewModel {
 
         runInAction(() => {
           this.list = data;
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  getNotice = async () => {
+    const monitorId = this.list.find(
+      (monitor: MonitorListDto) => monitor.name === this.router.query.monitor
+    ).id;
+    await this.api
+      .get(ServerUrlType.APIS, `/api/noti/id/${monitorId}`)
+      .then((result: AxiosResponse<MonitorNoticeDto>) => {
+        runInAction(() => {
+          this.notice = result.data[0].noti;
         });
       })
       .catch((error: AxiosError) => {
@@ -234,7 +255,6 @@ export default class MonitorViewModel extends DefaultViewModel {
     Alert.confirm({
       title: "이 모니터를 삭제합니다",
       callback: () => {
-        console.log("삭제 OK");
         this.delete(+value);
       },
       confirm: "삭제",
