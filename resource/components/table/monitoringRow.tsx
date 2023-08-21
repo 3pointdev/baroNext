@@ -53,11 +53,13 @@ export default function MonitoringRow({ data }: IProps) {
             data.alarm !== ""
           )}`}
         >
-          {machineStatusModule.ToStringStatus(
-            data.power,
-            data.mode,
+          {machineStatusModule.ToTextStatus(
             data.execution,
-            data.alarm !== ""
+            data.mode,
+            data.pause,
+            data.isReceiveMessage,
+            data.isReceivePartCount,
+            data.isChangePalette
           )}
         </td>
       </Article.TBodyRow>

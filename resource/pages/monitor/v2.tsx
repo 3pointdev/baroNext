@@ -45,6 +45,10 @@ function Monitoring2View(props: IProps) {
 
     initialize();
 
+    setTimeout(() => {
+      location.reload();
+    }, 1800000);
+
     return () => {
       clearInterval(interval);
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
@@ -157,6 +161,7 @@ const Header = {
   `,
 
   Time: styled.div`
+    font-variant-numeric: tabular-nums;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
@@ -218,6 +223,7 @@ const Footer = {
 
 const SlideMenu = {
   Wrap: styled.div`
+    z-index: 3;
     position: fixed;
     left: -100vw;
     top: 0px;

@@ -338,13 +338,12 @@ export default class MachineViewModel extends DefaultViewModel {
   };
 
   onMessage = async (response: MessageEvent) => {
-    if (typeof response.data === "object") {
+    if (typeof response.data === "object" && this.machines.length > 0) {
       //바이너리 메시지
       const updateData = await response.data.text();
       const dataArray = updateData.split("|");
       switch (dataArray[1]) {
         case BinaryMessageType.NOTI:
-          console.log("noti : ", dataArray);
           const matchDataForNoti = this.machines.find(
             (data) => +data.id === +dataArray[4]
           );
@@ -352,7 +351,7 @@ export default class MachineViewModel extends DefaultViewModel {
             (data) => +data.id === +dataArray[4]
           );
 
-          if (matchDataForNoti) {
+          if (matchDataForNoti !== undefined) {
             const mappingNoti = mapperModule.notiMapper(
               dataArray,
               matchDataForNoti,
@@ -362,6 +361,7 @@ export default class MachineViewModel extends DefaultViewModel {
           }
           break;
         case BinaryMessageType.PART_COUNT:
+          console.log("part : ", dataArray);
           const matchDataForPartCount = this.machines.find(
             (data) => +data.id === +dataArray[13]
           );
@@ -376,6 +376,10 @@ export default class MachineViewModel extends DefaultViewModel {
           break;
         case BinaryMessageType.MESSAGE:
           console.log("message", dataArray);
+          const matchDataForMessage = this.machines.find(
+            (data) => +data.id === +dataArray[6]
+          );
+          this.handleMessage(matchDataForMessage);
           break;
         case BinaryMessageType.ALARM:
           console.log("alarm", dataArray);
@@ -412,14 +416,21 @@ export default class MachineViewModel extends DefaultViewModel {
       }
     }
 
-    runInAction(() => {
-      this.machines = newMachinesByNoti.sort(
-        (a, b) => a.machineNo - b.machineNo
-      );
-      this.realTimeData = newRealTimeDataByNoti.sort(
-        (a, b) => a.machineNo - b.machineNo
-      );
-    });
+    if (this.router.pathname === pageUrlConfig.monitor2) {
+      runInAction(() => {
+        this.machines = newMachinesByNoti;
+        this.realTimeData = newRealTimeDataByNoti;
+      });
+    } else {
+      runInAction(() => {
+        this.machines = newMachinesByNoti.sort(
+          (a, b) => a.machineNo - b.machineNo
+        );
+        this.realTimeData = newRealTimeDataByNoti.sort(
+          (a, b) => a.machineNo - b.machineNo
+        );
+      });
+    }
   };
 
   handlePartCount = (mappingPartCount: MachineDto) => {
@@ -434,16 +445,13 @@ export default class MachineViewModel extends DefaultViewModel {
     }
 
     runInAction(() => {
-      this.machines = newMachinesByPartCount.sort(
-        (a, b) => a.machineNo - b.machineNo
-      );
+      this.machines = newMachinesByPartCount;
     });
   };
 
   handleMachineStat = (statArray) => {
     const newMachines: MachineDto[] = [];
     const newRealTimeData: RealTimeDataDto[] = [];
-
     for (let i = 0; i < statArray.length; i++) {
       const matchData = this.machines.find(
         (data) => +data.id === +statArray[i].Id
@@ -454,6 +462,7 @@ export default class MachineViewModel extends DefaultViewModel {
         newRealTimeData.push(result.rtd);
       }
     }
+
     runInAction(() => {
       this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
       this.realTimeData = newRealTimeData.sort(
@@ -462,6 +471,22 @@ export default class MachineViewModel extends DefaultViewModel {
       if (this.router.pathname === pageUrlConfig.monitor2) {
         this.setMountByMonitor();
       }
+    });
+  };
+
+  handleMessage = (matchData: MachineDto) => {
+    const newMachinesByMessage: MachineDto[] = [];
+
+    for (let i = 0; i < this.machines.length; i++) {
+      if (this.machines[i].id === matchData.id) {
+        newMachinesByMessage[i] = { ...matchData, isReceiveMessage: true };
+      } else {
+        newMachinesByMessage[i] = this.machines[i];
+      }
+    }
+
+    runInAction(() => {
+      this.machines = newMachinesByMessage;
     });
   };
 
@@ -528,9 +553,15 @@ export default class MachineViewModel extends DefaultViewModel {
     const newMachines = this.mountedList.machines.map((order: number) => {
       return this.machines.find((machine: MachineDto) => +machine.id === order);
     });
+    const newRTDatas = this.mountedList.machines.map((order: number) => {
+      return this.realTimeData.find(
+        (machine: RealTimeDataDto) => +machine.id === order
+      );
+    });
 
     runInAction(() => {
       this.machines = newMachines;
+      this.realTimeData = newRTDatas;
     });
   };
 }

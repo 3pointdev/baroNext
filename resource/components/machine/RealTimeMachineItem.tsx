@@ -17,7 +17,14 @@ export default function RealTimeMachineItem(props: IProps) {
 
   useEffect(() => {
     console.log(data.execution);
-    setColor(machineStatusModule.ToColorStatus(data.execution));
+    setColor(
+      machineStatusModule.ToColorStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage
+      )
+    );
   }, [data]);
 
   return (

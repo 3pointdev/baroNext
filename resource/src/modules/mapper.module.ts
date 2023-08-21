@@ -1,11 +1,13 @@
 import { plainToInstance } from "class-transformer";
 import MachineDto from "../dto/machine/machine.dto";
 import RealTimeDataDto from "../dto/machine/realTimeData.dto";
+import { MachineExecutionType } from "../../config/constants";
 
 class MapperModule {
   public currentListMapper(plainData) {
     const mapping = {
-      active: plainData.active_time,
+      active: plainData.active,
+      ActiveTime: plainData.active_time,
       machine_no: plainData.machine_no,
       Mid: plainData.mid,
       Id: plainData.mkey,
@@ -19,6 +21,7 @@ class MapperModule {
         : plainData.process,
       wait: plainData.wait,
       pause: false,
+      execution: plainData.status === "off" ? MachineExecutionType.OFF : "",
     };
 
     return plainToInstance(MachineDto, mapping);
@@ -28,11 +31,15 @@ class MapperModule {
     const plainMachineData = {
       Alarm: plainData.Alarm,
       active: matchData.active,
+      ActiveTime: matchData.activeTime,
+      ActiveStartTime: plainData.ActiveTime,
       wait: matchData.wait,
       Block: plainData.Block,
       CycleTime: plainData.CycleTime,
       Estop: plainData.Estop,
-      Execution: plainData.Execution,
+      Execution: plainData.Power
+        ? plainData.Execution
+        : MachineExecutionType.OFF,
       ExecutionTime: plainData.ExecutionTime,
       Id: plainData.Id,
       Mcode: plainData.Mcode,
@@ -52,6 +59,8 @@ class MapperModule {
       start_ymdt: matchData.startYmdt,
       pause: matchData.pause,
       doneTime: matchData.active * (plainData.PlanCount - plainData.PartCount),
+      WorkTime: plainData.WorkTime,
+      TActiveTime: plainData.TActiveTime,
     };
 
     const plainRealTimeData = {
@@ -98,10 +107,6 @@ class MapperModule {
     machine: MachineDto;
     rtd: RealTimeDataDto;
   } {
-    if (matchData === undefined || matchRTData === undefined) {
-      throw "아직 머신상태가 수신되지 않았습니다.";
-    }
-
     for (let i = 6; i < dataArray.length; i = i + 2) {
       const targetKey = dataArray[i].toLowerCase().replace("_", "");
       const RtKey = Object.keys(matchRTData).find(
@@ -113,23 +118,38 @@ class MapperModule {
         const MachineKey = Object.keys(matchData).find(
           (key) => key.toLowerCase().replace("_", "") === targetKey
         );
-        if (MachineKey) {
+        if (MachineKey && MachineKey !== "activeTime") {
           matchData[MachineKey] = dataArray[i + 1];
         }
       }
     }
-
+    matchData.isReceiveMessage = false;
     matchData.doneTime =
       matchData.active * (matchData.planCount - matchData.partCount);
-    console.log(matchData, matchRTData);
+
+    if (matchData.estop === "TRIGGERED" || !matchData.power) {
+      matchData.execution = MachineExecutionType.OFF;
+    }
+
+    if (matchData.execution === MachineExecutionType.ACTIVE) {
+      matchData.activeStartTime = new Date(dataArray[5]).getTime().toString();
+    }
+
+    if (matchData.execution !== MachineExecutionType.STOPPED) {
+      matchData.isReceivePartCount = false;
+    }
+
     return { machine: matchData, rtd: matchRTData };
   }
 
   public partCountMapper(dataArray: string[], matchData: MachineDto) {
-    matchData.active = +dataArray[11];
+    matchData.activeStartTime = dataArray[11];
+    matchData.tActiveTime = +dataArray[11];
     matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];
     matchData.wait = +dataArray[10];
+    matchData.isReceivePartCount = true;
+    matchData.isReceiveMessage = false;
 
     return matchData;
   }
