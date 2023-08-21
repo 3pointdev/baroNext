@@ -21,7 +21,6 @@ interface IProps {
 
 function MyPageView(props: IProps) {
   const userViewModel = props.userViewModel;
-  const [isViewPassword, setIsViewPassword] = useState<boolean>(false);
   const [isOpenModifyModal, setIsOpenModifyModal] = useState<boolean>(false);
 
   useEffect(() => {

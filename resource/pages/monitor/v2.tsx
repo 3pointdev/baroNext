@@ -13,6 +13,7 @@ import BarofactorySquare from "../../public/images/logo/barofactory-square";
 import MonitorViewModel from "../../src/viewModels/monitor/monitor.viewModel";
 import Linker from "../../components/linker/linker";
 import MonitorListDto from "../../src/dto/monitor/monitorList.dto";
+import pageUrlConfig from "../../config/pageUrlConfig";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -62,6 +63,20 @@ function Monitoring2View(props: IProps) {
     setIsOpenMonitorMenu(!isOpenMonitorMenu);
   };
 
+  const handleClickOtherMonitor = async (
+    event: MouseEvent<HTMLParagraphElement>
+  ) => {
+    event.preventDefault();
+
+    const { id } = event.currentTarget.dataset;
+    monitorViewModel.router.replace(`${pageUrlConfig.monitor2}?monitor=${id}`);
+    setIsOpenMenu(false);
+    await machineViewModel.getMounted();
+    await machineViewModel.getMachineList();
+    await monitorViewModel.getList();
+    monitorViewModel.getNotice();
+  };
+
   if (machineViewModel.machines.length <= NUMBERSEENMONITORING2)
     return (
       <MonitoringContainer>
@@ -90,7 +105,7 @@ function Monitoring2View(props: IProps) {
             />
           </SlideMenu.Head>
           <SlideMenu.Menu>
-            <Linker href="/" className="slide_menu">
+            <Linker onClick={(e) => e.preventDefault()} className="slide_menu">
               공지사항
             </Linker>
             <Linker onClick={handleClickOpenMonitorList} className="slide_menu">
@@ -104,7 +119,8 @@ function Monitoring2View(props: IProps) {
                   return (
                     <SlideMenu.MonitorChangeLink
                       key={`monitor_list_${key}`}
-                      href={`?monitor=${monitor.name}`}
+                      onClick={handleClickOtherMonitor}
+                      data-id={monitor.name}
                     >
                       <SlideMenu.MonitorName
                         className={
@@ -120,7 +136,7 @@ function Monitoring2View(props: IProps) {
                 }
               )}
             </SlideMenu.FolderMenu>
-            <Linker href="/" className="slide_menu">
+            <Linker onClick={(e) => e.preventDefault()} className="slide_menu">
               로그아웃
             </Linker>
           </SlideMenu.Menu>
@@ -294,7 +310,7 @@ const SlideMenu = {
       color: #3a79ec;
     }
   `,
-  MonitorChangeLink: styled.a`
+  MonitorChangeLink: styled.p`
     padding-left: 80px;
     height: 120px !important;
     margin-top: 8px;

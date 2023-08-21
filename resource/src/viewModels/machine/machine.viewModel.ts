@@ -379,7 +379,10 @@ export default class MachineViewModel extends DefaultViewModel {
           const matchDataForMessage = this.machines.find(
             (data) => +data.id === +dataArray[6]
           );
-          this.handleMessage(matchDataForMessage);
+
+          if (matchDataForMessage) {
+            this.handleMessage(matchDataForMessage);
+          }
           break;
         case BinaryMessageType.ALARM:
           console.log("alarm", dataArray);

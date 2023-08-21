@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UserMenuModel from "../../src/models/menu/userMenu.model";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import Linker from "../linker/linker";
 
 interface IProps {
   data: AuthDto;
@@ -118,7 +120,7 @@ const Menu = {
     align-items: center;
     justify-content: space-between;
   `,
-  Item: styled.a`
+  Item: styled(Linker)`
     padding: 0 20px;
     cursor: pointer;
     width: calc(100% - 40px);
