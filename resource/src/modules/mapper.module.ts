@@ -123,7 +123,10 @@ class MapperModule {
         }
       }
     }
-    matchData.isReceiveMessage = false;
+
+    if (dataArray.includes("execution")) {
+      matchData.isReceiveMessage = false;
+    }
     matchData.doneTime =
       matchData.active * (matchData.planCount - matchData.partCount);
 

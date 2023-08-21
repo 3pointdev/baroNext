@@ -116,7 +116,7 @@ export default class MainViewModel extends DefaultViewModel {
           {
             name: "monitor3",
             path: pageUrlConfig.monitor3,
-            title: "통합 모터",
+            title: "통합 모니터",
           },
         ],
       },

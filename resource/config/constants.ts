@@ -133,7 +133,7 @@ export type MachineColorType =
  * 기계 상황별 텍스트 타입
  */
 export const MachineTextType = {
-  ACTIVE: "가동 중",
+  ACTIVE: "가공 중",
   SUCCESS: "가공완료",
   READY: "대기 중",
   MODIFY: "수정 중",
