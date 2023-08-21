@@ -5,6 +5,12 @@ export default class MachineDto {
   @Expose({ name: "Alarm" })
   public alarm: string = "";
 
+  @Expose({ name: "ActiveTime" })
+  public activeTime: string = "";
+
+  @Expose({ name: "ActiveStartTime" })
+  public activeStartTime: string = "";
+
   @Expose({ name: "active" })
   public active: number = 0;
 
@@ -73,4 +79,19 @@ export default class MachineDto {
 
   @Expose({ name: "doneTime" })
   public doneTime?: number = 0;
+
+  @Expose({ name: "WorkTime" })
+  public workTime?: number = 0;
+
+  @Expose({ name: "TActiveTime" })
+  public tActiveTime?: number = 0;
+
+  @Expose({ name: "isReceivePartCount" })
+  public isReceivePartCount?: boolean = false;
+
+  @Expose({ name: "isChangePalette" })
+  public isChangePalette?: boolean = false;
+
+  @Expose({ name: "isReceiveMessage" })
+  public isReceiveMessage?: boolean = false;
 }

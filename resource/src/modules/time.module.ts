@@ -85,6 +85,17 @@ class TimeModule {
     const timeDiffInMs = date2.diff(date1);
     return timeDiffInMs;
   }
+
+  public msToString(millisecond: number): string {
+    const totalSeconds = Math.floor(millisecond / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    const hoursText = hours > 0 ? `${hours} 시간 ` : "";
+    const minutesText = minutes > 0 ? `${minutes} 분` : "";
+
+    return hoursText + minutesText;
+  }
 }
 
 const timeInstance = new TimeModule();

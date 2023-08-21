@@ -3,13 +3,14 @@ import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
 interface IProps {
-  href: string;
+  href?: string;
   onClick?: MouseEventHandler;
   onMouseEnter?: MouseEventHandler;
   onMouseLeave?: MouseEventHandler;
   boxStyle?: CSSProperties;
   style?: CSSProperties;
   children?: ReactElement | ReactElement[] | string | string[];
+  className?: string;
 }
 
 export default function Linker(props: IProps) {
@@ -21,15 +22,17 @@ export default function Linker(props: IProps) {
     onClick,
     onMouseEnter,
     onMouseLeave,
+    className,
   } = props;
 
   return (
-    <LinkerContainer style={boxStyle}>
+    <LinkerContainer style={boxStyle} className={className}>
       <Link
-        href={href}
+        href={href ? href : ""}
         style={style}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onClick={onClick}
       >
         {children}
       </Link>
