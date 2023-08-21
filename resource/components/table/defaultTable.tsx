@@ -25,29 +25,29 @@ export default function DefaultTable({
 }: IProps) {
   const [mergedCells, setMergedCells] = useState([]);
 
-  // 연속된 셀들을 찾는 함수 정의
-  const findConsecutiveCells = (columnName: string) => {
-    const mergedCells: number[] = [];
-    let count = 1;
-    for (let i = data.length - 1; i > 0; i--) {
-      if (data[i][columnName] === data[i - 1][columnName]) {
-        count++;
-        mergedCells.push(0);
-      } else {
-        mergedCells.push(count);
-        count = 1;
-      }
-    }
-    mergedCells.push(count);
-    return mergedCells;
-  };
-
   useEffect(() => {
     if (isRowSpan) {
+      // 연속된 셀들을 찾는 함수 정의
+      const findConsecutiveCells = (columnName: string) => {
+        const mergedCells: number[] = [];
+        let count = 1;
+        for (let i = data.length - 1; i > 0; i--) {
+          if (data[i][columnName] === data[i - 1][columnName]) {
+            count++;
+            mergedCells.push(0);
+          } else {
+            mergedCells.push(count);
+            count = 1;
+          }
+        }
+        mergedCells.push(count);
+        return mergedCells;
+      };
+
       const mergedArray = findConsecutiveCells(header[0].column);
       setMergedCells(mergedArray);
     }
-  }, [data]);
+  }, [isRowSpan, data, header]);
 
   if (data.length < 1) return <></>;
 
@@ -95,6 +95,7 @@ export default function DefaultTable({
                     className={
                       head.column === header[0].column ? "first_child" : ""
                     }
+                    style={{ width: head.size }}
                   >
                     {`${item[head.column]}`}
                   </td>
@@ -142,7 +143,7 @@ const Table = {
         font-weight: 600;
 
         & td.first_child {
-          background: rgb(213, 220, 233);
+          font-weight: 400;
         }
       }
     }

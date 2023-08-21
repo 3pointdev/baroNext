@@ -19,9 +19,9 @@ export default class RecordViewModel extends DefaultViewModel {
   constructor(props: IDefaultProps) {
     super(props);
     this.tableHeader = [
-      { title: "기계명", column: "mid", align: "center" },
-      { title: "품명", column: "program", align: "left" },
-      { title: "생산/목표", column: "count", align: "center" },
+      { title: "기계명", column: "mid", align: "center", size: "16vw" },
+      { title: "품명", column: "program", align: "left", size: "48vw" },
+      { title: "생산/목표", column: "count", align: "center", size: "16vw" },
     ];
     makeObservable(this, {
       recordModel: observable,
