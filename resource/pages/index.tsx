@@ -44,9 +44,9 @@ function MainView(props: IProps) {
 
   useEffect(() => {
     setTime(getFormattedTime());
-    const interval = setInterval(() => {
-      setTime(getFormattedTime());
-    }, 1000);
+    // const interval = setInterval(() => {
+    //   setTime(getFormattedTime());
+    // }, 1000);
     const initialize = async () => {
       await machineViewModel.getMachineList();
       machineViewModel.getProcessedQuantity();
@@ -55,7 +55,7 @@ function MainView(props: IProps) {
     initialize();
 
     return () => {
-      clearInterval(interval);
+      // clearInterval(interval);
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
         machineViewModel.socket.disconnect();
       }
@@ -63,7 +63,7 @@ function MainView(props: IProps) {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer style={{ overflow: "auto" }}>
       <Container.Time>{time}</Container.Time>
       <Container.RowFlex>
         <CardLayout

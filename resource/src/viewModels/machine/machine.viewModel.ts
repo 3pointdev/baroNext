@@ -419,21 +419,10 @@ export default class MachineViewModel extends DefaultViewModel {
       }
     }
 
-    if (this.router.pathname === pageUrlConfig.monitor2) {
-      runInAction(() => {
-        this.machines = newMachinesByNoti;
-        this.realTimeData = newRealTimeDataByNoti;
-      });
-    } else {
-      runInAction(() => {
-        this.machines = newMachinesByNoti.sort(
-          (a, b) => a.machineNo - b.machineNo
-        );
-        this.realTimeData = newRealTimeDataByNoti.sort(
-          (a, b) => a.machineNo - b.machineNo
-        );
-      });
-    }
+    runInAction(() => {
+      this.machines = newMachinesByNoti;
+      this.realTimeData = newRealTimeDataByNoti;
+    });
   };
 
   handlePartCount = (mappingPartCount: MachineDto) => {

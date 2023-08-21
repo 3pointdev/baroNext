@@ -3,6 +3,8 @@ import timeModule from "../../src/modules/time.module";
 import machineStatusModule from "../../src/modules/machineStatus.module";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import moment from "moment";
+import machineStatusInstance from "../../src/modules/machineStatus.module";
+import { MachineExecutionType } from "../../config/constants";
 
 interface IProps {
   data: MachineDto;
@@ -13,7 +15,7 @@ export default function MonitoringRow({ data }: IProps) {
     data.partCount > 0 ? (data.partCount / data.planCount) * 100 : 0
   );
 
-  if (data.execution !== "")
+  if (data.execution !== "" && data.program !== "")
     return (
       <Article.TBodyRow isOn={data.power}>
         <td className="number">{data.machineNo}</td>
@@ -45,13 +47,16 @@ export default function MonitoringRow({ data }: IProps) {
         <td className="cycle_time">
           {data.partCount ? timeModule.msToHHMM(data.active) : "-"}
         </td>
-        <td
-          className={`status ${machineStatusModule.ToClassStatus(
-            data.power,
-            data.mode,
+        <Article.StatusBadge
+          className={
+            data.execution === MachineExecutionType.OFF ? "is_turn_off" : ""
+          }
+          backgroundColor={machineStatusInstance.ToColorStatus(
             data.execution,
-            data.alarm !== ""
-          )}`}
+            data.mode,
+            data.pause,
+            data.isReceiveMessage
+          )}
         >
           {machineStatusModule.ToTextStatus(
             data.execution,
@@ -61,7 +66,7 @@ export default function MonitoringRow({ data }: IProps) {
             data.isReceivePartCount,
             data.isChangePalette
           )}
-        </td>
+        </Article.StatusBadge>
       </Article.TBodyRow>
     );
 }
@@ -221,6 +226,17 @@ const Article = {
       &.emergency_stop {
         background: #e8661c;
       }
+    }
+  `,
+  StatusBadge: styled.td<{ backgroundColor: string }>`
+    font-weight: 600;
+    text-align: center;
+    color: #000;
+    background: ${({ backgroundColor }) => backgroundColor};
+
+    &.is_turn_off {
+      background: #d9d9d980;
+      color: #e4e4e4 !important;
     }
   `,
 };
