@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import timeModule from "../../src/modules/time.module";
 import machineStatusModule from "../../src/modules/machineStatus.module";
 import MachineDto from "../../src/dto/machine/machine.dto";
@@ -18,8 +18,12 @@ export default function MonitoringRow({ data }: IProps) {
       <Article.TBodyRow isOn={data.power}>
         <td className="number">{data.machineNo}</td>
         <td className="name">{data.mid}</td>
-        <td className={`program ${progress >= 100 ? "redSign" : ""}`}>
-          {data.program}
+        <td
+          className={`program ${progress >= 100 ? "redSign" : ""} ${
+            data.program.length > 25 ? "is_long_column" : ""
+          }`}
+        >
+          <p>{data.program}</p>
         </td>
         <td className={`progress ${progress >= 100 ? "redSign" : ""}`}>
           {progress === Infinity ? "-" : `${progress}%`}
@@ -49,16 +53,35 @@ export default function MonitoringRow({ data }: IProps) {
             data.alarm !== ""
           )}`}
         >
-          {machineStatusModule.ToStringStatus(
-            data.power,
-            data.mode,
+          {machineStatusModule.ToTextStatus(
             data.execution,
-            data.alarm !== ""
+            data.mode,
+            data.pause,
+            data.isReceiveMessage,
+            data.isReceivePartCount,
+            data.isChangePalette
           )}
         </td>
       </Article.TBodyRow>
     );
 }
+
+const textScroll = keyframes`
+  from{
+    transform:translateX(100%);
+    -moz-transform:translateX(100%);
+    -webkit-transform:translateX(100%);
+    -o-transform:translateX(100%);
+    -ms-transform:translateX(100%);
+  }
+  to{
+    transform:translateX(-80%);
+    -moz-transform:translateX(-80%);
+    -webkit-transform:translateX(-80%);
+    -o-transform:translateX(-80%);
+    -ms-transform:translateX(-80%);
+  }
+`;
 
 const Article = {
   Wrap: styled.table`
@@ -92,6 +115,10 @@ const Article = {
   Body: styled.tbody``,
   TBodyRow: styled.tr<{ isOn: boolean }>`
     height: 48px;
+    cursor: default;
+    &:hover {
+      background: #494e7e;
+    }
 
     & * {
       color: ${({ isOn }) => (isOn ? "#fff" : "#474B6B !important")};
@@ -106,12 +133,22 @@ const Article = {
 
     // 기계명
     & .name {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     // 공정
     & .program {
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
       font-weight: 600;
 
+      &.is_long_column p {
+        animation: ${textScroll} 8s linear infinite;
+      }
       &.redSign {
         color: #ff4d49;
       }

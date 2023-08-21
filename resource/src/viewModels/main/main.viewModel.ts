@@ -105,8 +105,18 @@ export default class MainViewModel extends DefaultViewModel {
         subMenu: [
           {
             name: "monitoring_setting",
-            path: pageUrlConfig.monitoringSetting,
+            path: pageUrlConfig.monitorSetting,
             title: "모니터링 관리",
+          },
+          {
+            name: "monitor2",
+            path: `${pageUrlConfig.monitor2}?monitor=mon1`,
+            title: "분할 모니터",
+          },
+          {
+            name: "monitor3",
+            path: pageUrlConfig.monitor3,
+            title: "통합 모터",
           },
         ],
       },

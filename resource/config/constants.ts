@@ -1,3 +1,5 @@
+export const NUMBERSEENMONITORING2 = 4;
+
 /**
  * 서버주소 타입
  */
@@ -114,3 +116,31 @@ export const ValidType = {
   FAIL: 2,
 } as const;
 export type ValidType = (typeof ValidType)[keyof typeof ValidType];
+
+/**
+ * 기계 상황별 색상 타입
+ */
+export const MachineColorType = {
+  GREEN: "#6ebd33",
+  YELLOW: "#f5b117",
+  RED: "#e8661c",
+  GRAY: "#d5d7da",
+} as const;
+export type MachineColorType =
+  (typeof MachineColorType)[keyof typeof MachineColorType];
+
+/**
+ * 기계 상황별 텍스트 타입
+ */
+export const MachineTextType = {
+  ACTIVE: "가동 중",
+  SUCCESS: "가공완료",
+  READY: "대기 중",
+  MODIFY: "수정 중",
+  PAUSE: "일시정지",
+  EMERGENCY: "비상정지",
+  ALARM: "알람발생",
+  OFF: "전원꺼짐",
+} as const;
+export type MachineTextType =
+  (typeof MachineTextType)[keyof typeof MachineTextType];

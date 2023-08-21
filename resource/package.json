@@ -8,9 +8,7 @@
     "start:dev": "APP_ENV=development node app.js",
     "start": "node app.js",
     "build:dev": "APP_ENV=development next build",
-    "build": "next build",
-    "deploy:dev": "npm run build:dev && gcloud app deploy --project='centered-sight-237801' -q --appyaml=dev_app.yaml",
-    "deploy": "npm run build && gcloud app deploy --project='prd-barofactory' -q --appyaml=prd_app.yaml"
+    "build": "APP_ENV=production next build"
   },
   "dependencies": {
     "@babel/core": "^7.22.9",

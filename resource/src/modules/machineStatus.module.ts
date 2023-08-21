@@ -1,70 +1,92 @@
-import { MachineExecutionType, MachineStateType } from "../../config/constants";
+import {
+  MachineColorType,
+  MachineExecutionType,
+  MachineStateType,
+  MachineTextType,
+} from "../../config/constants";
 
 class MachineStatusModule {
-  public ToStringStatus(
-    power: boolean,
-    mode: string,
+  /**
+   * 머신 상태 별 텍스트 추출 함수
+   * @param execution : string
+   * @param mode : string
+   * @param isPause : boolean
+   * @param isReceiveMessage : boolean
+   * @param isReceivePartCount: boolean
+   * @param isChangePalette: boolean
+   * @returns color : string
+   */
+  public ToTextStatus(
     execution: string,
-    isDone: boolean,
-    isAlert?: boolean
-  ) {
-    if (!power) {
-      return "전원꺼짐";
-    }
-
-    if (mode !== "AUTOMATIC") {
-      return "수정 중";
-    }
-
-    if (isAlert) {
-      return "알람발생";
-    }
+    mode: string,
+    isPause: boolean,
+    isReceiveMessage: boolean,
+    isReceivePartCount: boolean,
+    isChangePalette: boolean
+  ): MachineTextType {
+    if (execution === MachineExecutionType.OFF) return MachineTextType.OFF;
+    if (isReceiveMessage) return MachineTextType.ALARM;
+    if (mode !== "AUTOMATIC") return MachineTextType.MODIFY;
+    if (isPause) return MachineTextType.PAUSE;
 
     switch (execution) {
       case MachineExecutionType.ACTIVE:
-        return "가공중";
+        return MachineTextType.ACTIVE;
       case MachineExecutionType.READY:
-        return "READY";
+        return MachineTextType.READY;
       case MachineExecutionType.TRIGGERED:
-        return "비상정지";
+        return MachineTextType.EMERGENCY;
       case MachineExecutionType.STOPPED || MachineExecutionType.INTERRUPTED:
-        if (isDone) {
-          return "가공완료";
+        if (isReceivePartCount || isChangePalette) {
+          return MachineTextType.SUCCESS;
         } else {
-          return "대기 중";
+          return MachineTextType.READY;
         }
     }
   }
 
-  public ToColorStatus(execution: string) {
-    switch (execution) {
-      case MachineExecutionType.ACTIVE:
-        return "#6ebd33";
+  /**
+   * 머신 상태 별 색상 추출 함수
+   * @param execution : string
+   * @param mode : string
+   * @param isPause : boolean
+   * @param isReceiveMessage : boolean
+   * @returns color : string
+   */
+  public ToColorStatus(
+    execution: string,
+    mode: string,
+    isPause: boolean,
+    isReceiveMessage: boolean
+  ): MachineColorType {
+    //전원 OFF
+    if (execution === MachineExecutionType.OFF || execution === "")
+      return MachineColorType.GRAY;
 
-      case MachineExecutionType.OFF:
-        return "#d5d7da";
+    //비상정지
+    if (execution === MachineExecutionType.TRIGGERED || isReceiveMessage)
+      return MachineColorType.RED;
 
-      case MachineExecutionType.TRIGGERED:
-        return "#e8661c";
+    //수동조작 수정작업 중
+    if (mode !== "AUTOMATIC" || isPause) return MachineColorType.YELLOW;
 
-      case MachineExecutionType.STOPPED:
-        return "#f5b117";
+    //일시정지, 대기, 작업중단
+    if (
+      execution === MachineExecutionType.STOPPED ||
+      execution === MachineExecutionType.INTERRUPTED ||
+      execution === MachineExecutionType.READY
+    )
+      return MachineColorType.YELLOW;
 
-      case MachineExecutionType.READY:
-        return "#f5b117";
-
-      case MachineExecutionType.INTERRUPTED:
-        return "#f5b117";
-
-      default:
-        return "#d5d7da";
-    }
+    //가공 중
+    if (execution === MachineExecutionType.ACTIVE)
+      return MachineColorType.GREEN;
   }
 
   public ToClassStatus(
     power: boolean,
-    mode: string,
     execution: string,
+    mode: string,
     isDone: boolean,
     isAlert?: boolean
   ) {

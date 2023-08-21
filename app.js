@@ -1,6 +1,6 @@
-var express = require("express");
-var app = express();
-var server = require("http").createServer(app);
+const express = require("express");
+const app = express();
+const server = require("http").createServer(app);
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/build/index.html", {

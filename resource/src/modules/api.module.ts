@@ -52,14 +52,6 @@ export class ApiModule {
       responseType: "json",
     });
 
-    console.log("ENV : ", {
-      BARO: process.env.NEXT_PUBLIC_BARO_URL,
-      APIS: process.env.NEXT_PUBLIC_APIS_URL,
-      EDGE: process.env.NEXT_PUBLIC_EDGE_API_URL,
-      WEBSOCKET: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-    });
-    console.log("axios : ", server);
-
     if (typeof this.indicatorViewModel !== "undefined") {
       this.indicatorViewModel.useIndicator(true);
     }
