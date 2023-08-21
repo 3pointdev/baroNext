@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import timeModule from "../../src/modules/time.module";
 import { MachineExecutionType } from "../../config/constants";
 import machineStatusModule from "../../src/modules/machineStatus.module";
+import timeInstance from "../../src/modules/time.module";
 
 interface IProps {
   data: MachineDto;
@@ -25,7 +26,7 @@ export default function RealTimeMachineItem(props: IProps) {
       )
     );
   }, [data.execution, data.mode, data.pause, data.isReceiveMessage]);
-
+  console.log(data.mid, data.execution, color);
   return (
     <Container>
       <Item.MidTitle>{data.mid}</Item.MidTitle>
@@ -48,7 +49,7 @@ export default function RealTimeMachineItem(props: IProps) {
           <RowFlex>
             <Item.Title>남은시간</Item.Title>
             <Item.Desc>
-              {+data.doneTime > 0 ? timeModule.msToHHMM(+data.doneTime) : "-"}
+              {+data.doneTime > 0 ? timeInstance.msToHHMM(data.doneTime) : "-"}
             </Item.Desc>
           </RowFlex>
         </ColFlex>

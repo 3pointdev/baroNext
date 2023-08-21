@@ -82,41 +82,6 @@ class MachineStatusModule {
     if (execution === MachineExecutionType.ACTIVE)
       return MachineColorType.GREEN;
   }
-
-  public ToClassStatus(
-    power: boolean,
-    execution: string,
-    mode: string,
-    isDone: boolean,
-    isAlert?: boolean
-  ) {
-    if (!power) {
-      return MachineStateType.OFF;
-    }
-
-    if (mode !== "AUTOMATIC") {
-      return MachineStateType.MODIFY;
-    }
-
-    if (isAlert) {
-      return MachineStateType.ALARM;
-    }
-
-    switch (execution) {
-      case MachineExecutionType.ACTIVE:
-        return MachineStateType.RUNNING;
-      case MachineExecutionType.READY:
-        return MachineStateType.READY;
-      case MachineExecutionType.TRIGGERED:
-        return MachineStateType.EMERGENCY_STOP;
-      case MachineExecutionType.STOPPED || MachineExecutionType.INTERRUPTED:
-        if (isDone) {
-          return MachineStateType.SUCCESS;
-        } else {
-          return MachineStateType.WAIT;
-        }
-    }
-  }
 }
 
 const machineStatusInstance = new MachineStatusModule();

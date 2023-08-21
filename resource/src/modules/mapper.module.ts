@@ -58,7 +58,9 @@ class MapperModule {
       prdct_end: matchData.prdctEnd,
       start_ymdt: matchData.startYmdt,
       pause: matchData.pause,
-      doneTime: matchData.active * (plainData.PlanCount - plainData.PartCount),
+      doneTime:
+        (matchData.active + matchData.wait) *
+        (plainData.PlanCount - plainData.PartCount),
       WorkTime: plainData.WorkTime,
       TActiveTime: plainData.TActiveTime,
     };
@@ -127,8 +129,6 @@ class MapperModule {
     if (dataArray.includes("execution")) {
       matchData.isReceiveMessage = false;
     }
-    matchData.doneTime =
-      matchData.active * (matchData.planCount - matchData.partCount);
 
     if (matchData.estop === "TRIGGERED" || !matchData.power) {
       matchData.execution = MachineExecutionType.OFF;
