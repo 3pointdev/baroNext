@@ -315,6 +315,8 @@ const SlideMenu = {
     height: 120px !important;
     margin-top: 8px;
     line-height: 112px;
+    cursor: pointer;
+
     &:hover {
       background: #19b1d248;
     }
