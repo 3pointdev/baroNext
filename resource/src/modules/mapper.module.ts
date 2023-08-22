@@ -1,7 +1,10 @@
 import { plainToInstance } from "class-transformer";
 import MachineDto from "../dto/machine/machine.dto";
 import RealTimeDataDto from "../dto/machine/realTimeData.dto";
-import { MachineExecutionType } from "../../config/constants";
+import {
+  ExceptionBlockType,
+  MachineExecutionType,
+} from "../../config/constants";
 
 class MapperModule {
   public currentListMapper(plainData) {
@@ -21,7 +24,6 @@ class MapperModule {
         : plainData.process,
       wait: plainData.wait,
       pause: false,
-      execution: plainData.status === "off" ? MachineExecutionType.OFF : "",
     };
 
     return plainToInstance(MachineDto, mapping);
@@ -44,7 +46,7 @@ class MapperModule {
       Id: plainData.Id,
       Mcode: plainData.Mcode,
       Message: plainData.Message,
-      MessageTime: plainData.MessageEvent,
+      MessageTime: plainData.MessageTime,
       Mid: plainData.Mid,
       Mode: plainData.Mode,
       ModeTime: plainData.ModeTime,
@@ -57,12 +59,13 @@ class MapperModule {
       machine_no: matchData.machineNo,
       prdct_end: matchData.prdctEnd,
       start_ymdt: matchData.startYmdt,
-      pause: matchData.pause,
+      pause: ExceptionBlockType.PAUSE.includes(plainData.Block),
       doneTime:
         (matchData.active + matchData.wait) *
         (plainData.PlanCount - plainData.PartCount),
       WorkTime: plainData.WorkTime,
       TActiveTime: plainData.TActiveTime,
+      isChangePalette: ExceptionBlockType.PALETTE.includes(plainData.Block),
     };
 
     const plainRealTimeData = {
@@ -102,7 +105,7 @@ class MapperModule {
   }
 
   public notiMapper(
-    dataArray: string[],
+    dataArray: any[],
     matchData: MachineDto,
     matchRTData: RealTimeDataDto
   ): {
@@ -117,11 +120,25 @@ class MapperModule {
       if (RtKey) {
         matchRTData[RtKey] = dataArray[i + 1];
       } else {
-        const MachineKey = Object.keys(matchData).find(
+        const machineKey = Object.keys(matchData).find(
           (key) => key.toLowerCase().replace("_", "") === targetKey
         );
-        if (MachineKey && MachineKey !== "activeTime") {
-          matchData[MachineKey] = dataArray[i + 1];
+        if (machineKey && machineKey !== "activeTime") {
+          matchData[machineKey] = dataArray[i + 1];
+        }
+
+        if (
+          machineKey === "block" &&
+          ExceptionBlockType.PAUSE.includes(dataArray[i + 1])
+        ) {
+          matchData.pause = true;
+        }
+
+        if (
+          machineKey === "block" &&
+          ExceptionBlockType.PALETTE.includes(dataArray[i + 1])
+        ) {
+          matchData.isChangePalette = true;
         }
       }
     }

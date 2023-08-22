@@ -144,3 +144,13 @@ export const MachineTextType = {
 } as const;
 export type MachineTextType =
   (typeof MachineTextType)[keyof typeof MachineTextType];
+
+/**
+ * 특수 블럭 코드 타입
+ */
+export const ExceptionBlockType = {
+  PAUSE: ["M0", "M00", "M1", "M01", "M61", "M62"],
+  PALETTE: ["M61", "M62"],
+} as const;
+export type ExceptionBlockType =
+  (typeof ExceptionBlockType)[keyof typeof ExceptionBlockType];

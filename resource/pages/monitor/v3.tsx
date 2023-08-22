@@ -7,6 +7,7 @@ import BarofactorySquare from "../../public/images/logo/barofactory-square";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import MachineViewModel from "../../src/viewModels/machine/machine.viewModel";
 import MonitoringRow from "../../components/table/monitoringRow";
+import Timer from "../../components/timer/timer";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -14,18 +15,8 @@ interface IProps {
 
 function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
-  const [time, setTime] = useState<string>("");
-
-  const getFormattedTime = () => {
-    return moment().format("YYYY.MM.DD HH:mm:ss");
-  };
 
   useEffect(() => {
-    setTime(getFormattedTime());
-    const interval = setInterval(() => {
-      setTime(getFormattedTime());
-    }, 1000);
-
     const initialize = async () => {
       await machineViewModel.getMachineList();
 
@@ -38,7 +29,6 @@ function Monitoring3View(props: IProps) {
     initialize();
 
     return () => {
-      clearInterval(interval);
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
         machineViewModel.socket.disconnect();
       }
@@ -50,7 +40,7 @@ function Monitoring3View(props: IProps) {
       <Header.Wrap>
         <Header.LeftSide>
           <BarofactorySquare color={"#ffffff"} />
-          <Header.Time>{time}</Header.Time>
+          <Timer style={{ width: "400px" }} size="midium" />
         </Header.LeftSide>
         <Header.Title>전체공정현황</Header.Title>
         <Header.Enterprise>{machineViewModel.auth.name}</Header.Enterprise>
@@ -104,10 +94,6 @@ const Header = {
     align-items: center;
     height: 100%;
     gap: 24px;
-  `,
-  Time: styled.p`
-    height: 34px;
-    font-size: 34px;
   `,
   Title: styled.p`
     position: absolute;
