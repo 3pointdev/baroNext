@@ -69,7 +69,6 @@ export default class AuthViewModel extends DefaultViewModel {
         sender: window.localStorage.sender,
       })
       .then((result: any) => {
-        console.log("result : ", result);
         if (result.data.code === 500) {
           Alert.alert("요청하신 계정 또는 연락처를 찾을 수 없습니다.");
         }

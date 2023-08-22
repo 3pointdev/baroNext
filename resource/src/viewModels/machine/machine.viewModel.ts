@@ -68,7 +68,6 @@ export default class MachineViewModel extends DefaultViewModel {
   }
 
   getMounted = async (monitorName: string | string[]) => {
-    console.log(monitorName);
     await this.api
       .post(ServerUrlType.APIS, "/api/cloud/monitorList", {
         monitor: monitorName,
@@ -362,7 +361,6 @@ export default class MachineViewModel extends DefaultViewModel {
           }
           break;
         case BinaryMessageType.PART_COUNT:
-          console.log("part : ", dataArray);
           const matchDataForPartCount = this.machines.find(
             (data) => +data.id === +dataArray[13]
           );

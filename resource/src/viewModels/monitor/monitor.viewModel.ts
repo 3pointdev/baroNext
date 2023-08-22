@@ -169,7 +169,6 @@ export default class MonitorViewModel extends DefaultViewModel {
   };
 
   updateMachineLocation = async (targets: any) => {
-    console.log(targets);
     await this.api
       .patch(ServerUrlType.BARO, "/mon", targets)
       .then((result: AxiosResponse) => {

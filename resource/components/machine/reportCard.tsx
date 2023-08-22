@@ -77,7 +77,6 @@ export default function ReportCard({
       <CardLayout>
         <ManageCycleTime.ButtonWrap>
           {data.data.map((settingData: ProductDataDto, key: number) => {
-            console.log(active, key, active === key);
             return (
               <DefaultButton
                 title={settingData.program.split("(")[0]}

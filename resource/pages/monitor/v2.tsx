@@ -14,7 +14,6 @@ import MonitorViewModel from "../../src/viewModels/monitor/monitor.viewModel";
 import Linker from "../../components/linker/linker";
 import MonitorListDto from "../../src/dto/monitor/monitorList.dto";
 import pageUrlConfig from "../../config/pageUrlConfig";
-import AuthViewModel from "../../src/viewModels/auth/auth.viewModel";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -136,12 +135,9 @@ function Monitoring2View(props: IProps) {
                 }
               )}
             </SlideMenu.FolderMenu>
-            <Linker
-              onClick={monitorViewModel.insertLogout}
-              className="slide_menu"
-            >
-              로그아웃
-            </Linker>
+            <div className="slide_menu" onClick={monitorViewModel.insertLogout}>
+              <p onClick={monitorViewModel.insertLogout}>로그아웃</p>
+            </div>
           </SlideMenu.Menu>
           <SlideMenu.Foot>BAROFACTORY</SlideMenu.Foot>
         </SlideMenu.Wrap>
@@ -281,6 +277,10 @@ const SlideMenu = {
       height: 120px;
       margin-top: 32px;
       padding-left: 56px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
       &:hover {
         background: #19b1d248;
       }
