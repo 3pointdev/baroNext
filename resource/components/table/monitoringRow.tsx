@@ -231,7 +231,7 @@ const Article = {
   StatusBadge: styled.td<{ backgroundColor: string }>`
     font-weight: 600;
     text-align: center;
-    color: #000;
+    color: #000 !important;
     background: ${({ backgroundColor }) => backgroundColor};
 
     &.is_turn_off {
