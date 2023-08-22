@@ -22,7 +22,7 @@ export default function MonitoringRow({ data }: IProps) {
         <td className="name">{data.mid}</td>
         <td
           className={`program ${progress >= 100 ? "redSign" : ""} ${
-            data.program.length > 25 ? "is_long_column" : ""
+            data.program?.length > 25 ? "is_long_column" : ""
           }`}
         >
           <p>{data.program}</p>
