@@ -51,7 +51,7 @@ export default class ReportViewModel extends DefaultViewModel {
       .then((result: AxiosResponse<ProductDto[]>) => {
         const data = result.data;
         const instance = [];
-        console.log(data);
+
         for (let index = 0; index < data.length; index++) {
           instance.push(plainToInstance(ProductDto, data[index]));
           this.getLotData(
@@ -145,7 +145,7 @@ export default class ReportViewModel extends DefaultViewModel {
 
   handleChangeFilter = (event: ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
-    console.log(value);
+
     runInAction(() => {
       this.filterTarget = +value;
     });

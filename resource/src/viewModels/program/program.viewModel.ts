@@ -77,25 +77,7 @@ export default class ProgramViewModel extends DefaultViewModel {
   };
 
   onMessage = async (response: MessageEvent) => {
-    if (typeof response.data === "object") {
-      //바이너리 메시지
-      const updateData = await response.data.text();
-      const dataArray = updateData.split("|");
-      switch (dataArray[1]) {
-        case BinaryMessageType.NOTI:
-          console.log("noti", dataArray);
-          break;
-        case BinaryMessageType.PART_COUNT:
-          console.log("part_count", dataArray);
-          break;
-        case BinaryMessageType.MESSAGE:
-          console.log("message", dataArray);
-          break;
-        case BinaryMessageType.ALARM:
-          console.log("alarm", dataArray);
-          break;
-      }
-    } else {
+    if (typeof response.data !== "object") {
       //오브젝트 메시지
       const objectMessage = JSON.parse(response.data);
 

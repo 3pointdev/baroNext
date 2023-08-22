@@ -26,7 +26,6 @@ export default function RealTimeMachineItem(props: IProps) {
       )
     );
   }, [data.execution, data.mode, data.pause, data.isReceiveMessage]);
-  console.log(data.mid, data.execution, color);
   return (
     <Container>
       <Item.MidTitle>{data.mid}</Item.MidTitle>

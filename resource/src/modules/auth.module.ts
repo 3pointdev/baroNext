@@ -2,7 +2,6 @@ import AuthDto from "../dto/auth/auth.dto";
 
 class AuthModule {
   public saveStorage(user: AuthDto) {
-    console.log(user);
     window.localStorage.setItem("account", user.account);
     window.localStorage.setItem("token", user.token);
     window.localStorage.setItem("enterprise", user.enterprise);
