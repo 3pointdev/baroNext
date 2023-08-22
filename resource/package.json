@@ -6,9 +6,11 @@
     "dev": "next dev",
     "lint": "next lint",
     "start:dev": "APP_ENV=development node app.js",
-    "start": "node app.js",
+    "start": "next start",
     "build:dev": "APP_ENV=development next build",
-    "build": "APP_ENV=production next build"
+    "build": "APP_ENV=production next build",
+    "depoly:dev": "gcloud app deploy --project='prd-barofactory' -q --appyaml=app_prd.yaml",
+    "depoly": "gcloud app deploy --project='centered-sight-237801' -q --appyaml=app_dev.yaml"
   },
   "dependencies": {
     "@babel/core": "^7.22.9",
