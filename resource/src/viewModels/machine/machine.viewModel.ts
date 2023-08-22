@@ -67,10 +67,11 @@ export default class MachineViewModel extends DefaultViewModel {
     });
   }
 
-  getMounted = async () => {
+  getMounted = async (monitorName: string | string[]) => {
+    console.log(monitorName);
     await this.api
       .post(ServerUrlType.APIS, "/api/cloud/monitorList", {
-        monitor: this.router.query.monitor,
+        monitor: monitorName,
       })
       .then((result: AxiosResponse<ServerResponse<MountedDto>>) => {
         runInAction(() => {
@@ -374,8 +375,7 @@ export default class MachineViewModel extends DefaultViewModel {
             this.handlePartCount(mappingPartCount);
           }
           break;
-        case BinaryMessageType.MESSAGE:
-          console.log("message", dataArray);
+        case BinaryMessageType.MESSAGE || BinaryMessageType.ALARM:
           const matchDataForMessage = this.machines.find(
             (data) => +data.id === +dataArray[6]
           );
@@ -383,9 +383,6 @@ export default class MachineViewModel extends DefaultViewModel {
           if (matchDataForMessage) {
             this.handleMessage(matchDataForMessage);
           }
-          break;
-        case BinaryMessageType.ALARM:
-          console.log("alarm", dataArray);
           break;
       }
     } else {

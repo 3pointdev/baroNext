@@ -14,6 +14,7 @@ import MonitorViewModel from "../../src/viewModels/monitor/monitor.viewModel";
 import Linker from "../../components/linker/linker";
 import MonitorListDto from "../../src/dto/monitor/monitorList.dto";
 import pageUrlConfig from "../../config/pageUrlConfig";
+import AuthViewModel from "../../src/viewModels/auth/auth.viewModel";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -21,8 +22,7 @@ interface IProps {
 }
 
 function Monitoring2View(props: IProps) {
-  const machineViewModel = props.machineViewModel;
-  const monitorViewModel = props.monitorViewModel;
+  const { machineViewModel, monitorViewModel } = props;
   const [time, setTime] = useState<string>("");
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [isOpenMonitorMenu, setIsOpenMonitorMenu] = useState<boolean>(false);
@@ -38,7 +38,7 @@ function Monitoring2View(props: IProps) {
     }, 1000);
 
     const initialize = async () => {
-      await machineViewModel.getMounted();
+      await machineViewModel.getMounted(monitorViewModel.router.query.monitor);
       await machineViewModel.getMachineList();
       await monitorViewModel.getList();
       monitorViewModel.getNotice();
@@ -71,7 +71,7 @@ function Monitoring2View(props: IProps) {
     const { id } = event.currentTarget.dataset;
     monitorViewModel.router.replace(`${pageUrlConfig.monitor2}?monitor=${id}`);
     setIsOpenMenu(false);
-    await machineViewModel.getMounted();
+    await machineViewModel.getMounted(id);
     await machineViewModel.getMachineList();
     await monitorViewModel.getList();
     monitorViewModel.getNotice();
@@ -136,7 +136,10 @@ function Monitoring2View(props: IProps) {
                 }
               )}
             </SlideMenu.FolderMenu>
-            <Linker onClick={(e) => e.preventDefault()} className="slide_menu">
+            <Linker
+              onClick={monitorViewModel.insertLogout}
+              className="slide_menu"
+            >
               로그아웃
             </Linker>
           </SlideMenu.Menu>
