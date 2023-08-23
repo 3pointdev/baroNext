@@ -94,6 +94,7 @@ const LeftSide = {
       font-size: 20px;
       font-weight: 600;
       color: #4c4e64;
+      white-space: nowrap;
     }
   `,
 };

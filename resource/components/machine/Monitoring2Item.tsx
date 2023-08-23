@@ -1,14 +1,9 @@
 import styled from "styled-components";
-import {
-  MachineExecutionType,
-  MachineStateType,
-  MachineTextType,
-} from "../../config/constants";
+import { MachineExecutionType, MachineTextType } from "../../config/constants";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
 import { useCallback, useEffect, useState } from "react";
-import moment from "moment";
 
 interface IProps {
   data: MachineDto;
@@ -29,33 +24,38 @@ export default function Monitoring2Item({ data }: IProps) {
   /**
    * execution이 active일때 타이머 작동함수
    */
-  const fetchTimer = useCallback(async () => {
+  useEffect(() => {
     if (data.execution === MachineExecutionType.ACTIVE) {
       const interval = setInterval(() => {
-        if (data.workTime > 0) {
-          if (data.tActiveTime > 0) {
-            setRealTime(
-              +data.activeTime -
-                data.workTime -
-                (new Date().getTime() - data.tActiveTime)
-            );
-          } else {
-            setRealTime(+data.activeTime - data.workTime);
-          }
-        } else {
-          setRealTime(
-            +data.activeTime - (new Date().getTime() - +data.activeStartTime)
-          );
-        }
+        setRealTime(
+          +data.activeStartTime - (new Date().getTime() - +data.activeTime)
+        );
       }, 1000);
       setRealTimeInterval(interval);
+    } else {
+      clearInterval(realTimeInterval);
+      setRealTimeInterval(null);
     }
   }, [data.execution]);
 
   /**
    * 머신상태에 따라 텍스트, 색상 변경함수
    */
-  const fetchState = useCallback(async () => {
+  useEffect(() => {
+    console.log(
+      data.mid,
+      data.execution,
+      data.pause,
+      data.block,
+      machineStatusInstance.ToTextStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage,
+        data.isReceivePartCount,
+        data.isChangePalette
+      )
+    );
     setExecutionText(
       machineStatusInstance.ToTextStatus(
         data.execution,
@@ -84,8 +84,6 @@ export default function Monitoring2Item({ data }: IProps) {
   ]);
 
   useEffect(() => {
-    fetchState();
-    fetchTimer();
     return () => {
       clearInterval(realTimeInterval);
     };
@@ -106,7 +104,13 @@ export default function Monitoring2Item({ data }: IProps) {
       <RealTimeInfo.Wrap>
         <RealTimeInfo.TrafficLights color={executionColor} />
         <RealTimeInfo.Number>{data.machineNo}</RealTimeInfo.Number>
-        <RealTimeInfo.CycleTime>
+        <RealTimeInfo.CycleTime
+          className={
+            realTime <= 0 && data.execution === MachineExecutionType.ACTIVE
+              ? "zero"
+              : ""
+          }
+        >
           {executionText === MachineTextType.ACTIVE
             ? timeInstance.msToHHMM(realTime > 0 ? realTime : 0)
             : executionText === MachineTextType.OFF
@@ -156,7 +160,8 @@ const StopCover = styled.div`
   justify-content: center;
   color: #fff;
   font-size: 9vh;
-  font-weight: 800;
+  font-family: "pretendard", monospace;
+  font-weight: 700;
 `;
 const Header = {
   Wrap: styled.div`
@@ -202,19 +207,21 @@ const RealTimeInfo = {
     position: relative;
   `,
   CycleTime: styled.p`
-    font-variant-numeric: tabular-nums;
-
     z-index: 1;
     font-size: 7.2vh;
     font-weight: 900;
     line-height: 6.2vh;
+
+    &.zero {
+      color: red;
+    }
   `,
 };
 
 const Footer = {
   Wrap: styled.div`
     z-index: 1;
-    height: 100px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -233,74 +240,16 @@ const Footer = {
   `,
   Mid: styled.p`
     z-index: 1;
-    font-size: 3vh;
+    font-size: 40px;
     color: #727171;
     font-weight: 500;
-    line-height: 100px;
+    line-height: 72px;
   `,
   EndTime: styled.p`
     z-index: 1;
-    font-size: 3vh;
+    font-size: 40px;
     color: #231815;
     font-weight: 500;
-    line-height: 100px;
+    line-height: 72px;
   `,
 };
-
-// active: 163377
-// activeStartTime: "1692327858973"
-// activeTime: "162542"
-// alarm: "0064 motion                                    .(       1  ) 3"
-// block: "M30"
-// cycleTime: 0
-// doneTime: 4737933
-// endPart: false
-// estop: "ARMED"
-// execution: "ACTIVE"
-// executionTime: 0
-// id: "5"
-// machineNo: "5"
-// mcode: "G1X39.4F.06"
-// message: "2360  2360 CHUCK UNCLAMP STATUS"
-// messageTime: undefined
-// mid: "Lynx220LC"
-// mode: "AUTOMATIC"
-// modeTime: 0
-// partCount: 69
-// pause: false
-// planCount: 98
-// power: true
-// prdctEnd: "2023-08-18 14:38:00"
-// program: "CS87D30H48-02-2  "
-// startYmdt: "2023-08-17 11:28:05"
-// tActiveTime: 1692327802908
-// wait: 35517
-// workTime: 136105
-
-// ActiveTime: 1692327858973
-// Alarm: "0064 motion                                    .(       1  ) 3"
-// Block: "O2003(CS87D30H48-02-2)"
-// CountTime: 1692327829345
-// CycleTime: 0
-// Estop: "ARMED"
-// Execution: "ACTIVE"
-// ExecutionTime: 0
-// HasDataModi: false
-// Id: "5"
-// IdleTime: 29628
-// Mcode: "N1000X50."
-// Message: "2360  2360 CHUCK UNCLAMP STATUS"
-// MessageTime: 1692313499931
-// Mid: "Lynx220LC"
-// Mode: "AUTOMATIC"
-// ModeTime: 0
-// PartCount: 69
-// PlanCount: 98
-// Power: true
-// Program: "% O2003(CS87D30H48-02-2)  (2023.08.17) "
-// SendByte: 3939889
-// State: 1
-// StopTime: 1692327829748
-// TActiveTime: 1692327858973
-// Time: "2023-08-18T03:04:36.101265Z"
-// WorkTime: 0

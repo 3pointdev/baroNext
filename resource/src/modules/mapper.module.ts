@@ -127,31 +127,23 @@ class MapperModule {
           matchData[machineKey] = dataArray[i + 1];
         }
 
-        if (
-          machineKey === "block" &&
-          ExceptionBlockType.PAUSE.includes(dataArray[i + 1])
-        ) {
-          matchData.pause = true;
-        }
-
-        if (
-          machineKey === "block" &&
-          ExceptionBlockType.PALETTE.includes(dataArray[i + 1])
-        ) {
-          matchData.isChangePalette = true;
+        if (machineKey === "block") {
+          matchData.pause = ExceptionBlockType.PAUSE.includes(dataArray[i + 1]);
+          matchData.isChangePalette = ExceptionBlockType.PALETTE.includes(
+            dataArray[i + 1]
+          );
         }
       }
-    }
-
-    if (dataArray.includes("execution")) {
-      matchData.isReceiveMessage = false;
     }
 
     if (matchData.estop === "TRIGGERED" || !matchData.power) {
       matchData.execution = MachineExecutionType.OFF;
     }
 
-    if (matchData.execution === MachineExecutionType.ACTIVE) {
+    if (
+      dataArray.includes("execution") &&
+      matchData.execution === MachineExecutionType.ACTIVE
+    ) {
       matchData.activeStartTime = new Date(dataArray[5]).getTime().toString();
     }
 
@@ -163,13 +155,15 @@ class MapperModule {
   }
 
   public partCountMapper(dataArray: string[], matchData: MachineDto) {
-    matchData.activeStartTime = dataArray[11];
-    matchData.tActiveTime = +dataArray[11];
+    // matchData.tActiveTime = +dataArray[11];
+    // matchData.active = +dataArray[11];
     matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];
     matchData.wait = +dataArray[10];
     matchData.isReceivePartCount = true;
     matchData.isReceiveMessage = false;
+    matchData.pause = false;
+    matchData.execution = MachineExecutionType.STOPPED;
 
     return matchData;
   }

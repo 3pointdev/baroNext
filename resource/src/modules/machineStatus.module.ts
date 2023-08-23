@@ -36,7 +36,13 @@ class MachineStatusModule {
         return MachineTextType.READY;
       case MachineExecutionType.TRIGGERED:
         return MachineTextType.EMERGENCY;
-      case MachineExecutionType.STOPPED || MachineExecutionType.INTERRUPTED:
+      case MachineExecutionType.STOPPED:
+        if (isReceivePartCount || isChangePalette) {
+          return MachineTextType.SUCCESS;
+        } else {
+          return MachineTextType.READY;
+        }
+      case MachineExecutionType.INTERRUPTED:
         if (isReceivePartCount || isChangePalette) {
           return MachineTextType.SUCCESS;
         } else {

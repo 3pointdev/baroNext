@@ -57,10 +57,10 @@ const TimeWrap = styled.div`
 const Date = styled.span`
   flex-shrink: 0;
   font-weight: 600;
-  width: 24vw;
+  width: 35vw;
   max-width: fit-content;
   color: #666666;
-  font-size: 4vw;
+  font-size: 6vw;
   font-weight: 400;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -71,7 +71,7 @@ const Date = styled.span`
 
   &.small {
     padding: 0 8px;
-    width: 102px;
+    width: 120px;
     max-width: none;
     font-size: 20px !important;
     font-weight: 600;
@@ -83,21 +83,22 @@ const Date = styled.span`
 
   &.midium {
     padding: 0 8px;
-    width: 172px !important;
+    width: 196px !important;
     max-width: none;
     font-size: 32px !important;
     font-weight: 600;
+    margin-left: 40px;
   }
 `;
 
 const Time = styled.span`
   flex-shrink: 0;
   font-weight: 600;
-  width: 9vw;
+  width: 12vw;
   min-width: fit-content;
   color: #666666;
-  font-size: 4vw;
-  font-weight: 400;
+  font-size: 6vw;
+  font-weight: 600;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   text-align: start;
@@ -110,7 +111,6 @@ const Time = styled.span`
     width: 96px !important;
     min-width: fit-content;
     font-size: 20px !important;
-    font-weight: 600;
     letter-spacing: 1px;
 
     @media screen and (min-width: 1080px) {
@@ -123,6 +123,5 @@ const Time = styled.span`
     width: 120px;
     max-width: none;
     font-size: 32px !important;
-    font-weight: 600;
   }
 `;
