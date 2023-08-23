@@ -2,7 +2,6 @@ import { inject, observer } from "mobx-react";
 import { MouseEvent, useEffect, useState } from "react";
 import React from "react";
 import styled from "styled-components";
-import moment from "moment";
 import MachineViewModel from "../../src/viewModels/machine/machine.viewModel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +13,7 @@ import MonitorViewModel from "../../src/viewModels/monitor/monitor.viewModel";
 import Linker from "../../components/linker/linker";
 import MonitorListDto from "../../src/dto/monitor/monitorList.dto";
 import pageUrlConfig from "../../config/pageUrlConfig";
+import Timer from "../../components/timer/timer";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -22,20 +22,10 @@ interface IProps {
 
 function Monitoring2View(props: IProps) {
   const { machineViewModel, monitorViewModel } = props;
-  const [time, setTime] = useState<string>("");
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [isOpenMonitorMenu, setIsOpenMonitorMenu] = useState<boolean>(false);
 
-  const getFormattedTime = () => {
-    return moment().format("YYYY.MM.DD HH:mm:ss");
-  };
-
   useEffect(() => {
-    setTime(getFormattedTime());
-    const interval = setInterval(() => {
-      setTime(getFormattedTime());
-    }, 1000);
-
     const initialize = async () => {
       await machineViewModel.getMounted(monitorViewModel.router.query.monitor);
       await machineViewModel.getMachineList();
@@ -50,7 +40,6 @@ function Monitoring2View(props: IProps) {
     }, 1800000);
 
     return () => {
-      clearInterval(interval);
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
         machineViewModel.socket.disconnect();
       }
@@ -81,10 +70,7 @@ function Monitoring2View(props: IProps) {
       <MonitoringContainer>
         <Header.Wrap>
           <Header.Menu icon={faBars} onClick={() => setIsOpenMenu(true)} />
-          <Header.Time>
-            <span>{moment(time).format("YYYY-MM-DD")}</span>
-            <span className="time">{moment(time).format("HH:mm:ss")}</span>
-          </Header.Time>
+          <Timer />
         </Header.Wrap>
         <Article.Wrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {
@@ -172,33 +158,6 @@ const Header = {
 
     @media screen and (min-width: 1080px) {
       font-size: 40px;
-    }
-  `,
-
-  Time: styled.div`
-    font-variant-numeric: tabular-nums;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    font-size: 6vw;
-    font-weight: 400;
-    display: flex;
-    gap: 24px;
-    justify-content: space-between;
-    color: #666666;
-    white-space: nowrap;
-
-    @media screen and (min-width: 1080px) {
-      font-size: 48px;
-      & span {
-        width: 260px;
-      }
-    }
-
-    & .time {
-      flex-shrink: 0;
-      letter-spacing: 6px;
-      font-weight: 600;
     }
   `,
 };

@@ -1,6 +1,5 @@
 import { inject, observer } from "mobx-react";
-import { useEffect, useState } from "react";
-import MainViewModel from "../src/viewModels/main/main.viewModel";
+import { useEffect } from "react";
 import React from "react";
 import {
   Chart as ChartJS,
@@ -13,13 +12,13 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
-import moment from "moment";
 import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
 import MachineDto from "../src/dto/machine/machine.dto";
 import PageContainer from "../components/container/pageContainer";
 import DoneMachine from "../components/machine/DoneSoonList";
 import MachineViewModel from "../src/viewModels/machine/machine.viewModel";
 import CardLayout from "../components/layout/cardLayout";
+import Timer from "../components/timer/timer";
 
 ChartJS.register(
   CategoryScale,
@@ -36,17 +35,8 @@ interface IProps {
 
 function MainView(props: IProps) {
   const machineViewModel = props.machineViewModel;
-  const [time, setTime] = useState<string>("");
-
-  const getFormattedTime = () => {
-    return moment().format("YYYY.MM.DD HH:mm:ss");
-  };
 
   useEffect(() => {
-    setTime(getFormattedTime());
-    const interval = setInterval(() => {
-      setTime(getFormattedTime());
-    }, 1000);
     const initialize = async () => {
       await machineViewModel.getMachineList();
       machineViewModel.getProcessedQuantity();
@@ -55,7 +45,6 @@ function MainView(props: IProps) {
     initialize();
 
     return () => {
-      clearInterval(interval);
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
         machineViewModel.socket.disconnect();
       }
@@ -64,7 +53,9 @@ function MainView(props: IProps) {
 
   return (
     <PageContainer style={{ overflow: "auto" }}>
-      <Container.Time>{time}</Container.Time>
+      <div>
+        <Timer size={"small"} />
+      </div>
       <Container.RowFlex>
         <CardLayout
           style={{
@@ -137,14 +128,6 @@ const Container = {
       max-height: 428px !important;
       margin: -12px 0 0 -12px;
     }
-  `,
-  Time: styled.p`
-    width: 100%;
-    height: 24px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: -16px;
   `,
 };
 

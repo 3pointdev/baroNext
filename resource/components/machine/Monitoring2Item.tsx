@@ -7,7 +7,7 @@ import {
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 interface IProps {
@@ -23,9 +23,39 @@ export default function Monitoring2Item({ data }: IProps) {
     MachineTextType.OFF,
     MachineTextType.MODIFY,
   ];
-  let realTime: number;
+  const [realTime, setRealTime] = useState<number>();
+  const [realTimeInterval, setRealTimeInterval] = useState<any>();
 
-  useEffect(() => {
+  /**
+   * execution이 active일때 타이머 작동함수
+   */
+  const fetchTimer = useCallback(async () => {
+    if (data.execution === MachineExecutionType.ACTIVE) {
+      const interval = setInterval(() => {
+        if (data.workTime > 0) {
+          if (data.tActiveTime > 0) {
+            setRealTime(
+              +data.activeTime -
+                data.workTime -
+                (new Date().getTime() - data.tActiveTime)
+            );
+          } else {
+            setRealTime(+data.activeTime - data.workTime);
+          }
+        } else {
+          setRealTime(
+            +data.activeTime - (new Date().getTime() - +data.activeStartTime)
+          );
+        }
+      }, 1000);
+      setRealTimeInterval(interval);
+    }
+  }, [data.execution]);
+
+  /**
+   * 머신상태에 따라 텍스트, 색상 변경함수
+   */
+  const fetchState = useCallback(async () => {
     setExecutionText(
       machineStatusInstance.ToTextStatus(
         data.execution,
@@ -34,6 +64,14 @@ export default function Monitoring2Item({ data }: IProps) {
         data.isReceiveMessage,
         data.isReceivePartCount,
         data.isChangePalette
+      )
+    );
+    setExecutionColor(
+      machineStatusInstance.ToColorStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage
       )
     );
   }, [
@@ -46,29 +84,12 @@ export default function Monitoring2Item({ data }: IProps) {
   ]);
 
   useEffect(() => {
-    setExecutionColor(
-      machineStatusInstance.ToColorStatus(
-        data.execution,
-        data.mode,
-        data.pause,
-        data.isReceiveMessage
-      )
-    );
-  }, [data.execution, data.mode, data.pause, data.isReceiveMessage]);
-
-  if (data.workTime > 0) {
-    if (data.tActiveTime > 0) {
-      realTime =
-        +data.activeTime -
-        data.workTime -
-        (new Date().getTime() - data.tActiveTime);
-    } else {
-      realTime = +data.activeTime - data.workTime;
-    }
-  } else {
-    realTime =
-      +data.activeTime - (new Date().getTime() - +data.activeStartTime);
-  }
+    fetchState();
+    fetchTimer();
+    return () => {
+      clearInterval(realTimeInterval);
+    };
+  }, []);
 
   return (
     <Container>

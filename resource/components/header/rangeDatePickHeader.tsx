@@ -56,6 +56,13 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media screen and (max-width: 1100px) {
+    height: 140px;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+  }
 `;
 
 const LeftSide = {
@@ -63,6 +70,10 @@ const LeftSide = {
     height: 100%;
     display: flex;
     align-items: center;
+
+    @media screen and (max-width: 1100px) {
+      height: 60px;
+    }
 
     & span {
       text-align: center;
@@ -85,4 +96,9 @@ const Title = styled.h2`
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
+
+  @media screen and (max-width: 1100px) {
+    right: 0px;
+    left: initial;
+  }
 `;
