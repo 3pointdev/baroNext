@@ -35,14 +35,12 @@ function Monitoring2View(props: IProps) {
 
     initialize();
 
-    setTimeout(() => {
-      location.reload();
-    }, 1800000);
+    // setTimeout(() => {
+    //   location.reload();
+    // }, 1800000);
 
     return () => {
-      if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
-        machineViewModel.socket.disconnect();
-      }
+      machineViewModel.socketDisconnect();
     };
   }, []);
 
@@ -51,9 +49,7 @@ function Monitoring2View(props: IProps) {
     setIsOpenMonitorMenu(!isOpenMonitorMenu);
   };
 
-  const handleClickOtherMonitor = async (
-    event: MouseEvent<HTMLParagraphElement>
-  ) => {
+  const handleClickOtherMonitor = async (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
 
     const { id } = event.currentTarget.dataset;
@@ -153,6 +149,7 @@ const Header = {
   `,
 
   Menu: styled(FontAwesomeIcon)`
+    z-index: 2;
     font-size: 6vw;
     cursor: pointer;
 
@@ -272,7 +269,7 @@ const SlideMenu = {
       color: #3a79ec;
     }
   `,
-  MonitorChangeLink: styled.p`
+  MonitorChangeLink: styled.div`
     padding-left: 80px;
     height: 120px !important;
     margin-top: 8px;

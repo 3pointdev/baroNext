@@ -40,6 +40,8 @@ export default class MachineViewModel extends DefaultViewModel {
   public notiModel: NotificationModel = new NotificationModel();
   public mountedList: MountedDto = new MountedDto();
 
+  public unMount: boolean = false;
+
   constructor(props: IDefaultProps) {
     super(props);
     this.tableHeader = [
@@ -351,7 +353,7 @@ export default class MachineViewModel extends DefaultViewModel {
             (data) => +data.id === +dataArray[4]
           );
 
-          if (matchDataForNoti !== undefined) {
+          if (matchDataForNoti) {
             const mappingNoti = mapperModule.notiMapper(
               dataArray,
               matchDataForNoti,
@@ -393,11 +395,26 @@ export default class MachineViewModel extends DefaultViewModel {
           this.handleMachineStat(objectMessage.data);
           break;
         case SocketResponseType.CONNECT:
+          runInAction(() => {
+            this.unMount = false;
+          });
           break;
         case SocketResponseType.CLOSED:
+          if (!this.unMount) {
+            this.initializeSocket(this.onMessage, this.onOpen);
+          }
           break;
       }
     }
+  };
+
+  socketDisconnect = () => {
+    runInAction(() => {
+      this.unMount = true;
+      if (this.socket?.socket?.readyState === WebSocket.OPEN) {
+        this.socket.disconnect();
+      }
+    });
   };
 
   handleNoti = (mappingNoti: { machine: MachineDto; rtd: RealTimeDataDto }) => {
