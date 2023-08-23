@@ -57,7 +57,7 @@ const TimeWrap = styled.div`
 const Date = styled.span`
   flex-shrink: 0;
   font-weight: 600;
-  width: 20vw;
+  width: 24vw;
   max-width: fit-content;
   color: #666666;
   font-size: 4vw;
@@ -83,7 +83,7 @@ const Date = styled.span`
 
   &.midium {
     padding: 0 8px;
-    width: 180px;
+    width: 172px !important;
     max-width: none;
     font-size: 32px !important;
     font-weight: 600;

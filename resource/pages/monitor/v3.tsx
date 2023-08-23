@@ -1,8 +1,7 @@
 import { inject, observer } from "mobx-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import React from "react";
 import styled from "styled-components";
-import moment from "moment";
 import BarofactorySquare from "../../public/images/logo/barofactory-square";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import MachineViewModel from "../../src/viewModels/machine/machine.viewModel";

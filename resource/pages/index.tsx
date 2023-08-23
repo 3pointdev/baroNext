@@ -1,6 +1,5 @@
 import { inject, observer } from "mobx-react";
-import { useEffect, useState } from "react";
-import MainViewModel from "../src/viewModels/main/main.viewModel";
+import { useEffect } from "react";
 import React from "react";
 import {
   Chart as ChartJS,
@@ -13,7 +12,6 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
-import moment from "moment";
 import RealTimeMachineItem from "../components/machine/RealTimeMachineItem";
 import MachineDto from "../src/dto/machine/machine.dto";
 import PageContainer from "../components/container/pageContainer";

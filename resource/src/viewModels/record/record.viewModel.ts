@@ -57,7 +57,9 @@ export default class RecordViewModel extends DefaultViewModel {
         const data = result.data.map((item) =>
           plainToInstance(RecordDto, {
             mid: item.mid,
-            program: item.program,
+            program: item.program?.includes("(")
+              ? item.program.split("(")[1].replace(")", "")
+              : item.program,
             count: `${item.count} / ${item.plan_count}`,
           })
         );

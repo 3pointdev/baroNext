@@ -138,10 +138,13 @@ const ProgramButton = styled.button<{ highlight: boolean }>`
 
   & * {
     color: ${({ highlight }) => (highlight ? "#000" : "#7f7f7f")} !important;
+    text-align: left;
+    white-space: wrap;
   }
 `;
 
 const LayoutTitle = styled.div`
+  z-index: 2 !important;
   background: #fff;
   font-weight: 500;
   line-height: 24px;
@@ -162,6 +165,7 @@ const ButtonWrap = styled.div`
   padding: 0 16px;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 `;
 
 const ButtonText = styled.p`
