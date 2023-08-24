@@ -14,6 +14,8 @@ import Linker from "../../components/linker/linker";
 import MonitorListDto from "../../src/dto/monitor/monitorList.dto";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import Timer from "../../components/timer/timer";
+import { Alert } from "../../src/modules/alert.module";
+import { SweetAlertResult } from "sweetalert2";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -30,7 +32,7 @@ function Monitoring2View(props: IProps) {
       await machineViewModel.getMounted(monitorViewModel.router.query.monitor);
       await machineViewModel.getMachineList();
       await monitorViewModel.getList();
-      monitorViewModel.getNotice();
+      machineViewModel.getNotice(monitorViewModel.list);
     };
 
     initialize();
@@ -58,7 +60,42 @@ function Monitoring2View(props: IProps) {
     await machineViewModel.getMounted(id);
     await machineViewModel.getMachineList();
     await monitorViewModel.getList();
-    monitorViewModel.getNotice();
+    machineViewModel.getNotice(monitorViewModel.list);
+  };
+
+  const handleClickNoticeEdit = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    Alert.prompt({
+      title: "공지사항 변경",
+      inputType: "text",
+      showCancel: true,
+      showDeny: true,
+      placeholder: "변경 할 공지사항을 입력해 주세요.",
+      defaultValue: machineViewModel.notice,
+      confirm: "변경",
+      cancel: "취소",
+      deny: "전체변경",
+      denyColor: "#1976d2",
+      confirmColor: "#6ebd33",
+      callback: (result: SweetAlertResult) => {
+        console.log(result);
+        if (result.isConfirmed) {
+          machineViewModel.insertNotice(result.value);
+          return setIsOpenMenu(false);
+        }
+
+        if (result.isDenied) {
+          return machineViewModel.insertNoticeAll(result.value);
+        }
+      },
+      validation: (result: string, resolve: (error?: string) => void) => {
+        if (result === "") {
+          resolve("새로운 공지사항을 입력해 주세요");
+        } else {
+          resolve();
+        }
+      },
+    });
   };
 
   if (machineViewModel.machines.length <= NUMBERSEENMONITORING2)
@@ -75,7 +112,7 @@ function Monitoring2View(props: IProps) {
         </Article.Wrap>
         <Footer.Wrap>
           <BarofactorySquare color="#000" />
-          <Footer.Notice>{monitorViewModel.notice}</Footer.Notice>
+          <Footer.Notice>{machineViewModel.notice}</Footer.Notice>
         </Footer.Wrap>
         <SlideMenu.Wrap className={isOpenMenu ? "is_open" : ""}>
           <SlideMenu.Head>
@@ -86,7 +123,7 @@ function Monitoring2View(props: IProps) {
             />
           </SlideMenu.Head>
           <SlideMenu.Menu>
-            <Linker onClick={(e) => e.preventDefault()} className="slide_menu">
+            <Linker onClick={handleClickNoticeEdit} className="slide_menu">
               공지사항
             </Linker>
             <Linker onClick={handleClickOpenMonitorList} className="slide_menu">

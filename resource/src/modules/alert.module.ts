@@ -13,12 +13,17 @@ interface IPromptOptions {
   text?: string;
   inputType: SweetAlertInput;
   showCancel?: boolean;
+  showDeny?: boolean;
   placeholder?: string;
   confirm?: string;
   cancel?: string;
+  deny?: string;
   callback?: any;
   error?: string;
   validation?: any;
+  defaultValue?: string | number | boolean;
+  denyColor?: string;
+  confirmColor?: string;
 }
 
 interface ISelectorOptions {
@@ -93,7 +98,7 @@ function prompt(options: IPromptOptions) {
     title: options.title,
     text: options.text ?? "",
     input: options.inputType,
-
+    inputValue: options.defaultValue,
     inputPlaceholder: options.placeholder,
     confirmButtonText: options.confirm ?? "확인",
     cancelButtonText: options.cancel ?? "취소",
@@ -103,6 +108,11 @@ function prompt(options: IPromptOptions) {
     },
     showConfirmButton: true,
     showCancelButton: options.showCancel ? true : false,
+    showDenyButton: options.showDeny ? true : false,
+    denyButtonText: options.deny,
+    denyButtonColor: options.denyColor,
+    confirmButtonColor: options.confirmColor,
+    reverseButtons: true,
     inputValidator: (value) => {
       if (options.validation) {
         return new Promise((resolve: (error?: string) => void) => {
@@ -111,8 +121,10 @@ function prompt(options: IPromptOptions) {
       }
     },
   }).then((result) => {
-    if (options.callback && result.isConfirmed) {
-      options.callback(result.value);
+    if (options.callback) {
+      if (options.showDeny)
+        return options.callback({ ...result, value: Swal.getInput().value });
+      if (result.isConfirmed) return options.callback(result.value);
     }
   });
 }

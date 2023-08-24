@@ -7,6 +7,7 @@ import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
 import {
   BinaryMessageType,
   ServerUrlType,
+  SocketBroadcastType,
   SocketResponseType,
   SortType,
 } from "../../../config/constants";
@@ -26,6 +27,8 @@ import { Alert } from "../../modules/alert.module";
 import Swal from "sweetalert2";
 import pageUrlConfig from "../../../config/pageUrlConfig";
 import MountedDto from "../../dto/monitor/mounted.dto";
+import MonitorListDto from "../../dto/monitor/monitorList.dto";
+import MonitorNoticeDto from "../../dto/monitor/notice.dto";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
@@ -41,6 +44,8 @@ export default class MachineViewModel extends DefaultViewModel {
   public mountedList: MountedDto = new MountedDto();
 
   public unMount: boolean = false;
+
+  public notice: string = "";
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -60,6 +65,7 @@ export default class MachineViewModel extends DefaultViewModel {
       notiList: observable,
       notiModel: observable,
       mountedList: observable,
+      notice: observable,
 
       onMessage: action,
       getMachineList: action,
@@ -325,6 +331,75 @@ export default class MachineViewModel extends DefaultViewModel {
     );
   };
 
+  getNotice = async (monitorList: MonitorListDto[]) => {
+    const monitorId = monitorList.find(
+      (monitor: MonitorListDto) => monitor.name === this.router.query.monitor
+    ).id;
+    await this.api
+      .get(ServerUrlType.APIS, `/api/noti/id/${monitorId}`)
+      .then((result: AxiosResponse<MonitorNoticeDto>) => {
+        runInAction(() => {
+          this.notice = result.data[0].noti;
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  insertBroadcast = async (value: string, type: string) => {
+    const params = {
+      enterprise: this.auth.enterprise,
+      data: {
+        noti: value,
+      },
+    };
+
+    if (type === "monitor") {
+      params.data["monitor"] = this.mountedList.id.toString();
+      params.data["type"] = SocketBroadcastType.NOTICE;
+    } else {
+      params.data["type"] = SocketBroadcastType.RELOAD;
+    }
+
+    await this.api
+      .post(ServerUrlType.EDGE, "/api/edge/broadcast", params)
+      .then((result: AxiosResponse) => {})
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  insertNotice = async (value: string) => {
+    await this.api
+      .post(ServerUrlType.APIS, "/api/noti/", {
+        monitor_id: this.mountedList.id.toString(),
+        noti: value,
+      })
+      .then((result: AxiosResponse) => {
+        this.insertBroadcast(value, "monitor");
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  insertNoticeAll = async (value: string) => {
+    this.insertBroadcast(value, "all");
+    await this.api
+      .post(ServerUrlType.APIS, "/api/noti/al", {
+        noti: value,
+      })
+      .then((result: AxiosResponse) => {})
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
   // ********************소켓******************** //
   // ********************소켓******************** //
   // ********************소켓******************** //
@@ -393,6 +468,17 @@ export default class MachineViewModel extends DefaultViewModel {
         case SocketResponseType.MACHINE:
           //object
           this.handleMachineStat(objectMessage.data);
+          break;
+        case SocketResponseType.BROADCAST:
+          if (objectMessage.data.type === SocketBroadcastType.NOTICE) {
+            if (this.checkNoticeUpdate(objectMessage)) {
+              runInAction(() => {
+                this.notice = objectMessage.data.noti;
+              });
+            }
+          } else {
+            location.reload();
+          }
           break;
         case SocketResponseType.CONNECT:
           runInAction(() => {
@@ -492,6 +578,19 @@ export default class MachineViewModel extends DefaultViewModel {
     runInAction(() => {
       this.machines = newMachinesByMessage;
     });
+  };
+
+  checkNoticeUpdate = (objectMessage) => {
+    let result = true;
+
+    if (objectMessage.enterprise !== this.auth.enterprise) {
+      result = false;
+    }
+
+    if (+objectMessage.data.monitor !== this.mountedList.id) {
+      result = false;
+    }
+    return result;
   };
 
   // ********************차트******************** //
