@@ -2,55 +2,46 @@
   font-family: "pretendard";
   src: url("/font/pretendard/100.woff2") format("woff2");
   font-weight: 100;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/200.woff2") format("woff2");
   font-weight: 200;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/300.woff2") format("woff2");
   font-weight: 300;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/400.woff2") format("woff2");
   font-weight: 400;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/500.woff2") format("woff2");
   font-weight: 500;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/600.woff2") format("woff2");
   font-weight: 600;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/700.woff2") format("woff2");
   font-weight: 700;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/800.woff2") format("woff2");
   font-weight: 800;
-  font-style: monospace;
 }
 @font-face {
   font-family: "pretendard";
   src: url("/font/pretendard/900.woff2") format("woff2");
   font-weight: 900;
-  font-style: monospace;
 }
 
 * {

@@ -35,9 +35,9 @@ function Monitoring2View(props: IProps) {
 
     initialize();
 
-    // setTimeout(() => {
-    //   location.reload();
-    // }, 1800000);
+    setTimeout(() => {
+      location.reload();
+    }, 1200000);
 
     return () => {
       machineViewModel.socketDisconnect();
@@ -133,7 +133,7 @@ export default inject(
 )(observer(Monitoring2View));
 
 const MonitoringContainer = styled.div`
-  background: #fff;
+  background: #f7f7f9;
   height: 100vh;
   min-width: 460px;
 `;
@@ -161,7 +161,7 @@ const Header = {
 
 const Article = {
   Wrap: styled.ul`
-    height: calc(100vh - 262px);
+    height: calc(100vh - 264px);
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -177,6 +177,7 @@ const Footer = {
     display: flex;
     align-items: center;
     gap: 32px;
+    background: #fff;
 
     & svg {
       height: 120px;
@@ -184,7 +185,7 @@ const Footer = {
     }
   `,
   Notice: styled.p`
-    font-size: 3.5982008996vh;
+    font-size: 3vh;
     font-weight: 500;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;

@@ -59,6 +59,9 @@ export default class MachineDto {
   @Expose({ name: "PlanCount" })
   public planCount: number = 0;
 
+  @Expose({ name: "CountTime" })
+  public countTime: number = 0;
+
   @Expose({ name: "Power" })
   public power: boolean;
 

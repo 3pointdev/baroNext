@@ -66,6 +66,12 @@ class MapperModule {
       WorkTime: plainData.WorkTime,
       TActiveTime: plainData.TActiveTime,
       isChangePalette: ExceptionBlockType.PALETTE.includes(plainData.Block),
+      isReceivePartCount:
+        plainData.CountTime < plainData.ActiveTime &&
+        new Date().getTime() > plainData.ActiveTime
+          ? false
+          : true,
+      CountTime: plainData.CountTime,
     };
 
     const plainRealTimeData = {
@@ -114,9 +120,11 @@ class MapperModule {
   } {
     for (let i = 6; i < dataArray.length; i = i + 2) {
       const targetKey = dataArray[i].toLowerCase().replace("_", "");
-      const RtKey = Object.keys(matchRTData).find(
-        (key: string) => key.toLowerCase().replace("_", "") === targetKey
-      );
+      const RtKey = matchRTData
+        ? Object.keys(matchRTData).find(
+            (key: string) => key.toLowerCase().replace("_", "") === targetKey
+          )
+        : false;
       if (RtKey) {
         matchRTData[RtKey] = dataArray[i + 1];
       } else {
@@ -140,11 +148,11 @@ class MapperModule {
       matchData.execution = MachineExecutionType.OFF;
     }
 
-    if (
-      dataArray.includes("execution") &&
-      matchData.execution === MachineExecutionType.ACTIVE
-    ) {
-      matchData.activeStartTime = new Date(dataArray[5]).getTime().toString();
+    if (dataArray.includes("execution")) {
+      matchData.isReceiveMessage = false;
+      if (matchData.execution === MachineExecutionType.ACTIVE) {
+        matchData.activeStartTime = new Date(dataArray[5]).getTime().toString();
+      }
     }
 
     if (matchData.execution !== MachineExecutionType.STOPPED) {

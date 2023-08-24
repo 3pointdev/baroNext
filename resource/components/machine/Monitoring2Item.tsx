@@ -144,6 +144,11 @@ const Container = styled.li`
   justify-content: space-between;
   padding-top: 16px;
   overflow: hidden;
+  background: #fff;
+
+  & > * {
+    flex-shrink: 0;
+  }
 `;
 
 const StopCover = styled.div`
@@ -211,6 +216,8 @@ const RealTimeInfo = {
     font-size: 7.2vh;
     font-weight: 900;
     line-height: 6.2vh;
+    width: 100%;
+    text-align: right;
 
     &.zero {
       color: red;
@@ -225,7 +232,7 @@ const Footer = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #d6d6d6;
+    background: #d9d9d9;
     padding: 0 16px;
     position: relative;
   `,
