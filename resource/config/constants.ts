@@ -30,9 +30,20 @@ export const SocketResponseType = {
   CALL_FUNC_FAIL: "CALL_FUNC_FAIL",
   CONNECT: "EDGE_CONNECT",
   CLOSED: "EDGE_CLOSED",
+  BROADCAST: "BROADCAST",
 } as const;
 export type SocketResponseType =
   (typeof SocketResponseType)[keyof typeof SocketResponseType];
+
+/**
+ * Socket Broadcast 타입
+ */
+export const SocketBroadcastType = {
+  NOTICE: "notice",
+  RELOAD: "reload",
+} as const;
+export type SocketBroadcastType =
+  (typeof SocketBroadcastType)[keyof typeof SocketBroadcastType];
 
 /**
  * 머신상태타입
