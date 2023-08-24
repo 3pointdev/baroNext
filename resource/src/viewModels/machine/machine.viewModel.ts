@@ -347,10 +347,10 @@ export default class MachineViewModel extends DefaultViewModel {
       switch (dataArray[1]) {
         case BinaryMessageType.NOTI:
           const matchDataForNoti = this.machines.find(
-            (data) => +data.id === +dataArray[4]
+            (data) => +data?.id === +dataArray[4]
           );
           const matchRTDataForNoti = this.realTimeData.find(
-            (data) => +data.id === +dataArray[4]
+            (data) => +data?.id === +dataArray[4]
           );
 
           if (matchDataForNoti) {

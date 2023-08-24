@@ -44,6 +44,10 @@ function MainView(props: IProps) {
 
     initialize();
 
+    setTimeout(() => {
+      location.reload();
+    }, 1200000);
+
     return () => {
       if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
         machineViewModel.socket.disconnect();

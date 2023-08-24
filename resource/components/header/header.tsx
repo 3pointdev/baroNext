@@ -177,6 +177,8 @@ const Head = {
     display: flex;
     align-items: center;
     gap: 12px;
+    position: absolute;
+    right: 24px;
   `,
 
   Alarm: styled.div`

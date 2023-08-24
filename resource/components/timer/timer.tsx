@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -9,16 +9,16 @@ export default function Timer({
   size?: string;
   style?: CSSProperties;
 }) {
-  const [time, setTime] = useState<string>("");
+  const [time, setTime] = useState<Moment>(null);
 
-  const getFormattedTime = () => {
-    return moment().format("YYYY.MM.DD HH:mm:ss");
+  const getTime = () => {
+    return moment();
   };
 
   useEffect(() => {
-    setTime(getFormattedTime());
+    setTime(getTime());
     const interval = setInterval(() => {
-      setTime(getFormattedTime());
+      setTime(getTime());
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -28,7 +28,7 @@ export default function Timer({
   return (
     <TimeWrap style={style} className={size ? size : ""}>
       <Date className={size ? size : ""}>
-        {moment(time).format("YYYY-MM-DD")}
+        {moment(time).format("YYYY.MM.DD")}
       </Date>
       <Time className={size ? size : ""}>
         {moment(time).format("HH:mm:ss")}

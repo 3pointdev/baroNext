@@ -50,7 +50,7 @@ function ReportView(props: IProps) {
           }}
         >
           <>
-            <SelectorOption title="전체보기" value={0} selected />
+            <SelectorOption title="전체보기" value={0} />
             {reportViewModel.products.map(
               (product: ProductDto, key: number) => {
                 return (
