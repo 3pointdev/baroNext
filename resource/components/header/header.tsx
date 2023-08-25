@@ -86,7 +86,7 @@ function Header(props: IProps) {
                   onMouseLeave={() => setHover("")}
                 >
                   <div>
-                    <FontAwesomeIcon icon={item.icon} />
+                    <item.icon />
                     <p>{item.title}</p>
                   </div>
                 </Linker>
@@ -223,7 +223,6 @@ const Navi = {
     cursor: pointer;
 
     & p {
-      padding-top: 4px;
       font-weight: 400;
       font-size: 18px;
       line-height: 1.5;
