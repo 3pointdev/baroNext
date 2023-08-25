@@ -17,6 +17,11 @@ import { faClipboard } from "@fortawesome/free-regular-svg-icons";
 import AlarmListDto from "../../dto/alarm/alarmList.dto";
 import UserMenuModel from "../../models/menu/userMenu.model";
 import pageUrlConfig from "../../../config/pageUrlConfig";
+import HomeIcon from "../../../public/images/icons/homeIcon";
+import BoxsIcon from "../../../public/images/icons/boxsIcon";
+import ScheduleIcon from "../../../public/images/icons/scheduleIcon";
+import ToolsIcon from "../../../public/images/icons/toolsIcon";
+import MonitorIcon from "../../../public/images/icons/monitorIcon";
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
@@ -30,7 +35,7 @@ export default class MainViewModel extends DefaultViewModel {
         name: "home",
         path: pageUrlConfig.main,
         title: "메인 홈",
-        icon: faHome,
+        icon: HomeIcon,
         size: 24,
         subMenu: [],
       },
@@ -38,7 +43,7 @@ export default class MainViewModel extends DefaultViewModel {
         name: "product_manage",
         path: pageUrlConfig.production,
         title: "생산관리",
-        icon: faBoxesStacked,
+        icon: BoxsIcon,
         size: 20,
         subMenu: [
           {
@@ -51,23 +56,13 @@ export default class MainViewModel extends DefaultViewModel {
             path: pageUrlConfig.productionRecord,
             title: "생산이력",
           },
-          // {
-          //   name: "production_share",
-          //   path: pageUrlConfig.productionShare,
-          //   title: "생산일정 공유",
-          // },
-          // {
-          //   name: "production_status",
-          //   path: pageUrlConfig.productionStatus,
-          //   title: "생산공유 현황",
-          // },
         ],
       },
       {
         name: "work_manage",
         path: pageUrlConfig.work,
         title: "작업관리",
-        icon: faClipboard,
+        icon: ScheduleIcon,
         size: 22,
         subMenu: [
           {
@@ -81,7 +76,7 @@ export default class MainViewModel extends DefaultViewModel {
         name: "machine_manage",
         path: pageUrlConfig.machine,
         title: "기계관리",
-        icon: faScrewdriverWrench,
+        icon: ToolsIcon,
         size: 20,
         subMenu: [
           {
@@ -100,7 +95,7 @@ export default class MainViewModel extends DefaultViewModel {
         name: "screen_manage",
         path: pageUrlConfig.monitor,
         title: "화면관리",
-        icon: faDisplay,
+        icon: MonitorIcon,
         size: 20,
         subMenu: [
           {

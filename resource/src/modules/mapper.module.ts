@@ -30,6 +30,16 @@ class MapperModule {
   }
 
   public machineStatMapper(plainData, matchData: MachineDto) {
+    let programName = plainData.Program;
+
+    if (plainData.Program.includes("(")) {
+      programName = plainData.Program.split("(")[1].replace(")", "");
+    }
+
+    if (programName.includes("%")) {
+      programName = programName.replaceAll("%", "");
+    }
+
     const plainMachineData = {
       Alarm: plainData.Alarm,
       active: matchData.active,
@@ -53,9 +63,7 @@ class MapperModule {
       PartCount: plainData.PartCount,
       PlanCount: plainData.PlanCount,
       Power: plainData.Power,
-      Program: plainData.Program.includes("(")
-        ? plainData.Program.split("(")[1].replace(")", "")
-        : plainData.Program,
+      Program: programName,
       machine_no: matchData.machineNo,
       prdct_end: matchData.prdctEnd,
       start_ymdt: matchData.startYmdt,
