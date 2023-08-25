@@ -155,7 +155,10 @@ class MapperModule {
       }
     }
 
-    if (matchData.execution !== MachineExecutionType.STOPPED) {
+    if (
+      matchData.execution !== MachineExecutionType.STOPPED &&
+      matchData.execution !== MachineExecutionType.INTERRUPTED
+    ) {
       matchData.isReceivePartCount = false;
     }
 

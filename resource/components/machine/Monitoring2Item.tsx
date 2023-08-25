@@ -42,20 +42,24 @@ export default function Monitoring2Item({ data }: IProps) {
    * 머신상태에 따라 텍스트, 색상 변경함수
    */
   useEffect(() => {
-    console.log(
-      data.mid,
-      data.execution,
-      data.pause,
-      data.block,
-      machineStatusInstance.ToTextStatus(
-        data.execution,
-        data.mode,
-        data.pause,
-        data.isReceiveMessage,
-        data.isReceivePartCount,
-        data.isChangePalette
-      )
-    );
+    if (data.mid === "Lynx220LSY") {
+      console.log(data.mid, "execution :", data.execution);
+      console.log(data.mid, "pause :", data.pause);
+      console.log(data.mid, "block :", data.block);
+      console.log(data.mid, "isReceivePartCount :", data.isReceivePartCount);
+      console.log(
+        data.mid,
+        "status :",
+        machineStatusInstance.ToTextStatus(
+          data.execution,
+          data.mode,
+          data.pause,
+          data.isReceiveMessage,
+          data.isReceivePartCount,
+          data.isChangePalette
+        )
+      );
+    }
     setExecutionText(
       machineStatusInstance.ToTextStatus(
         data.execution,
@@ -194,13 +198,14 @@ const RealTimeInfo = {
     display: flex;
     justify-content: space-between;
     padding: 0 16px;
+    position: relative;
   `,
   TrafficLights: styled.div<{ color: string }>`
     position: absolute;
-    left: -16%;
-    top: -16%;
-    width: 600px;
-    height: 600px;
+    left: -16vw;
+    top: -24vw;
+    width: 50vw;
+    height: 50vw;
     background: ${({ color }) => color};
     border-radius: 50%;
   `,

@@ -487,7 +487,7 @@ export default class MachineViewModel extends DefaultViewModel {
           break;
         case SocketResponseType.CLOSED:
           if (!this.unMount) {
-            this.initializeSocket(this.onMessage, this.onOpen);
+            location.reload();
           }
           break;
       }
