@@ -107,6 +107,7 @@ function Monitoring2View(props: IProps) {
         </Header.Wrap>
         <Article.Wrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {
+            ``;
             return <Monitoring2Item data={machine} key={`machine_${key}`} />;
           })}
         </Article.Wrap>
@@ -177,9 +178,11 @@ const MonitoringContainer = styled.div`
 
 const Header = {
   Wrap: styled.div`
+    min-width: 460px;
     display: flex;
     align-items: center;
-    padding: 1.8vh 1.4vh;
+    padding: 23px 20px;
+    height: 50px;
     position: relative;
     background: #f4f4f5;
     border-bottom: 1px solid #333333;
@@ -187,18 +190,14 @@ const Header = {
 
   Menu: styled(FontAwesomeIcon)`
     z-index: 2;
-    font-size: 6vw;
+    font-size: 40px;
     cursor: pointer;
-
-    @media screen and (min-width: 1080px) {
-      font-size: 40px;
-    }
   `,
 };
 
 const Article = {
   Wrap: styled.ul`
-    height: calc(100vh - 264px);
+    height: calc(100vh - 220px);
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -208,17 +207,18 @@ const Article = {
 
 const Footer = {
   Wrap: styled.div`
-    height: 120px;
+    height: 100px;
     width: 100%;
     padding: 0 16px;
     display: flex;
     align-items: center;
     gap: 32px;
-    background: #fff;
+    background: #f4f4f5;
+    border-top: 1px solid #333333;
 
     & svg {
-      height: 120px;
-      width: 120px;
+      height: 100px;
+      width: 100px;
     }
   `,
   Notice: styled.p`

@@ -57,16 +57,16 @@ const TimeWrap = styled.div`
 const Date = styled.span`
   flex-shrink: 0;
   font-weight: 600;
-  width: 35vw;
+  width: 260px;
   max-width: fit-content;
   color: #666666;
-  font-size: 6vw;
+  font-size: 48px;
   font-weight: 400;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 
-  @media screen and (min-width: 1080px) {
-    font-size: 48px;
+  @media screen and (max-width: 660px) {
+    font-size: 36px;
   }
 
   &.small {
@@ -94,17 +94,16 @@ const Date = styled.span`
 const Time = styled.span`
   flex-shrink: 0;
   font-weight: 600;
-  width: 12vw;
+  width: 210px;
   min-width: fit-content;
   color: #666666;
-  font-size: 6vw;
+  font-size: 48px;
   font-weight: 600;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   text-align: start;
-
-  @media screen and (min-width: 1080px) {
-    font-size: 48px;
+  @media screen and (max-width: 660px) {
+    font-size: 36px;
   }
 
   &.small {
