@@ -18,7 +18,6 @@ export class SocketModule {
   public token: string = "";
   public sender: string;
   public onMessage: (response: MessageEvent) => void;
-  public unMount: boolean = false;
 
   constructor({ onMessage, company, isAll = false }: IProps) {
     this.api = ApiModule.getInstance();
@@ -45,10 +44,9 @@ export class SocketModule {
 
   public onClose = () => {
     console.log("WebSocket closed");
-    if (!this.unMount) {
-      console.log("try reload");
-      location.reload();
-    }
+
+    console.log("try reload");
+    location.reload();
   };
 
   public onError = (error) => {
@@ -63,9 +61,5 @@ export class SocketModule {
     if (this.socket?.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(data));
     }
-  };
-
-  public getUnMount = () => {
-    return this.unMount;
   };
 }

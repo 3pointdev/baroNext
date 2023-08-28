@@ -44,6 +44,7 @@ export default class MachineViewModel extends DefaultViewModel {
   public mountedList: MountedDto = new MountedDto();
 
   public notice: string = "";
+  public unMount: boolean = false;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -411,7 +412,7 @@ export default class MachineViewModel extends DefaultViewModel {
     this.socket.sendEvent({ token: this.auth.token });
     this.insertInstalledTransmitters();
     runInAction(() => {
-      this.socket.unMount = false;
+      this.unMount = false;
     });
   };
 
@@ -483,11 +484,11 @@ export default class MachineViewModel extends DefaultViewModel {
           break;
         case SocketResponseType.CONNECT:
           runInAction(() => {
-            this.socket.unMount = false;
+            this.unMount = false;
           });
           break;
         case SocketResponseType.CLOSED:
-          if (!this.socket.getUnMount()) {
+          if (!this.unMount) {
             location.reload();
           }
           break;
@@ -497,7 +498,7 @@ export default class MachineViewModel extends DefaultViewModel {
 
   socketDisconnect = () => {
     runInAction(() => {
-      this.socket.unMount = true;
+      this.unMount = true;
       if (this.socket?.socket?.readyState === WebSocket.OPEN) {
         this.socket.disconnect();
       }
