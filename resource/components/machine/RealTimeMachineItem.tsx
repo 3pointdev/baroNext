@@ -99,7 +99,6 @@ const Item = {
     width: 100%;
     text-align: center;
     color: ${({ color }) => color};
-    margin-left: 4px;
   `,
   Title: styled.p`
     flex-shrink: 0;

@@ -3,7 +3,7 @@ import {
   MachineExecutionType,
   MachineStateType,
   MachineTextType,
-} from "../../config/constants";
+} from "config/constants";
 
 class MachineStatusModule {
   /**
@@ -87,6 +87,25 @@ class MachineStatusModule {
     //가공 중
     if (execution === MachineExecutionType.ACTIVE)
       return MachineColorType.GREEN;
+  }
+
+  /**
+   * 머신 상태 별 색상 추출 함수
+   * @param execution : string
+   * @param mode : string
+   * @param isPause : boolean
+   * @param isReceiveMessage : boolean
+   * @returns color : string
+   */
+  public ToDashBoardColor(execution: string): MachineColorType {
+    switch (execution) {
+      case MachineExecutionType.OFF:
+        return MachineColorType.GRAY;
+      case MachineExecutionType.TRIGGERED:
+        return MachineColorType.RED;
+      default:
+        return MachineColorType.GREEN;
+    }
   }
 }
 

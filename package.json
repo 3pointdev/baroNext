@@ -15,6 +15,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@loadable/component": "^5.15.3",
     "express": "^4.17.1"
   }
 }

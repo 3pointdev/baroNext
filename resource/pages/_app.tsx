@@ -2,13 +2,13 @@ import "reflect-metadata";
 import { Provider } from "mobx-react";
 import App from "next/app";
 import React from "react";
-import initializeStore, { RootStore } from "../src/mobx/store";
+import initializeStore, { RootStore } from "src/mobx/store";
 import "styles/globals.css";
-import Header from "../components/header/header";
-import { IDefaultProps } from "../src/viewModels/default.viewModel";
-import authModule from "../src/modules/auth.module";
-import pageUrlConfig from "../config/pageUrlConfig";
-import LoadingIndicator from "../components/indicator/loadingIndicator";
+import Header from "components/header/header";
+import { IDefaultProps } from "src/viewModels/default.viewModel";
+import authModule from "src/modules/auth.module";
+import pageUrlConfig from "config/pageUrlConfig";
+import LoadingIndicator from "components/indicator/loadingIndicator";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
@@ -61,7 +61,11 @@ class MyApp extends App<any, any, any> {
         <LoadingIndicator
           indicatorViewModel={this.mobxStore.indicatorViewModel}
         />
-        <Component {...pageProps} headers={headers} />
+        <Component
+          {...pageProps}
+          headers={headers}
+          version={process.env.NEXT_PUBLIC_VERSION}
+        />
       </Provider>
     );
   }

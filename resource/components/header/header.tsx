@@ -52,7 +52,11 @@ function Header(props: IProps) {
             <p>{mainViewModel.auth.name}</p>
           </Head.Company>
         </Linker>
-        <WorkEnvironmentBadge title={process.env.NEXT_PUBLIC_APP_MARK} />
+        <WorkEnvironmentBadge
+          title={`${
+            process.env.NEXT_PUBLIC_APP_MARK
+          }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
+        />
         <Head.User>
           <CircleButton icon={faBell} onClick={handleToggleAlarmModal}>
             <Head.Alarm>{mainViewModel.alarm.unRead}</Head.Alarm>
