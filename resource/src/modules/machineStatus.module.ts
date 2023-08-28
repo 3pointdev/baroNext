@@ -3,7 +3,7 @@ import {
   MachineExecutionType,
   MachineStateType,
   MachineTextType,
-} from "../../config/constants";
+} from "config/constants";
 
 class MachineStatusModule {
   /**

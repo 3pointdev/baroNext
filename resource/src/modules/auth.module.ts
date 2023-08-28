@@ -1,4 +1,4 @@
-import AuthDto from "../dto/auth/auth.dto";
+import AuthDto from "src/dto/auth/auth.dto";
 
 class AuthModule {
   public saveStorage(user: AuthDto) {

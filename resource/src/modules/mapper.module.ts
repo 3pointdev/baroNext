@@ -1,10 +1,7 @@
 import { plainToInstance } from "class-transformer";
-import MachineDto from "../dto/machine/machine.dto";
-import RealTimeDataDto from "../dto/machine/realTimeData.dto";
-import {
-  ExceptionBlockType,
-  MachineExecutionType,
-} from "../../config/constants";
+import MachineDto from "src/dto/machine/machine.dto";
+import RealTimeDataDto from "src/dto/machine/realTimeData.dto";
+import { ExceptionBlockType, MachineExecutionType } from "config/constants";
 
 class MapperModule {
   public currentListMapper(plainData) {

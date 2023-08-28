@@ -1,12 +1,6 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { ApiModule, ServerResponse } from "./api.module";
-import {
-  EdgeMachineSocketDataType,
-  ServerUrlType,
-} from "../../config/constants";
-import { AxiosResponse } from "axios";
-import TransmitterDto from "../dto/transmitters/transmitters.dto";
-import { plainToInstance } from "class-transformer";
+import { runInAction } from "mobx";
+import { ApiModule } from "./api.module";
+import { EdgeMachineSocketDataType } from "config/constants";
 
 interface IProps {
   onMessage: (response: MessageEvent) => void;

@@ -7,9 +7,9 @@ import axios, {
   RawAxiosRequestHeaders,
 } from "axios";
 import { plainToInstance } from "class-transformer";
-import { ServerUrlType } from "../../config/constants";
-import authModule from "./auth.module";
-import IndicatorViewModel from "../viewModels/indicator/indicator.viewModel";
+import { ServerUrlType } from "config/constants";
+import authModule from "src/modules/auth.module";
+import IndicatorViewModel from "src/viewModels/indicator/indicator.viewModel";
 
 export interface ApiResponse<T> {
   data: T;
