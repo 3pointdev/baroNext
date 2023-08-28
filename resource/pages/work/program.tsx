@@ -1,6 +1,7 @@
-import loadable from "@loadable/component";
 import { withRouter } from "next/router";
+import ProgramView from "src/views/common/work/program.view";
 import React from "react";
+import dynamic from "next/dynamic";
 
 class pages extends React.Component<any, any> {
   private readonly version: string;
@@ -10,16 +11,14 @@ class pages extends React.Component<any, any> {
   }
 
   render() {
-    const MainContainer = loadable(
-      () => import(`src/views/${this.version}/work/program.view`),
-      {
-        fallback: <></>,
-      }
+    const View = dynamic(() =>
+      import(`src/views/${this.version}/work/program.view`).catch((err) => {
+        return ProgramView;
+      })
     );
-
     return (
       <section id={"wrap"}>
-        <MainContainer {...this.props} />
+        <View {...this.props} />
       </section>
     );
   }

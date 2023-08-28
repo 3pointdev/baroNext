@@ -28,6 +28,7 @@ class MapperModule {
 
   public machineStatMapper(plainData, matchData: MachineDto) {
     let programName = plainData.Program;
+    let execution = plainData.Execution;
 
     if (plainData.Program.includes("(")) {
       programName = plainData.Program.split("(")[1].replace(")", "");
@@ -35,6 +36,10 @@ class MapperModule {
 
     if (programName.includes("%")) {
       programName = programName.replaceAll("%", "");
+    }
+
+    if (!plainData.Power) {
+      execution = MachineExecutionType.OFF;
     }
 
     const plainMachineData = {
@@ -46,9 +51,7 @@ class MapperModule {
       Block: plainData.Block,
       CycleTime: plainData.CycleTime,
       Estop: plainData.Estop,
-      Execution: plainData.Power
-        ? plainData.Execution
-        : MachineExecutionType.OFF,
+      Execution: execution,
       ExecutionTime: plainData.ExecutionTime,
       Id: plainData.Id,
       Mcode: plainData.Mcode,
