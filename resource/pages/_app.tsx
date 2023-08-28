@@ -61,7 +61,11 @@ class MyApp extends App<any, any, any> {
         <LoadingIndicator
           indicatorViewModel={this.mobxStore.indicatorViewModel}
         />
-        <Component {...pageProps} headers={headers} />
+        <Component
+          {...pageProps}
+          headers={headers}
+          version={process.env.NEXT_PUBLIC_VERSION}
+        />
       </Provider>
     );
   }
