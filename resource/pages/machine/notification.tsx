@@ -1,6 +1,7 @@
-import loadable from "@loadable/component";
 import { withRouter } from "next/router";
+import MachineNotificationView from "src/views/common/machine/notification.view";
 import React from "react";
+import dynamic from "next/dynamic";
 
 class pages extends React.Component<any, any> {
   private readonly version: string;
@@ -10,16 +11,16 @@ class pages extends React.Component<any, any> {
   }
 
   render() {
-    const MainContainer = loadable(
-      () => import(`src/views/${this.version}/machine/notification.view`),
-      {
-        fallback: <></>,
-      }
+    const View = dynamic(() =>
+      import(`src/views/${this.version}/machine/notification.view`).catch(
+        (err) => {
+          return MachineNotificationView;
+        }
+      )
     );
-
     return (
       <section id={"wrap"}>
-        <MainContainer {...this.props} />
+        <View {...this.props} />
       </section>
     );
   }

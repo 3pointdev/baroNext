@@ -43,8 +43,6 @@ export default class MachineViewModel extends DefaultViewModel {
   public notiModel: NotificationModel = new NotificationModel();
   public mountedList: MountedDto = new MountedDto();
 
-  public unMount: boolean = false;
-
   public notice: string = "";
 
   constructor(props: IDefaultProps) {
@@ -412,6 +410,9 @@ export default class MachineViewModel extends DefaultViewModel {
     //소켓 연결완료 후 사용자가 소켓서버 이용을 시작함을 서버에 알리는 이벤트
     this.socket.sendEvent({ token: this.auth.token });
     this.insertInstalledTransmitters();
+    runInAction(() => {
+      this.socket.unMount = false;
+    });
   };
 
   onMessage = async (response: MessageEvent) => {
@@ -482,11 +483,11 @@ export default class MachineViewModel extends DefaultViewModel {
           break;
         case SocketResponseType.CONNECT:
           runInAction(() => {
-            this.unMount = false;
+            this.socket.unMount = false;
           });
           break;
         case SocketResponseType.CLOSED:
-          if (!this.unMount) {
+          if (!this.socket.getUnMount()) {
             location.reload();
           }
           break;
@@ -496,7 +497,7 @@ export default class MachineViewModel extends DefaultViewModel {
 
   socketDisconnect = () => {
     runInAction(() => {
-      this.unMount = true;
+      this.socket.unMount = true;
       if (this.socket?.socket?.readyState === WebSocket.OPEN) {
         this.socket.disconnect();
       }
