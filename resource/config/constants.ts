@@ -135,7 +135,7 @@ export const MachineColorType = {
   GREEN: "#6ebd33",
   YELLOW: "#f5b117",
   RED: "#e8661c",
-  GRAY: "#d5d7da",
+  GRAY: "#9c9c9c",
 } as const;
 export type MachineColorType =
   (typeof MachineColorType)[keyof typeof MachineColorType];

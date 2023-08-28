@@ -1,31 +1,37 @@
-import FactoryIcon from "../../public/images/icons/factoryIcon";
-import MachineDto from "../../src/dto/machine/machine.dto";
+import FactoryIcon from "public/images/icons/factoryIcon";
+import MachineDto from "src/dto/machine/machine.dto";
 import styled from "styled-components";
-import moment, { now } from "moment";
 import { useEffect, useState } from "react";
-import timeModule from "../../src/modules/time.module";
-import { MachineExecutionType } from "../../config/constants";
-import machineStatusModule from "../../src/modules/machineStatus.module";
-import timeInstance from "../../src/modules/time.module";
+import machineStatusModule from "src/modules/machineStatus.module";
+import timeInstance from "src/modules/time.module";
+import {
+  MachineColorType,
+  MachineExecutionType,
+  MachineStateType,
+} from "config/constants";
 
 interface IProps {
   data: MachineDto;
 }
 
-export default function RealTimeMachineItem(props: IProps) {
+export default function DashBoardMachine(props: IProps) {
   const { data } = props;
-  const [color, setColor] = useState<string>("red");
+  const [color, setColor] = useState<string>(MachineColorType.GRAY);
+  const [endTime, setEndTime] = useState<string>("-");
 
   useEffect(() => {
-    setColor(
-      machineStatusModule.ToColorStatus(
-        data.execution,
-        data.mode,
-        data.pause,
-        data.isReceiveMessage
-      )
-    );
-  }, [data.execution, data.mode, data.pause, data.isReceiveMessage]);
+    setColor(machineStatusModule.ToDashBoardColor(data.execution));
+  }, [data.execution]);
+
+  useEffect(() => {
+    const time = (data.active + data.wait) * (data.planCount - data.partCount);
+    setEndTime(timeInstance.msToHHMM(time));
+
+    if (color === MachineColorType.GRAY || time <= 0) {
+      setEndTime("-");
+    }
+  }, [color]);
+
   return (
     <Container>
       <Item.MidTitle>{data.mid}</Item.MidTitle>
@@ -47,28 +53,36 @@ export default function RealTimeMachineItem(props: IProps) {
           </RowFlex>
           <RowFlex>
             <Item.Title>남은시간</Item.Title>
-            <Item.Desc>
-              {+data.doneTime > 0 ? timeInstance.msToHHMM(data.doneTime) : "-"}
-            </Item.Desc>
+            <Item.Desc>{endTime}</Item.Desc>
           </RowFlex>
         </ColFlex>
       </RowFlex>
+      {data.execution === MachineExecutionType.OFF && <BackgroundCover />}
     </Container>
   );
 }
 
 const Container = styled.div`
-  width: 230px;
+  flex-shrink: 0;
+  width: 234px;
+  min-width: 200px;
   height: 140px;
   padding: 12px 18px;
   border-radius: 8px;
   background-color: #f4f4f4;
+
+  position: relative;
+
   display: flex;
   flex-direction: column;
   gap: 24px;
 
-  & img {
-    margin-left: 8px;
+  @media screen and (max-width: 1248px) {
+    width: 27%;
+  }
+
+  @media screen and (max-width: 917px) {
+    width: 40%;
   }
 `;
 
@@ -119,3 +133,13 @@ const Item = {
     word-break: break-all;
   `,
 };
+
+const BackgroundCover = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  background: #9c9c9c50;
+`;

@@ -107,7 +107,6 @@ function Monitoring2View(props: IProps) {
         </Header.Wrap>
         <Article.Wrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {
-            ``;
             return <Monitoring2Item data={machine} key={`machine_${key}`} />;
           })}
         </Article.Wrap>
