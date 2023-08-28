@@ -26,13 +26,4 @@ class pages extends React.Component<any, any> {
   }
 }
 
-export async function getServerSideProps(context) {
-  const headers = context.req.headers;
-  return {
-    props: {
-      headers: headers,
-    },
-  };
-}
-
 export default withRouter(pages);
