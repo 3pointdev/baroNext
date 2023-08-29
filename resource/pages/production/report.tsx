@@ -18,6 +18,7 @@ class pages extends React.Component<any, any> {
         }
       )
     );
+
     return (
       <section id={"wrap"}>
         <View {...this.props} />

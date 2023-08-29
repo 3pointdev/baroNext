@@ -8,9 +8,11 @@ import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import CardLayout from "components/layout/cardLayout";
 import DashBoardTimer from "components/timer/dashBoardTimer";
 import DashBoardMachine from "components/machine/dashBoardMachine";
+import { NextRouter } from "next/router";
 
 interface IProps {
   machineViewModel: MachineViewModel;
+  router: NextRouter;
 }
 
 function MainView(props: IProps) {

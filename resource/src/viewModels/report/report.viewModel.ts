@@ -171,4 +171,12 @@ export default class ReportViewModel extends DefaultViewModel {
       this.products = newProducts;
     });
   };
+
+  handleClickFilter = (event: MouseEvent<HTMLSpanElement>) => {
+    const { id } = event.currentTarget.dataset;
+
+    runInAction(() => {
+      this.filterTarget = +id;
+    });
+  };
 }
