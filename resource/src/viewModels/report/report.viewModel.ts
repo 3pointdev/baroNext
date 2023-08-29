@@ -3,7 +3,7 @@ import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
 import { DatePickerButtonType, ServerUrlType } from "../../../config/constants";
-import moment from "moment";
+import dayjs from "dayjs";
 import ProductModel from "../../models/product/product.model";
 import { ChangeEvent, MouseEvent } from "react";
 import ProductDto from "../../dto/report/product.dto";
@@ -100,7 +100,7 @@ export default class ReportViewModel extends DefaultViewModel {
     runInAction(() => {
       this.productModel = {
         ...this.productModel,
-        day: moment(date).format("YYYY-MM-DD"),
+        day: dayjs(date).format("YYYY-MM-DD"),
       };
     });
     this.InsertProductList();
@@ -114,7 +114,7 @@ export default class ReportViewModel extends DefaultViewModel {
         runInAction(() => {
           this.productModel = {
             ...this.productModel,
-            day: moment(new Date()).format("YYYY-MM-DD"),
+            day: dayjs(new Date()).format("YYYY-MM-DD"),
           };
         });
         break;
@@ -124,7 +124,7 @@ export default class ReportViewModel extends DefaultViewModel {
         runInAction(() => {
           this.productModel = {
             ...this.productModel,
-            day: moment(newNextDay).format("YYYY-MM-DD"),
+            day: dayjs(newNextDay).format("YYYY-MM-DD"),
           };
         });
         break;
@@ -134,7 +134,7 @@ export default class ReportViewModel extends DefaultViewModel {
         runInAction(() => {
           this.productModel = {
             ...this.productModel,
-            day: moment(newPrevDay).format("YYYY-MM-DD"),
+            day: dayjs(newPrevDay).format("YYYY-MM-DD"),
           };
         });
 

@@ -1,10 +1,7 @@
 import FactoryIcon from "../../public/images/icons/factoryIcon";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import styled from "styled-components";
-import moment, { now } from "moment";
 import { useEffect, useState } from "react";
-import timeModule from "../../src/modules/time.module";
-import { MachineExecutionType } from "../../config/constants";
 import machineStatusModule from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
 

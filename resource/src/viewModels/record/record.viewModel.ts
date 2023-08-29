@@ -1,15 +1,12 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import LotDto from "../../dto/report/lot.dto";
 import RecordModel from "../../models/record/record.model";
-import moment from "moment";
+import dayjs from "dayjs";
 import { ServerUrlType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
-import MachineDto from "../../dto/machine/machine.dto";
 import { plainToInstance } from "class-transformer";
 import RecordDto from "../../dto/record/record.dto";
 import { ITableHeader } from "../../../components/table/defaultTable";
-import { Ref } from "react";
 
 export default class RecordViewModel extends DefaultViewModel {
   public recordModel: RecordModel = new RecordModel();
@@ -41,7 +38,7 @@ export default class RecordViewModel extends DefaultViewModel {
     runInAction(() => {
       this.recordModel = {
         ...this.recordModel,
-        [type]: moment(date).format("YYYY-MM-DD"),
+        [type]: dayjs(date).format("YYYY-MM-DD"),
       };
       this.getList();
     });

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AngleButton from "../button/angleButton";
 import DefaultButton from "../button/defaultButton";
 import DefaultDatePicker from "../datePicker/defaultDatePicker";
-import moment from "moment";
+import dayjs from "dayjs";
 import { DatePickerButtonType } from "../../config/constants";
 
 interface IProps {
@@ -27,7 +27,7 @@ export default function SingleDatePickHeader({
   children,
   style,
 }: IProps) {
-  const isToday = moment(new Date()).format("YYYY-MM-DD") === value;
+  const isToday = dayjs().format("YYYY-MM-DD") === value;
   return (
     <Container style={style}>
       <LeftSide.Wrap>

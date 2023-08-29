@@ -1,12 +1,12 @@
-import moment, { Moment } from "moment";
+import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
 
 export default function DashBoardTimer({ style }: { style?: CSSProperties }) {
-  const [time, setTime] = useState<Moment>(null);
+  const [time, setTime] = useState<Dayjs>(null);
 
   const getTime = () => {
-    return moment();
+    return dayjs();
   };
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function DashBoardTimer({ style }: { style?: CSSProperties }) {
 
   return (
     <TimeWrap style={style}>
-      {moment(time).format("YYYY.MM.DD HH:mm:ss")}
+      {dayjs(time).format("YYYY.MM.DD HH:mm:ss")}
     </TimeWrap>
   );
 }

@@ -1,4 +1,4 @@
-import moment, { Moment } from "moment";
+import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -9,10 +9,10 @@ export default function Timer({
   size?: string;
   style?: CSSProperties;
 }) {
-  const [time, setTime] = useState<Moment>(null);
+  const [time, setTime] = useState<Dayjs>(null);
 
   const getTime = () => {
-    return moment();
+    return dayjs();
   };
 
   useEffect(() => {
@@ -28,11 +28,9 @@ export default function Timer({
   return (
     <TimeWrap style={style} className={size ? size : ""}>
       <Date className={size ? size : ""}>
-        {moment(time).format("YYYY.MM.DD")}
+        {dayjs(time).format("YYYY.MM.DD")}
       </Date>
-      <Time className={size ? size : ""}>
-        {moment(time).format("HH:mm:ss")}
-      </Time>
+      <Time className={size ? size : ""}>{dayjs(time).format("HH:mm:ss")}</Time>
     </TimeWrap>
   );
 }
