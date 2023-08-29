@@ -40,7 +40,15 @@ function RecordView(props: IProps) {
         datePickerType="range"
         title="생산이력"
       >
-        <DefaultRadio />
+        <DefaultRadio
+          value={recordViewModel.recordModel.filter}
+          list={[
+            { title: "전체", id: 0 },
+            { title: "기계별", id: 1 },
+            { title: "품번별", id: 2 },
+          ]}
+          onChange={recordViewModel.handleChangeFilter}
+        />
         {/* <DefaultButton
           title={
             <ButtonText>

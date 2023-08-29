@@ -77,6 +77,8 @@ const UserContainer = styled.div<{ active: boolean }>`
   pointer-events: ${({ active }) => (active ? "auto" : "none")};
   opacity: ${({ active }) => (active ? "1" : "0")};
   transition: all 0.4s ease;
+
+  overflow: hidden;
 `;
 
 const HeadLine = styled.div`

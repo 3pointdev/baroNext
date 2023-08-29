@@ -1,4 +1,3 @@
-import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SquareLogo from "public/images/logo/barofactory-square.svg";
 import styled from "styled-components";
@@ -11,12 +10,10 @@ import Logo from "../image/logo";
 import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
 import { inject, observer } from "mobx-react";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import AlarmModal from "../modal/alarmModal";
 import UserModal from "../modal/userModal";
 import Linker from "../linker/linker";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import authModule from "../../src/modules/auth.module";
-import CircleButton from "../button/circleButton";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -25,7 +22,6 @@ interface IProps {
 function Header(props: IProps) {
   const mainViewModel: MainViewModel = props.mainViewModel;
   const [hover, setHover] = useState("");
-  const [isOpenAlarmModal, setIsOpenAlarmModal] = useState<boolean>(false);
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
 
@@ -34,10 +30,6 @@ function Header(props: IProps) {
       router.push(pageUrlConfig.login);
     }
   }, []);
-
-  const handleToggleAlarmModal = () => {
-    setIsOpenAlarmModal(!isOpenAlarmModal);
-  };
 
   const handleToggleUserModal = () => {
     setIsOpenUserModal(!isOpenUserModal);
@@ -57,24 +49,21 @@ function Header(props: IProps) {
             process.env.NEXT_PUBLIC_APP_MARK
           }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
         />
-        <Head.User>
-          <CircleButton icon={faBell} onClick={handleToggleAlarmModal}>
-            <Head.Alarm>{mainViewModel.alarm.unRead}</Head.Alarm>
-          </CircleButton>
-          <Head.Profile
-            src={mainViewModel.auth.profileImage}
-            alt="profile"
-            onClick={handleToggleUserModal}
-          />
-        </Head.User>
+
+        <Head.Profile
+          src={mainViewModel.auth.profileImage}
+          alt="profile"
+          onClick={handleToggleUserModal}
+        />
       </Head.Wrap>
       <Navi.Wrap>
         <Navi.MenuWrap>
           {mainViewModel.menus.map((item: MenuModel, key: number) => {
-            let isActive =
+            const isActive =
               item.path === "/"
                 ? router.asPath === "/"
                 : router.asPath.includes(item.path);
+            const isHaveSubMenu = item.subMenu.length > 0;
 
             return (
               <Navi.MenuItem
@@ -83,61 +72,41 @@ function Header(props: IProps) {
                   isActive ? "active" : hover === item.name ? "active" : ""
                 }
                 isMain={item.path === "/"}
+                onMouseEnter={() => setHover(item.name)}
+                onMouseLeave={() => setHover("")}
+                onClick={() => (isHaveSubMenu ? null : router.push(item.path))}
               >
-                <Linker
-                  href={item.subMenu.length < 1 ? item.path : ""}
+                <item.icon />
+                <p>{item.title}</p>
+                {isHaveSubMenu && <Navi.DropDownIcon icon={faAngleDown} />}
+
+                <Navi.MenuModal
                   onMouseEnter={() => setHover(item.name)}
                   onMouseLeave={() => setHover("")}
                 >
-                  <div>
-                    <item.icon />
-                    <p>{item.title}</p>
-                  </div>
-                </Linker>
-                {item.subMenu.length > 0 && (
-                  <>
-                    <Navi.DropDownIcon icon={faAngleDown} />
-                    <Navi.MenuModal
-                      onMouseEnter={() => setHover(item.name)}
-                      onMouseLeave={() => setHover("")}
-                    >
-                      <Navi.SubMenu
-                        className={hover === item.name ? "active" : ""}
-                        count={item.subMenu.length}
-                      >
-                        {item.subMenu.map((sub: SubMenuModel, key) => {
-                          return (
-                            <li key={`sub_menu_${key}`}>
-                              <Linker href={sub.path}>{sub.title}</Linker>
-                            </li>
-                          );
-                        })}
-                      </Navi.SubMenu>
-                    </Navi.MenuModal>
-                  </>
-                )}
+                  <Navi.SubMenu
+                    className={hover === item.name ? "active" : ""}
+                    count={item.subMenu.length}
+                  >
+                    {item.subMenu.map((sub: SubMenuModel, key) => {
+                      return <li key={`sub_menu_${key}`}>{sub.title}</li>;
+                    })}
+                  </Navi.SubMenu>
+                </Navi.MenuModal>
               </Navi.MenuItem>
             );
           })}
         </Navi.MenuWrap>
       </Navi.Wrap>
       {mainViewModel.auth.enterpriseId && (
-        <>
-          <AlarmModal
-            onClick={handleToggleAlarmModal}
-            active={isOpenAlarmModal}
-            list={mainViewModel.alarm.alarms}
-            count={mainViewModel.alarm.unRead}
-          />
-          <UserModal
-            onClick={handleToggleUserModal}
-            onClickLogout={mainViewModel.insertLogout}
-            active={isOpenUserModal}
-            data={mainViewModel.auth}
-            menus={mainViewModel.userMenu}
-            alarm={mainViewModel.alarm.unRead}
-          />
-        </>
+        <UserModal
+          onClick={handleToggleUserModal}
+          onClickLogout={mainViewModel.insertLogout}
+          active={isOpenUserModal}
+          data={mainViewModel.auth}
+          menus={mainViewModel.userMenu}
+          alarm={mainViewModel.alarm.unRead}
+        />
       )}
     </HeaderContainer>
   );
@@ -177,27 +146,6 @@ const Head = {
     cursor: pointer;
   `,
 
-  User: styled.div`
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: absolute;
-    right: 24px;
-  `,
-
-  Alarm: styled.div`
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    background: red;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 300;
-    line-height: 18px;
-  `,
   Profile: styled.img`
     width: 40px;
     height: 40px;
@@ -220,86 +168,74 @@ const Navi = {
   MenuItem: styled.div<{ isMain?: boolean }>`
     flex-shrink: 0;
     position: relative;
-    width: ${({ isMain }) => (isMain ? "108px" : "140px")};
+
+    width: fit-content;
     height: 47px;
-    padding: 0px;
+    padding: 0 20px 0 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
     white-space: nowrap;
     cursor: pointer;
 
-    & p {
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 1.5;
-    }
-    & div {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      height: 100%;
-    }
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+
     & svg {
-      padding-left: 12px;
       width: 24px;
       height: 24px;
     }
+
     &.active {
       background: #3a79ec;
       border-radius: 8px;
       box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
+
       & p,
       path {
         color: white;
       }
     }
   `,
+  MenuModal: styled.div`
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 100% !important;
+  `,
   SubMenu: styled.ul<{ count: number }>`
     position: absolute;
-    margin-top: 18px;
-    top: 0px;
+    top: 48px;
     left: 0px;
     display: flex;
     flex-direction: column;
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-    width: 140px;
+    width: 100%;
     overflow: hidden;
     font-size: 16px;
     height: 0px !important;
     transition: all 0.4s ease;
 
     &.active {
-      height: ${({ count }) => count * 44}px !important;
-      top: 16px;
+      height: ${({ count }) => count * 48}px !important;
     }
 
     & li {
-      padding: 6px;
-
-      & a {
-        padding: 6px;
-      }
+      padding: 12px;
 
       &:hover {
         background: #f5f5f5;
       }
     }
   `,
-  MenuModal: styled.div`
-    position: absolute;
-    top: 16px;
-    left: 0px;
-    width: 100%;
-    height: 100% !important;
-  `,
   DropDownIcon: styled(FontAwesomeIcon)`
-    position: absolute;
-    top: 50%;
-    right: 12px;
-
     width: 16px !important;
     height: 16px !important;
-
-    transform: translate(0, -50%);
   `,
 };

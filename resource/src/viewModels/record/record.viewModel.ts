@@ -7,6 +7,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
 import RecordDto from "../../dto/record/record.dto";
 import { ITableHeader } from "../../../components/table/defaultTable";
+import { ChangeEvent } from "react";
 
 export default class RecordViewModel extends DefaultViewModel {
   public recordModel: RecordModel = new RecordModel();
@@ -69,5 +70,16 @@ export default class RecordViewModel extends DefaultViewModel {
         console.log("error : ", error);
         return false;
       });
+  };
+
+  handleChangeFilter = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    console.log(value);
+    runInAction(() => {
+      this.recordModel = {
+        ...this.recordModel,
+        filter: +value,
+      };
+    });
   };
 }

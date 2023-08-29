@@ -40,37 +40,28 @@ export default class MainViewModel extends DefaultViewModel {
         subMenu: [],
       },
       {
-        name: "product_manage",
-        path: pageUrlConfig.production,
-        title: "생산관리",
+        name: "production_record",
+        path: pageUrlConfig.productionRecord,
+        title: "생산이력",
         icon: BoxsIcon,
         size: 20,
-        subMenu: [
-          {
-            name: "production_report",
-            path: pageUrlConfig.productionReport,
-            title: "생산리포트",
-          },
-          {
-            name: "production_record",
-            path: pageUrlConfig.productionRecord,
-            title: "생산이력",
-          },
-        ],
+        subMenu: [],
       },
       {
-        name: "work_manage",
-        path: pageUrlConfig.work,
-        title: "작업관리",
+        name: "production_report",
+        path: pageUrlConfig.productionReport,
+        title: "생산분석",
+        icon: BoxsIcon,
+        size: 20,
+        subMenu: [],
+      },
+      {
+        name: "program",
+        path: pageUrlConfig.workProgram,
+        title: "프로그램 관리",
         icon: ScheduleIcon,
         size: 22,
-        subMenu: [
-          {
-            name: "program",
-            path: pageUrlConfig.workProgram,
-            title: "프로그램 관리",
-          },
-        ],
+        subMenu: [],
       },
       {
         name: "machine_manage",
@@ -93,60 +84,19 @@ export default class MainViewModel extends DefaultViewModel {
       },
       {
         name: "screen_manage",
-        path: pageUrlConfig.monitor,
+        path: pageUrlConfig.monitorSetting,
         title: "화면관리",
         icon: MonitorIcon,
         size: 20,
-        subMenu: [
-          {
-            name: "monitoring_setting",
-            path: pageUrlConfig.monitorSetting,
-            title: "모니터링 관리",
-          },
-          {
-            name: "monitor2",
-            path: `${pageUrlConfig.monitor2}?monitor=mon1`,
-            title: "분할 모니터",
-          },
-          {
-            name: "monitor3",
-            path: pageUrlConfig.monitor3,
-            title: "통합 모니터",
-          },
-        ],
+        subMenu: [],
       },
     ];
 
     this.userMenu = [
       {
-        title: "계정정보",
+        title: "암호 재설정",
         icon: faUser,
         path: pageUrlConfig.my,
-      },
-      {
-        title: "청구서",
-        icon: faEnvelope,
-        path: pageUrlConfig.invoices,
-      },
-      {
-        title: "알림사항",
-        icon: faBell,
-        path: pageUrlConfig.alarm,
-      },
-      {
-        title: "기능설명",
-        icon: faCircleQuestion,
-        path: pageUrlConfig.functionExplain,
-      },
-      {
-        title: "고객문의",
-        icon: faMessage,
-        path: pageUrlConfig.contact,
-      },
-      {
-        title: "설정",
-        icon: faGear,
-        path: pageUrlConfig.setting,
       },
     ];
 
