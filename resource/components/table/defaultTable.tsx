@@ -118,7 +118,7 @@ const Table = {
   Head: styled.thead`
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 10;
 
     & tr {
       height: 48px;

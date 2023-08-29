@@ -9,7 +9,7 @@ import { ChangeEventHandler } from "react";
 
 interface IProps {
   selected: string;
-  onChange: (date: string) => void;
+  onChange: ((date: string) => void) | ((date: string, type: string) => void);
 }
 
 export default function DefaultDatePicker({ selected, onChange }: IProps) {

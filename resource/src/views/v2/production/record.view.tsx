@@ -8,6 +8,8 @@ import DefaultButton from "components/button/defaultButton";
 import ExcelIcon from "public/images/icons/excel";
 import DefaultTable from "components/table/defaultTable";
 import excelModule from "src/modules/excel.module";
+import LayoutHeader from "components/layout/layoutHeader";
+import DefaultRadio from "components/input/defaultRadio";
 
 interface IProps {
   recordViewModel: RecordViewModel;
@@ -34,13 +36,15 @@ function RecordView(props: IProps) {
 
   return (
     <PageContainer style={{ gap: "16px" }}>
-      <RangeDatePickHeader
+      <LayoutHeader
         start={recordViewModel.recordModel.startDay}
         end={recordViewModel.recordModel.endDay}
         onChange={recordViewModel.handleChangeDay}
+        datePickerType="range"
         title="생산이력"
       >
-        <DefaultButton
+        <DefaultRadio />
+        {/* <DefaultButton
           title={
             <ButtonText>
               <ExcelIcon size={18} />
@@ -56,8 +60,8 @@ function RecordView(props: IProps) {
             fontSize: "16px",
           }}
           activeColor="#E0E0E0"
-        />
-      </RangeDatePickHeader>
+        /> */}
+      </LayoutHeader>
       <TableLayout>
         <TablePadding>
           <DefaultTable
@@ -80,6 +84,7 @@ const ButtonText = styled.p`
 `;
 
 const TableLayout = styled.section`
+  z-index: 10;
   overflow: hidden;
   background: #fff;
   padding: 16px;

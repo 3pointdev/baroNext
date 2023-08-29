@@ -5,12 +5,15 @@ import DefaultButton from "../button/defaultButton";
 import DefaultDatePicker from "../datePicker/defaultDatePicker";
 import moment from "moment";
 import { DatePickerButtonType } from "../../config/constants";
+import RangeDatePicker from "components/datePicker/rangeDatePicker";
 
 interface IProps {
   title: string;
   datePickerType: "single" | "range" | "notUse";
-  value: string;
-  onChange: (date: string) => void;
+  start?: string;
+  end?: string;
+  value?: string;
+  onChange: ((date: string) => void) | ((date: string, type: string) => void);
   children?:
     | ReactElement
     | ReactElement[]
@@ -28,12 +31,20 @@ export default function LayoutHeader({
   onChange,
   children,
   style,
+  start,
+  end,
 }: IProps) {
   return (
     <Container style={style}>
       <LeftSide.Wrap>
         <LeftSide.Title>{title}</LeftSide.Title>
-        <DefaultDatePicker selected={value} onChange={onChange} />
+        {datePickerType === "single" ? (
+          <DefaultDatePicker selected={value} onChange={onChange} />
+        ) : datePickerType === "range" ? (
+          <RangeDatePicker start={start} end={end} onChange={onChange} />
+        ) : (
+          <></>
+        )}
       </LeftSide.Wrap>
       <RightSide.Wrap>{children}</RightSide.Wrap>
     </Container>
