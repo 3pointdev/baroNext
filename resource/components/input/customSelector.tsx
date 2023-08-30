@@ -1,37 +1,32 @@
-import {
-  CSSProperties,
-  ChangeEventHandler,
-  MouseEvent,
-  MouseEventHandler,
-  ReactElement,
-  useEffect,
-  useState,
-} from "react";
-import ProductDto from "src/dto/report/product.dto";
+import { StyleColor } from "config/constants";
+import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface IProps {
-  options: ProductDto[];
+  options: Options[];
   onClick: MouseEventHandler;
   defaultValue?: string | number;
   defaultTitle: string;
-  value: number;
+  value: string | number;
+}
+
+interface Options {
+  title: string;
+  id: number | string;
 }
 
 export default function CustomSelector({
   options,
   onClick,
-  defaultValue,
+  defaultValue = null,
   defaultTitle,
   value,
 }: IProps) {
   const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<string>(defaultTitle);
   useEffect(() => {
-    const target = options.find(
-      (option: ProductDto) => +option.machineNo === value
-    );
-    setSelectedValue(target?.name ? target.name : defaultTitle);
+    const target = options.find((option: Options) => option.id === value);
+    setSelectedValue(target?.title ? target.title : defaultTitle);
   }, [value]);
 
   const onClickSelector = () => {
@@ -45,21 +40,23 @@ export default function CustomSelector({
 
   return (
     <Container>
-      <SelectWrap onClick={onClickSelector}>
+      <SelectWrap onClick={onClickSelector} isOpenOption={isOpenOption}>
         <p>{selectedValue}</p>
       </SelectWrap>
       <OptionWrap isOpenOption={isOpenOption}>
-        <SelectorOption onClick={onClickOption} data-id={0}>
-          {defaultTitle}
-        </SelectorOption>
-        {options.map((option: ProductDto, key: number) => {
+        {defaultValue && (
+          <SelectorOption onClick={onClickOption} data-id={defaultValue}>
+            {defaultTitle}
+          </SelectorOption>
+        )}
+        {options.map((option: Options) => {
           return (
             <SelectorOption
-              key={`filter_options_${option.name}_${key}`}
-              data-id={option.machineNo}
+              key={`filter_options_${option.title}_${option.id}`}
+              data-id={option.id}
               onClick={onClickOption}
             >
-              {option.name}
+              {option.title}
             </SelectorOption>
           );
         })}
@@ -70,64 +67,71 @@ export default function CustomSelector({
 
 const Container = styled.div`
   position: relative;
-  width: 180px;
-  height: 42px;
+  width: 100%;
+  height: 56px;
 `;
 
-const SelectWrap = styled.div`
+const SelectWrap = styled.div<{ isOpenOption: boolean }>`
+
   position: absolute;
   right: 0px;
   top: 0px;
-  font-size: 16px;
-  font-weight: 400;
-  border: 1px solid #000 !important;
+  width: calc(100% - 2px);
+  height: 54px;
+  border: 1px solid #d8d8dd !important;
   border-radius: 8px;
-  color: #6e6e6e;
   cursor: pointer;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   padding: 0 0px;
-  width: 100%;
-  height: 42px;
 
-  background: linear-gradient(45deg, transparent 50%, gray 50%),
-    linear-gradient(135deg, gray 50%, transparent 50%);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 12px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+  background: ${({ isOpenOption }) =>
+    isOpenOption
+      ? `linear-gradient(135deg, transparent 50%, gray 50%),
+      linear-gradient(45deg, gray 50%, transparent 50%)`
+      : `linear-gradient(45deg, transparent 50%, gray 50%),
+  linear-gradient(135deg, gray 50%, transparent 50%)`}};
+
+  background-position: calc(100% - 20px) calc(1.4em + 2px),
+    calc(100% - 12px) calc(1.4em + 2px), calc(100% - 2.5em) 0.5em;
 
   background-size: 8px 8px, 8px 8px, 1px 2.4em;
   background-repeat: no-repeat;
+
   & p {
-    padding-left: 16px;
+    padding-left: 10px;
+    color: #777 !important;
+    font-size: 16px;
+    font-weight: 400;
   }
 `;
 
 const OptionWrap = styled.div<{ isOpenOption: boolean }>`
   z-index: 10;
+  width: calc(100% - 2px);
   position: absolute;
   right: 0px;
-  top: 48px;
-  width: 100%;
-  background: #fff;
-  border: 1px solid #000;
+  top: 54px;
+  background: ${StyleColor.LIGHT};
+  border: 1px solid #d8d8dd !important;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-itmes: center;
 
-  opacity: ${({ isOpenOption }) => (isOpenOption ? "1" : "0")};
-
   transition: all 0.2s ease;
+  opacity: ${({ isOpenOption }) => (isOpenOption ? "1" : "0")};
+  pointer-events: ${({ isOpenOption }) => (isOpenOption ? "auto" : "none")};
 `;
 
 const SelectorOption = styled.span`
-  padding: 8px 16px;
+  padding: 16px 16px;
   cursor: pointer;
-  border-bottom: 1px solid #000;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: #eee;
+    background: ${StyleColor.HOVER};
   }
 
   &:first-child {
@@ -136,6 +140,5 @@ const SelectorOption = styled.span`
 
   &:last-child {
     border-radius: 0 0 8px 8px;
-    border: 0;
   }
 `;

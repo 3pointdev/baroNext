@@ -16,6 +16,7 @@ import styled from "styled-components";
 import LotDto from "../../src/dto/report/lot.dto";
 import chartModule from "../../src/modules/chart.module";
 import timeModule from "../../src/modules/time.module";
+import { StyleColor } from "config/constants";
 
 ChartJS.register(
   LinearScale,
@@ -61,7 +62,7 @@ export default function LotBarChart({ data = [], averageLotTime }: IProps) {
 
     // Bar의 배경색을 결정하는 함수
     const getBarBackgroundColor = (value) => {
-      return value > 100 ? "rgb(125, 134, 153)" : "rgb(255, 77, 73)";
+      return value > 100 ? StyleColor.WARNNING : StyleColor.PRIMARY;
     };
 
     setChartData({

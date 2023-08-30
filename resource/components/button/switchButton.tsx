@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { ChangeEventHandler } from "react";
 import styled from "styled-components";
 
@@ -48,7 +49,7 @@ const SwitchLabel = styled.label`
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    background-color: rgb(0, 0, 0, 0.38);
+    background-color: ${StyleColor.DARK}60;
     outline: none;
     opacity: 0;
     transform: scale(1);
@@ -64,7 +65,7 @@ const SwitchLabel = styled.label`
     border-radius: 7px;
     width: 36px;
     height: 14px;
-    background-color: rgb(0, 0, 0, 0.38);
+    background-color: ${StyleColor.DARK}60;
     vertical-align: top;
     transition: background-color 0.2s, opacity 0.2s;
   }
@@ -77,23 +78,23 @@ const SwitchLabel = styled.label`
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    background-color: #fff;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-      0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background-color: ${StyleColor.LIGHT};
+    box-shadow: 0 3px 1px -2px ${StyleColor.DARK}60,
+      0 2px 2px 0 ${StyleColor.DARK}30;, 0 1px 5px 0 ${StyleColor.DARK}40;
     transition: background-color 0.2s, transform 0.2s;
   }
 
   & > input:checked {
     right: -10px;
-    background-color: #1976d280;
+    background-color: ${StyleColor.PRIMARY};
   }
 
   & > input:checked + span::before {
-    background-color: #1976d280;
+    background-color: ${StyleColor.PRIMARY}70;
   }
 
   & > input:checked + span::after {
-    background-color: #1976d2;
+    background-color: ${StyleColor.PRIMARY};
     transform: translateX(16px);
   }
 
@@ -116,26 +117,26 @@ const SwitchLabel = styled.label`
   }
 
   & > input:active + span::before {
-    background-color: #8f8f8f;
+    background-color: ${StyleColor.DARK};
   }
 
   & > input:checked:active + span::before {
-    background-color: #1976d280;
+    background-color: ${StyleColor.PRIMARY};
   }
 
   & > input:disabled {
-    opacity: 0;
+    // opacity: 0;
   }
 
   & > input:disabled + span::before {
-    background-color: #ddd;
+    // background-color: ${StyleColor.PRIMARY};
   }
 
   & > input:checked:disabled + span::before {
-    background-color: #bfdbda;
+    // background-color: ${StyleColor.PRIMARY};
   }
 
   & > input:checked:disabled + span::after {
-    background-color: #61b5b4;
+    // background-color: ${StyleColor.PRIMARY};
   }
 `;

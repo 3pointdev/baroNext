@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { CSSProperties } from "react";
 import styled from "styled-components";
 
@@ -23,14 +24,14 @@ const Container = styled.div`
 
 const Title = styled.p`
   padding: 4px 12px;
-  background: #e7effd;
+  background: ${StyleColor.EMPHASIS};
   text-align: center;
   font-weight: 700 !important;
 `;
 
 const Desc = styled.p`
   padding: 4px 12px;
-  background: #f5f8fe;
+  background: ${StyleColor.BRIGHTEMPHASIS};
   color: #4c4e64;
   text-align: center;
   font-weight: 400 !important;

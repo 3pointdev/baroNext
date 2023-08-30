@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ko from "date-fns/locale/ko";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { ChangeEventHandler } from "react";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   selected: string;
@@ -141,13 +142,13 @@ const CalendarIcon = styled(FontAwesomeIcon)`
 
 const Picker = styled(DatePicker)`
   z-index: 101;
-  border: 1px solid #d8d8dd;
+  border: 1px solid ${StyleColor.HOVER};
   border-radius: 8px;
   padding: 6px 10px;
   height: 28px;
   width: 160px;
 
-  background: #f2f2f2;
+  background: ${StyleColor.LIGHT};
 
   font-size: 16px;
   font-weight: 400;
@@ -158,6 +159,12 @@ const Picker = styled(DatePicker)`
   caret-color: transparent;
 
   text-align: right;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${StyleColor.HOVER};
+  }
 `;
 
 const Calendar = {
@@ -169,7 +176,7 @@ const Calendar = {
     height: 32px;
   `,
   Button: styled.button`
-    background: 0;
+    background: none;
     border: 0;
     font-size: 16px;
     cursor: pointer;

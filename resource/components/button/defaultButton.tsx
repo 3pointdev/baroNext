@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
@@ -29,8 +30,8 @@ export default function DefaultButton({
   alwaysHandling = false,
   isActive = true,
   style,
-  activeColor = "#3a79ec",
-  disableColor = "#63657840",
+  activeColor = StyleColor.PRIMARY,
+  disableColor = StyleColor.DISABLE,
 }: IProps) {
   let isActiveHandling = null;
 

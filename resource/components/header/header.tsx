@@ -14,6 +14,7 @@ import UserModal from "../modal/userModal";
 import Linker from "../linker/linker";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import authModule from "../../src/modules/auth.module";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -89,7 +90,11 @@ function Header(props: IProps) {
                     count={item.subMenu.length}
                   >
                     {item.subMenu.map((sub: SubMenuModel, key) => {
-                      return <li key={`sub_menu_${key}`}>{sub.title}</li>;
+                      return (
+                        <Linker key={`sub_menu_${key}`} href={sub.path}>
+                          {sub.title}
+                        </Linker>
+                      );
                     })}
                   </Navi.SubMenu>
                 </Navi.MenuModal>
@@ -191,13 +196,13 @@ const Navi = {
     }
 
     &.active {
-      background: #3a79ec;
+      background: ${StyleColor.PRIMARY};
       border-radius: 8px;
       box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
 
       & p,
       path {
-        color: white;
+        color: ${StyleColor.LIGHT};
       }
     }
   `,
@@ -214,7 +219,7 @@ const Navi = {
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    background: #fff;
+    background: ${StyleColor.LIGHT};
     box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
     width: 100%;
     overflow: hidden;
@@ -226,11 +231,12 @@ const Navi = {
       height: ${({ count }) => count * 48}px !important;
     }
 
-    & li {
+    & div {
       padding: 12px;
+      transition: all 0.2s ease;
 
       &:hover {
-        background: #f5f5f5;
+        background: ${StyleColor.HOVER};
       }
     }
   `,

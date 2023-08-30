@@ -14,6 +14,7 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import CardLayout from "../layout/cardLayout";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   data: ProductDto;
@@ -42,7 +43,7 @@ export default function ColumnReportCard({
   return (
     <Container>
       <ColumnWrap>
-        <CardLayout style={{ background: "#e7f4ff" }}>
+        <CardLayout style={{ background: StyleColor.EMPHASIS }}>
           <MachineName>{data.name}</MachineName>
         </CardLayout>
         <CardLayout style={{ width: "24vw", flexShrink: "0" }}>
@@ -363,13 +364,13 @@ const Graph = {
       & path {
         fill: rgba(58, 121, 236, 100);
       }
-      background: rgb(225 236 255);
+      background: ${StyleColor.PRIMARY}20;
     }
     &.not_work {
       & path {
         fill: rgba(255, 58, 58, 54);
       }
-      background: rgb(255 236 236);
+      background: ${StyleColor.WARNNING}20;
     }
   `,
   Percent: styled.p`
@@ -396,7 +397,7 @@ const Graph = {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: #eaeaec;
+      background: ${StyleColor.HOVER};
       border-radius: 50%;
       width: 20px;
       height: 20px;

@@ -4,9 +4,8 @@ import { inject, observer } from "mobx-react";
 import ReportViewModel from "src/viewModels/report/report.viewModel";
 import ProductDto from "src/dto/report/product.dto";
 import styled from "styled-components";
-import ReportCard from "components/machine/reportCard";
 import LayoutHeader from "components/layout/layoutHeader";
-import CustomSelector from "components/input/customSelector";
+import CustomMachineSelector from "components/input/customMachineSelector";
 import ColumnReportCard from "components/machine/columnReportCard";
 
 interface IProps {
@@ -32,7 +31,7 @@ function ReportView(props: IProps) {
         value={reportViewModel.productModel.day}
         onChange={reportViewModel.handleChangeDay}
       >
-        <CustomSelector
+        <CustomMachineSelector
           onClick={reportViewModel.handleClickFilter}
           options={reportViewModel.products}
           defaultTitle="전체보기"

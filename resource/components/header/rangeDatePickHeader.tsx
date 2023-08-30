@@ -1,6 +1,7 @@
 import { CSSProperties, ReactElement } from "react";
 import styled from "styled-components";
 import RangeDatePicker from "../datePicker/rangeDatePicker";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   start: string;
@@ -42,7 +43,7 @@ const Container = styled.div`
   position: relative;
   flex-shrink: 0;
   width: calc(100% - 32px);
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
   border-radius: 8px;
   height: 70px;

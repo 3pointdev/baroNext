@@ -8,6 +8,7 @@ import {
   MachineColorType,
   MachineExecutionType,
   MachineStateType,
+  StyleColor,
 } from "config/constants";
 
 interface IProps {
@@ -21,6 +22,7 @@ export default function DashBoardMachine(props: IProps) {
 
   useEffect(() => {
     setColor(machineStatusModule.ToDashBoardColor(data.execution));
+    console.log(data.mid, data, color);
   }, [data.execution]);
 
   useEffect(() => {
@@ -69,7 +71,7 @@ const Container = styled.div`
   height: 140px;
   padding: 12px 18px;
   border-radius: 8px;
-  background-color: #f4f4f4;
+  background: ${StyleColor.HOVER};
 
   position: relative;
 
@@ -101,7 +103,8 @@ const ColFlex = styled.div`
 const Item = {
   MidTitle: styled.p`
     width: 100%;
-    background: rgba(255, 255, 255, 0.6);
+    background: ${StyleColor.LIGHT};
+    border-radius: 8px;
     height: 28px;
     line-height: 2;
     text-align: center;
@@ -141,5 +144,5 @@ const BackgroundCover = styled.div`
   border-radius: 8px;
   width: 100%;
   height: 100%;
-  background: #9c9c9c50;
+  background: ${StyleColor.DISABLE}50;
 `;
