@@ -12,6 +12,24 @@ export const ServerUrlType = {
 export type ServerUrlType = (typeof ServerUrlType)[keyof typeof ServerUrlType];
 
 /**
+ * 색상
+ */
+export const StyleColor = {
+  PRIMARY: "#3A79EC",
+  EMPHASIS: "#E7EFFD",
+  BRIGHTEMPHASIS: "#F5F8FE",
+  INFOMATION: "#FFEAE9",
+  HOVER: "#F0F0F0",
+  DISABLE: "#9C9C9C",
+  LIGHT: "#FFFFFF",
+  DARK: "#000000",
+  WARNNING: "#FF4D49",
+  BACKGROUND: "#F7F7F9",
+  POSITIVE: "#71E61A",
+} as const;
+export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];
+
+/**
  * 엣지머신 소켓 요청데이터 타입
  */
 export const EdgeMachineSocketDataType = {
@@ -165,3 +183,14 @@ export const ExceptionBlockType = {
 } as const;
 export type ExceptionBlockType =
   (typeof ExceptionBlockType)[keyof typeof ExceptionBlockType];
+
+/**
+ * 표 포멧 타입
+ */
+export const TableFormatType = {
+  ALL: 0,
+  MACHINE: 1,
+  PROGRAM: 2,
+} as const;
+export type TableFormatType =
+  (typeof TableFormatType)[keyof typeof TableFormatType];

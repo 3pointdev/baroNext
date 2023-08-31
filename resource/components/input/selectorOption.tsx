@@ -27,4 +27,9 @@ export default function SelectorOption({
   );
 }
 
-const Option = styled.option``;
+const Option = styled.option`
+  background: lightcoral;
+  &:hover {
+    background: #eee;
+  }
+`;

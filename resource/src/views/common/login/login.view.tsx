@@ -18,6 +18,8 @@ import Checkbox from "components/input/checkbox";
 import Selector from "components/input/selector";
 import SelectorOption from "components/input/selectorOption";
 import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import CustomSelector from "components/input/customSelector";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   authViewModel: AuthViewModel;
@@ -95,14 +97,22 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeContact}
               placeholder="등록된 연락처"
             />
-            <Selector onChange={authViewModel.handleChangeCategory}>
-              <SelectorOption title="문의 내용" value={""} selected disabled />
-              <SelectorOption title="아이디 문의" value={"id"} />
-              <SelectorOption title="비밀번호 문의" value={"password"} />
-            </Selector>
+            <CustomSelector
+              options={[
+                { title: "아이디 문의", id: "id" },
+                { title: "비밀번호 문의", id: "password" },
+              ]}
+              onClick={authViewModel.handleClickCategory}
+              value={authViewModel.findAccount.inquiry}
+              defaultTitle={"문의내용"}
+            />
             <DefaultButton
               title="요청하기"
-              onClick={authViewModel.insertContact}
+              onClick={async () => {
+                if (await authViewModel.insertContact()) {
+                  setIsContactMode(false);
+                }
+              }}
               dynamic
               isActive={authViewModel.isContactReady}
             />
@@ -399,7 +409,7 @@ const Login = {
     }
 
     &:hover {
-      background: #f0f0f0;
+      background: ${StyleColor.HOVER};
     }
   `,
 };

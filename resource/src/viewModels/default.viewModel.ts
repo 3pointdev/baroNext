@@ -9,6 +9,7 @@ import { ServerUrlType } from "../../config/constants";
 import { SocketModule } from "../modules/socket.module";
 import { NextRouter } from "next/router";
 import IndicatorViewModel from "./indicator/indicator.viewModel";
+import { Alert } from "src/modules/alert.module";
 
 export interface IDefaultProps {
   headers: any;
@@ -59,20 +60,20 @@ export default class DefaultViewModel {
     await this.api
       .post(ServerUrlType.BARO, "/login/login", params)
       .then((result: AxiosResponse<any>) => {
-        const auth = plainToInstance(AuthDto, {
-          ...result.data,
-          account: params.username,
-          profile_image: DefaultProfile.src,
-          sender: params.sender,
-        });
-        runInAction(() => {
-          this.auth = auth;
-          authModule.saveStorage(auth);
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
+        if (result.data.success) {
+          const auth = plainToInstance(AuthDto, {
+            ...result.data,
+            account: params.username,
+            profile_image: DefaultProfile.src,
+            sender: params.sender,
+          });
+          runInAction(() => {
+            this.auth = auth;
+            authModule.saveStorage(auth);
+          });
+        } else {
+          Alert.alert(result.data.msg);
+        }
       });
   };
 

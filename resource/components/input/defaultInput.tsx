@@ -8,7 +8,7 @@ import {
   RefObject,
 } from "react";
 import styled from "styled-components";
-import { ValidType } from "../../config/constants";
+import { StyleColor, ValidType } from "../../config/constants";
 
 interface IProps {
   type: HTMLInputTypeAttribute;
@@ -122,12 +122,12 @@ const ChildrenWrap = styled.p`
   transition: all 0.4s;
 
   &:hover {
-    background: rgba(222, 222, 222, 0.4);
+    background: ${StyleColor.HOVER};
   }
 `;
 
 const InputColumn = styled.input<{ isOnValue: boolean }>`
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   border: 1px solid #d8d8dd !important;
   border-radius: 8px;
   height: 38px;
@@ -161,7 +161,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
   }
 
   &.readonly {
-    background: #d9d9d9;
+    background: ${StyleColor.DISABLE};
   }
 `;
 
@@ -173,12 +173,12 @@ const Placeholder = styled.label`
   color: #bfbfbf;
   transition: all 0.4s ease;
   cursor: text;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   padding: 0 8px;
   border-radius: 8px;
 
   &.readonly {
-    background: #d9d9d9;
+    background: ${StyleColor.DISABLE};
     color: #a0a0a0;
   }
 `;
@@ -191,13 +191,13 @@ const ValidLabel = styled.label<{ isViewAble: boolean }>`
   color: #bfbfbf;
   transition: all 0.4s ease;
   cursor: text;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   padding: 0 8px;
   border-radius: 8px;
   opacity: ${({ isViewAble }) => (isViewAble ? "1" : "0")};
 
   &.readonly {
-    background: #d9d9d9;
+    background: ${StyleColor.DISABLE};
     color: #a0a0a0;
   }
 

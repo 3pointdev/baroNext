@@ -13,7 +13,7 @@ import { ServerResponse } from "../../modules/api.module";
 import ProgramDto from "../../dto/program/program.dto";
 import FunctionDto from "../../dto/program/function.dto";
 import { MouseEvent } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
 
 export interface IActiveTarget {
   machine: number;
@@ -33,7 +33,7 @@ export default class ProgramViewModel extends DefaultViewModel {
   public activeTarget: IActiveTarget = { machine: 1, code: 0 };
   public isLoading: ILoding = { machine: true, code: false };
 
-  public targetDate: string = moment().format("YYYY-MM-DD");
+  public targetDate: string = dayjs().format("YYYY-MM-DD");
   public activeComponent: number = 0;
 
   constructor(props: IDefaultProps) {
@@ -315,7 +315,7 @@ export default class ProgramViewModel extends DefaultViewModel {
 
   handleChangeDay = (date: string) => {
     runInAction(() => {
-      this.targetDate = moment(date).format("YYYY-MM-DD");
+      this.targetDate = dayjs(date).format("YYYY-MM-DD");
       this.activeCallfunc = [];
       this.activeCode = "";
       this.isLoading = { machine: true, code: false };
@@ -330,7 +330,7 @@ export default class ProgramViewModel extends DefaultViewModel {
     switch (value) {
       case DatePickerButtonType.TODAY:
         runInAction(() => {
-          this.targetDate = moment(new Date()).format("YYYY-MM-DD");
+          this.targetDate = dayjs(new Date()).format("YYYY-MM-DD");
           this.activeCallfunc = [];
           this.activeCode = "";
           this.isLoading = { machine: true, code: false };
@@ -341,7 +341,7 @@ export default class ProgramViewModel extends DefaultViewModel {
         const newTimeMs = new Date(this.targetDate).getTime();
         const newNextDay = new Date(newTimeMs + 86400000);
         runInAction(() => {
-          this.targetDate = moment(newNextDay).format("YYYY-MM-DD");
+          this.targetDate = dayjs(newNextDay).format("YYYY-MM-DD");
           this.activeCallfunc = [];
           this.activeCode = "";
           this.isLoading = { machine: true, code: false };
@@ -352,7 +352,7 @@ export default class ProgramViewModel extends DefaultViewModel {
         const baseDateInMillis = new Date(this.targetDate).getTime();
         const newPrevDay = new Date(baseDateInMillis - 86400000);
         runInAction(() => {
-          this.targetDate = moment(newPrevDay).format("YYYY-MM-DD");
+          this.targetDate = dayjs(newPrevDay).format("YYYY-MM-DD");
           this.activeCallfunc = [];
           this.activeCode = "";
           this.isLoading = { machine: true, code: false };

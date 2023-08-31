@@ -1,9 +1,9 @@
-import moment from "moment";
+import dayjs from "dayjs";
 
 class TimeModule {
   public toString(time: string) {
-    const date = moment(time);
-    const now = moment();
+    const date = dayjs(time);
+    const now = dayjs();
 
     if (now.diff(date, "minutes") <= 10) {
       return "방금 전";
@@ -32,24 +32,23 @@ class TimeModule {
   }
 
   public getRemainingTime(targetDateTime: string) {
-    const targetMoment = moment(targetDateTime, "YYYY-MM-DD HH:mm:ss");
-    const currentMoment = moment();
+    const target = dayjs(targetDateTime, "YYYY-MM-DD HH:mm:ss");
+    const current = dayjs();
 
-    const duration = moment.duration(targetMoment.diff(currentMoment));
-    const hours = Math.floor(duration.asHours());
-    const minutes = Math.floor(duration.asMinutes()) % 60;
-    const seconds = Math.floor(duration.asSeconds()) % 60;
+    const duration = target.diff(current);
+    const hours = Math.floor(duration / 3600000);
+    const minutes = Math.floor((duration / 60000) % 60);
+    const seconds = Math.floor((duration / 1000) % 60);
 
     return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  public msToHHMM(ms: number) {
-    const duration = moment.duration(ms);
-    const hours = Math.floor(duration.asHours());
-    const minutes = duration.minutes();
-    const seconds = duration.seconds();
+  public msToHHMM(ms: number): string {
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms / 60000) % 60);
+    const seconds = Math.floor((ms / 1000) % 60);
 
     if (hours > 0) {
       return `${hours.toString().padStart(2, "0")}:${minutes
@@ -80,8 +79,8 @@ class TimeModule {
   }
 
   public getTimeDifferenceInMs(time1: string, time2: string) {
-    const date1 = moment(time1);
-    const date2 = moment(time2);
+    const date1 = dayjs(time1);
+    const date2 = dayjs(time2);
     const timeDiffInMs = date2.diff(date1);
     return timeDiffInMs;
   }

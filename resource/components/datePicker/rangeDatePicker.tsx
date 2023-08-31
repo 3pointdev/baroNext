@@ -6,7 +6,7 @@ import styled from "styled-components";
 import ko from "date-fns/locale/ko";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { ChangeEventHandler } from "react";
-import { DatePickerRangeType } from "../../config/constants";
+import { DatePickerRangeType, StyleColor } from "../../config/constants";
 
 interface IProps {
   start: string;
@@ -155,12 +155,15 @@ const Container = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+  z-index: 101;
+
   //달력 Wrapper
   & .react-datepicker__tab-loop {
     z-index: 101;
     position: absolute;
 
     & .react-datepicker {
+      z-index: 101;
       box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
       border: 0;
     }
@@ -202,7 +205,7 @@ const Container = styled.div`
 `;
 
 const IconSetting = styled(FontAwesomeIcon)`
-  z-index: 1;
+  z-index: 101;
   position: absolute;
   top: 50%;
   width: 16px;
@@ -220,13 +223,14 @@ const EndCalendarIcon = styled(IconSetting)`
 `;
 
 const Picker = styled(DatePicker)`
-  border: 1px solid #d8d8dd;
+  z-index: 101;
+  border: 1px solid ${StyleColor.HOVER};
   border-radius: 8px;
   padding: 6px 10px;
   height: 28px;
   width: 160px;
 
-  background: #f2f2f2;
+  background: ${StyleColor.LIGHT};
 
   font-size: 16px;
   font-weight: 400;
@@ -237,6 +241,10 @@ const Picker = styled(DatePicker)`
   caret-color: transparent;
 
   text-align: right;
+
+  &:hover {
+    background: ${StyleColor.HOVER};
+  }
 `;
 
 const Calendar = {
@@ -248,7 +256,7 @@ const Calendar = {
     height: 32px;
   `,
   Button: styled.button`
-    background: 0;
+    background: none;
     border: 0;
     font-size: 16px;
     cursor: pointer;

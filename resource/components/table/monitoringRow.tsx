@@ -2,9 +2,9 @@ import styled, { keyframes } from "styled-components";
 import timeModule from "../../src/modules/time.module";
 import machineStatusModule from "../../src/modules/machineStatus.module";
 import MachineDto from "../../src/dto/machine/machine.dto";
-import moment from "moment";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import { MachineExecutionType } from "../../config/constants";
+import dayjs from "dayjs";
 
 interface IProps {
   data: MachineDto;
@@ -37,7 +37,7 @@ export default function MonitoringRow({ data }: IProps) {
           <span className="plan">{` / ${data.planCount}`}</span>
         </td>
         <td className="start_date">
-          {moment(data.startYmdt).format("MM-DD hh:mm")}
+          {dayjs(data.startYmdt).format("MM-DD hh:mm")}
         </td>
         <td className="end_date">
           {data.planCount !== 0 && data.partCount <= data.planCount

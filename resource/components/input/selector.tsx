@@ -22,7 +22,6 @@ export default function Selector({
 }
 
 const SelectWrap = styled.select`
-  background: #fff;
   height: 56px;
   width: 100%;
   padding: 8px 10px;
@@ -35,8 +34,9 @@ const SelectWrap = styled.select`
   appearance: none;
   color: #6e6e6e;
   flex-shrink: 0;
+  cursor: pointer;
 
-  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+  background: linear-gradient(45deg, transparent 50%, gray 50%),
     linear-gradient(135deg, gray 50%, transparent 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position: calc(100% - 20px) calc(1em + 6px),
@@ -46,5 +46,8 @@ const SelectWrap = styled.select`
 
   &::-ms-expand {
     display: none;
+  }
+
+  &:hover {
   }
 `;

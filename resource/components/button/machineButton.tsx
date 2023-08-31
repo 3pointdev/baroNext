@@ -1,5 +1,6 @@
 import { MouseEventHandler, ReactElement } from "react";
 import styled, { CSSProperties } from "styled-components";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   title: string | number | string[] | number[] | ReactElement | ReactElement[];
@@ -67,11 +68,11 @@ const Button = styled.button<{
   ${({ dynamic, isActive }) =>
     dynamic === true && isActive === false
       ? `
-      background: #d9d9d9;
+      background: ${StyleColor.DISABLE}70;
       border: 0;
       cursor: default;
       `
       : `
-      background: #fff;
+      background: ${StyleColor.LIGHT};
     `}
 `;

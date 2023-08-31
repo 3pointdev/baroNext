@@ -2,7 +2,7 @@ import sha256 from "sha256";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import AccountModel from "../../models/login/account.model";
-import { ChangeEvent, KeyboardEvent } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { ServerUrlType } from "../../../config/constants";
 import FindAccountModel from "../../models/login/contact.model";
 import { Alert } from "../../modules/alert.module";
@@ -11,7 +11,7 @@ export default class AuthViewModel extends DefaultViewModel {
   public account: AccountModel = new AccountModel();
   public findAccount: FindAccountModel = new FindAccountModel();
   public isContactReady: boolean = false;
-  public isAutoLogin: boolean = false;
+  public isAutoLogin: boolean = true;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -23,7 +23,7 @@ export default class AuthViewModel extends DefaultViewModel {
 
       checkContactReady: action,
       handleChangeContact: action,
-      handleChangeCategory: action,
+      handleClickCategory: action,
       handleChangeAccount: action,
       handleChangeAutoLogin: action,
     });
@@ -46,11 +46,11 @@ export default class AuthViewModel extends DefaultViewModel {
     });
   };
 
-  handleChangeCategory = (event: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
+  handleClickCategory = (event: MouseEvent<HTMLSelectElement>) => {
+    const { id } = event.currentTarget.dataset;
 
     runInAction(() => {
-      this.findAccount = { ...this.findAccount, inquiry: value };
+      this.findAccount = { ...this.findAccount, inquiry: id };
       this.checkContactReady();
     });
   };
@@ -62,8 +62,8 @@ export default class AuthViewModel extends DefaultViewModel {
     });
   };
 
-  insertContact = async () => {
-    await this.api
+  insertContact = async (): Promise<boolean> => {
+    return await this.api
       .post(ServerUrlType.BARO, "/login/findId", {
         ...this.findAccount,
         sender: window.localStorage.sender,
@@ -71,6 +71,11 @@ export default class AuthViewModel extends DefaultViewModel {
       .then((result: any) => {
         if (result.data.code === 500) {
           Alert.alert("요청하신 계정 또는 연락처를 찾을 수 없습니다.");
+          return false;
+        } else {
+          return Alert.alert("계정을 문자메시지로 전송하였습니다.").then(() => {
+            return true;
+          });
         }
       });
   };

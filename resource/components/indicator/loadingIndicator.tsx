@@ -1,6 +1,7 @@
 import { inject, observer } from "mobx-react";
 import styled, { keyframes } from "styled-components";
 import IndicatorViewModel from "../../src/viewModels/indicator/indicator.viewModel";
+import { StyleColor } from "config/constants";
 
 interface IProps {
   indicatorViewModel: IndicatorViewModel;
@@ -58,7 +59,7 @@ const shadow = keyframes`
 const Background = styled.div`
   position: fixed;
   z-index: 997;
-  background: black;
+  background: ${StyleColor.DARK};
   width: 100vw;
   height: 100vh;
   transition: all 0.4s ease;
@@ -85,7 +86,7 @@ const Background = styled.div`
     height: 20px;
     position: absolute;
     border-radius: 50%;
-    background-color: #fff;
+    background: ${StyleColor.LIGHT};
     left: 15%;
     transform-origin: 50%;
     animation: ${circle} 0.5s alternate infinite ease;
@@ -106,7 +107,7 @@ const Background = styled.div`
     width: 20px;
     height: 4px;
     border-radius: 50%;
-    background-color: #3a79ec;
+    background-color: ${StyleColor.HOVER};
     position: absolute;
     top: 62px;
     transform-origin: 50%;

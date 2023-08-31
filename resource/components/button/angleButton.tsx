@@ -1,5 +1,6 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/constants";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 
@@ -28,7 +29,7 @@ const Button = styled.button`
   height: 40px;
 
   border-radius: 50%;
-  background: 0;
+  background: none;
   border: 0;
   cursor: pointer;
   transition: all 0.4s;
@@ -39,7 +40,7 @@ const Button = styled.button`
   }
 
   &:hover {
-    background: #f0f0f0;
+    background: ${StyleColor.HOVER};
   }
 
   &:disabled {

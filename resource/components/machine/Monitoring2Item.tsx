@@ -1,9 +1,13 @@
 import styled from "styled-components";
-import { MachineExecutionType, MachineTextType } from "../../config/constants";
+import {
+  MachineExecutionType,
+  MachineTextType,
+  StyleColor,
+} from "../../config/constants";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProps {
   data: MachineDto;
@@ -148,7 +152,7 @@ const Container = styled.li`
   justify-content: space-between;
   padding-top: 16px;
   overflow: hidden;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
 
   & > * {
     flex-shrink: 0;

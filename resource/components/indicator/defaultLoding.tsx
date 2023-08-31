@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import FactoryIcon from "../../public/images/icons/factoryIcon";
+import { StyleColor } from "config/constants";
 
 export default function DefaultLoading() {
   return (
@@ -37,7 +38,7 @@ const LoadingFactory = styled.div`
   & .loading_in_box {
     width: 50px;
     height: 50px;
-    background: #3a79ec;
+    background: ${StyleColor.PRIMARY};
     animation: ${animate} 0.5s linear infinite;
     position: absolute;
     top: 0;
@@ -48,7 +49,7 @@ const LoadingFactory = styled.div`
   & .loading_in_shadow {
     width: 50px;
     height: 5px;
-    background: #000;
+    background: ${StyleColor.LIGHT};
     opacity: 0.1;
     position: absolute;
     top: 59px;

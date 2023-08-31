@@ -1,20 +1,19 @@
-import { inject, observer } from "mobx-react";
-import { MouseEvent, useEffect, useState } from "react";
-import React from "react";
-import styled from "styled-components";
-import MachineViewModel from "src/viewModels/machine/machine.viewModel";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import MachineDto from "src/dto/machine/machine.dto";
-import Monitoring2Item from "components/machine/Monitoring2Item";
-import { NUMBERSEENMONITORING2 } from "config/constants";
-import BarofactorySquare from "public/images/logo/barofactory-square";
-import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Linker from "components/linker/linker";
-import MonitorListDto from "src/dto/monitor/monitorList.dto";
-import pageUrlConfig from "config/pageUrlConfig";
+import Monitoring2Item from "components/machine/Monitoring2Item";
 import Timer from "components/timer/timer";
+import { NUMBERSEENMONITORING2 } from "config/constants";
+import pageUrlConfig from "config/pageUrlConfig";
+import { inject, observer } from "mobx-react";
+import BarofactorySquare from "public/images/logo/barofactory-square";
+import { MouseEvent, useEffect, useState } from "react";
+import MachineDto from "src/dto/machine/machine.dto";
+import MonitorListDto from "src/dto/monitor/monitorList.dto";
 import { Alert } from "src/modules/alert.module";
+import MachineViewModel from "src/viewModels/machine/machine.viewModel";
+import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
+import styled from "styled-components";
 import { SweetAlertResult } from "sweetalert2";
 
 interface IProps {
@@ -37,9 +36,9 @@ function Monitoring2View(props: IProps) {
 
     initialize();
 
-    setTimeout(() => {
-      location.reload();
-    }, 1200000);
+    // setTimeout(() => {
+    //   location.reload();
+    // }, 1200000);
 
     return () => {
       machineViewModel.socketDisconnect();

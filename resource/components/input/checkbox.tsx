@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { ChangeEventHandler } from "react";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
@@ -83,7 +84,7 @@ const CheckboxWrapper = styled.div`
     content: "";
     width: 100%;
     height: 100%;
-    background: rgb(76, 78, 100);
+    background: ${StyleColor.EMPHASIS};
     display: block;
     transform: scale(0);
     opacity: 1;
@@ -95,12 +96,12 @@ const CheckboxWrapper = styled.div`
   }
 
   & .cbx:hover span:first-child {
-    border-color: rgb(76, 78, 100);
+    border-color: ${StyleColor.PRIMARY};
   }
 
   & .inp-cbx:checked + .cbx span:first-child {
-    border-color: rgb(76, 78, 100);
-    background: rgb(76, 78, 100);
+    border-color: none;
+    background: ${StyleColor.PRIMARY};
     animation: ${check15} 0.6s ease;
   }
   & .inp-cbx:checked + .cbx span:first-child svg {

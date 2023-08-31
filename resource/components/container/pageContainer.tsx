@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { ReactElement } from "react";
 import styled, { CSSProperties } from "styled-components";
 
@@ -14,7 +15,7 @@ const Container = styled.div`
   margin: 0 auto;
   width: calc(100vw - 32px);
   height: calc(100vh - 176px);
-  background: #f7f7f9;
+  background: ${StyleColor.BACKGROUND};
   padding: 24px 16px;
   display: flex;
   flex-direction: column;

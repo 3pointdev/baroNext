@@ -1,27 +1,16 @@
 import { makeObservable, observable } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import MenuModel from "../../models/menu/menu.model";
-import {
-  faBoxesStacked,
-  faDisplay,
-  faHome,
-  faScrewdriverWrench,
-  faUser,
-  faEnvelope,
-  faBell,
-  faCircleQuestion,
-  faMessage,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
-import { faClipboard } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import AlarmListDto from "../../dto/alarm/alarmList.dto";
 import UserMenuModel from "../../models/menu/userMenu.model";
 import pageUrlConfig from "../../../config/pageUrlConfig";
 import HomeIcon from "../../../public/images/icons/homeIcon";
-import BoxsIcon from "../../../public/images/icons/boxsIcon";
 import ScheduleIcon from "../../../public/images/icons/scheduleIcon";
 import ToolsIcon from "../../../public/images/icons/toolsIcon";
 import MonitorIcon from "../../../public/images/icons/monitorIcon";
+import ListIcon from "public/images/icons/listIcon";
+import MagnifyGlassIcon from "../../../public/images/icons/magnifyGlassIcon";
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
@@ -40,26 +29,23 @@ export default class MainViewModel extends DefaultViewModel {
         subMenu: [],
       },
       {
-        name: "product_manage",
-        path: pageUrlConfig.production,
-        title: "생산관리",
-        icon: BoxsIcon,
+        name: "production_record",
+        path: pageUrlConfig.productionRecord,
+        title: "생산이력",
+        icon: ListIcon,
         size: 20,
-        subMenu: [
-          {
-            name: "production_report",
-            path: pageUrlConfig.productionReport,
-            title: "생산리포트",
-          },
-          {
-            name: "production_record",
-            path: pageUrlConfig.productionRecord,
-            title: "생산이력",
-          },
-        ],
+        subMenu: [],
       },
       {
-        name: "work_manage",
+        name: "production_report",
+        path: pageUrlConfig.productionReport,
+        title: "생산분석",
+        icon: MagnifyGlassIcon,
+        size: 20,
+        subMenu: [],
+      },
+      {
+        name: "work",
         path: pageUrlConfig.work,
         title: "작업관리",
         icon: ScheduleIcon,
@@ -69,6 +55,11 @@ export default class MainViewModel extends DefaultViewModel {
             name: "program",
             path: pageUrlConfig.workProgram,
             title: "프로그램 관리",
+          },
+          {
+            name: "machine_info",
+            path: pageUrlConfig.workSchedule,
+            title: "스케쥴 관리",
           },
         ],
       },
@@ -93,27 +84,11 @@ export default class MainViewModel extends DefaultViewModel {
       },
       {
         name: "screen_manage",
-        path: pageUrlConfig.monitor,
+        path: pageUrlConfig.monitorSetting,
         title: "화면관리",
         icon: MonitorIcon,
         size: 20,
-        subMenu: [
-          {
-            name: "monitoring_setting",
-            path: pageUrlConfig.monitorSetting,
-            title: "모니터링 관리",
-          },
-          {
-            name: "monitor2",
-            path: `${pageUrlConfig.monitor2}?monitor=mon1`,
-            title: "분할 모니터",
-          },
-          {
-            name: "monitor3",
-            path: pageUrlConfig.monitor3,
-            title: "통합 모니터",
-          },
-        ],
+        subMenu: [],
       },
     ];
 
@@ -122,31 +97,6 @@ export default class MainViewModel extends DefaultViewModel {
         title: "계정정보",
         icon: faUser,
         path: pageUrlConfig.my,
-      },
-      {
-        title: "청구서",
-        icon: faEnvelope,
-        path: pageUrlConfig.invoices,
-      },
-      {
-        title: "알림사항",
-        icon: faBell,
-        path: pageUrlConfig.alarm,
-      },
-      {
-        title: "기능설명",
-        icon: faCircleQuestion,
-        path: pageUrlConfig.functionExplain,
-      },
-      {
-        title: "고객문의",
-        icon: faMessage,
-        path: pageUrlConfig.contact,
-      },
-      {
-        title: "설정",
-        icon: faGear,
-        path: pageUrlConfig.setting,
       },
     ];
 

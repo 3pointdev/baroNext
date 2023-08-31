@@ -21,7 +21,7 @@ import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
 import NotificationDto from "../../dto/machine/notification.dto";
 import NotificationModel from "../../models/machine/notification.model";
 import NotificationListDto from "../../dto/machine/notificationList.dto";
-import moment from "moment";
+import dayjs from "dayjs";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { Alert } from "../../modules/alert.module";
 import Swal from "sweetalert2";
@@ -231,7 +231,7 @@ export default class MachineViewModel extends DefaultViewModel {
     runInAction(() => {
       this.notiModel = {
         ...this.notiModel,
-        [type]: moment(date).format("YYYY-MM-DD"),
+        [type]: dayjs(date).format("YYYY-MM-DD"),
       };
       this.insertListNotification();
     });

@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import { CSSProperties } from "react";
 import styled from "styled-components";
 
@@ -19,7 +20,7 @@ const Badge = styled.div`
   justify-content: center;
   border-radius: 12px;
   color: #000;
-  background: #ffeae9;
+  background: ${StyleColor.INFOMATION};
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;

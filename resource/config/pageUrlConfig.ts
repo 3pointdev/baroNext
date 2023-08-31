@@ -9,6 +9,7 @@ class PageUrlConfig {
   public productionStatus = "/production/status";
   public work = "/work";
   public workProgram = "/work/program";
+  public workSchedule = "/work/schedule";
   public machine = "/machine";
   public machineAlarm = "/machine/notification";
   public machineInfo = "/machine/info";
