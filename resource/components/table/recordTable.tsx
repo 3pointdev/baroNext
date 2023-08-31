@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor, TableFormatType } from "config/constants";
 import { ReactElement, Ref, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -14,36 +14,77 @@ interface IProps {
   header: ITableHeader[];
   data: any[];
   recordRef?: Ref<HTMLTableElement>;
+  filter?: string | number;
+  format?: number;
 }
 
-export default function RecordTable({ header, data, recordRef }: IProps) {
+export default function RecordTable({
+  header,
+  data,
+  recordRef,
+  filter,
+  format,
+}: IProps) {
   const [mergedCells, setMergedCells] = useState([]);
+  const [tableData, setTableData] = useState([]);
+
+  const findMergeCell = () => {
+    if (tableData.length < 1) return false;
+    const merged = header.map((column) => {
+      const merginsArray: number[] = [];
+      let count = 1;
+      for (let i = tableData.length - 1; i >= 0; i--) {
+        const target = tableData[i];
+        const nextData = tableData[i + 1];
+
+        if (nextData && target[column.column] === nextData[column.column]) {
+          merginsArray.push(0);
+          count++;
+        } else {
+          merginsArray.push(count);
+          count = 1;
+        }
+      }
+      merginsArray.push(count);
+
+      return merginsArray.reverse();
+    });
+    console.log(merged);
+    setMergedCells(merged);
+  };
+
+  const filterData = async () => {
+    switch (format) {
+      case TableFormatType.MACHINE:
+        if (filter === "all") {
+          setTableData(data);
+        } else {
+          setTableData(data.filter((column) => column.mid === filter));
+        }
+        break;
+
+      case TableFormatType.PROGRAM:
+        if (filter === "all") {
+          setTableData(data);
+        } else {
+          setTableData(data.filter((column) => column.program === filter));
+        }
+        break;
+
+      default:
+        setTableData(data);
+        break;
+    }
+    return true;
+  };
 
   useEffect(() => {
-    // 연속된 셀들을 찾는 함수 정의
-    if (data.length > 0) {
-      const merged = header.map((column) => {
-        const mergedCells: number[] = [];
-        let count = 1;
-        for (let i = 0; i < data.length - 1; i++) {
-          if (
-            data[i + 1][column.column] &&
-            data[i][column.column] === data[i + 1][column.column]
-          ) {
-            mergedCells.push(0);
-            count++;
-          } else {
-            mergedCells.push(count);
-            count = 1;
-          }
-        }
-        mergedCells.push(count);
+    filterData();
+  }, [filter, data, format]);
 
-        return mergedCells.reverse();
-      });
-      setMergedCells(merged);
-    }
-  }, [data, header]);
+  useEffect(() => {
+    findMergeCell();
+  }, [tableData, format]);
 
   if (mergedCells.length < 1) return <></>;
   return (
@@ -64,22 +105,24 @@ export default function RecordTable({ header, data, recordRef }: IProps) {
         </tr>
       </Table.Head>
       <Table.Body>
-        {data.map((item: any, key: number) => {
+        {tableData.map((item: any, key: number) => {
           return (
             <tr key={`table_body_rows_${key}`}>
               {header.map((head: ITableHeader, inkey: number) => {
                 const thisMergeCount = mergedCells[inkey][key];
 
                 const shoudSkip = head.rowSpan && thisMergeCount === 0;
-                if (shoudSkip) return;
+                if (shoudSkip || item[head.column] === -1) return;
 
                 const shouldMerge = head.rowSpan && thisMergeCount > 0;
-
+                const isAverage = item[head.column] === "전체" ? 3 : 1;
                 return (
                   <td
                     key={`table_body_row_data_${head.column}_${inkey}`}
                     align={head.align}
                     rowSpan={head.rowSpan && shouldMerge ? thisMergeCount : 1}
+                    colSpan={isAverage}
+                    className={isAverage === 3 ? "is_average" : ""}
                     style={{ width: `${head.size}%` }}
                   >
                     {`${item[head.column]}`}
@@ -109,7 +152,7 @@ const Table = {
 
     & tr {
       height: 48px;
-      background: rgb(216, 228, 251);
+      background: ${StyleColor.EMPHASIS};
       font-size: 14px;
       color: black;
     }
@@ -141,8 +184,13 @@ const Table = {
         border-right: 1px solid ${StyleColor.DARK};
       }
     }
+
     & tr:first-child td {
       border-top: 0;
+    }
+
+    & .is_average {
+      background: ${StyleColor.EMPHASIS};
     }
   `,
 };

@@ -185,12 +185,12 @@ export type ExceptionBlockType =
   (typeof ExceptionBlockType)[keyof typeof ExceptionBlockType];
 
 /**
- * 표 필터 타입
+ * 표 포멧 타입
  */
-export const TableFilterType = {
+export const TableFormatType = {
   ALL: 0,
   MACHINE: 1,
   PROGRAM: 2,
 } as const;
-export type TableFilterType =
-  (typeof TableFilterType)[keyof typeof TableFilterType];
+export type TableFormatType =
+  (typeof TableFormatType)[keyof typeof TableFormatType];

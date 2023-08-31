@@ -1,17 +1,16 @@
-import { useEffect, useRef } from "react";
-import PageContainer from "components/container/pageContainer";
-import { inject, observer } from "mobx-react";
-import styled from "styled-components";
-import RecordViewModel from "src/viewModels/record/record.viewModel";
-import DefaultTable from "components/table/defaultTable";
-import excelModule from "src/modules/excel.module";
-import LayoutHeader from "components/layout/layoutHeader";
-import DefaultRadio from "components/input/defaultRadio";
-import RecordTable, { ITableHeader } from "components/table/recordTable";
-import { StyleColor, TableFilterType } from "config/constants";
 import DefaultButton from "components/button/defaultButton";
-import ExcelIcon from "public/images/icons/excel";
+import PageContainer from "components/container/pageContainer";
 import CustomSelector from "components/input/customSelector";
+import DefaultRadio from "components/input/defaultRadio";
+import LayoutHeader from "components/layout/layoutHeader";
+import RecordTable from "components/table/recordTable";
+import { TableFormatType } from "config/constants";
+import { inject, observer } from "mobx-react";
+import ExcelIcon from "public/images/icons/excel";
+import { useEffect, useRef } from "react";
+import excelModule from "src/modules/excel.module";
+import RecordViewModel from "src/viewModels/record/record.viewModel";
+import styled from "styled-components";
 
 interface IProps {
   recordViewModel: RecordViewModel;
@@ -56,16 +55,30 @@ function RecordView(props: IProps) {
         title="생산이력"
       >
         <DefaultRadio
-          value={recordViewModel.recordModel.filter}
+          value={recordViewModel.recordModel.format}
           list={[
-            { title: "전체", id: TableFilterType.ALL },
-            { title: "기계별", id: TableFilterType.MACHINE },
-            { title: "품번별", id: TableFilterType.PROGRAM },
+            { title: "전체", id: TableFormatType.ALL },
+            { title: "기계별", id: TableFormatType.MACHINE },
+            { title: "품번별", id: TableFormatType.PROGRAM },
           ]}
-          onChange={recordViewModel.handleChangeFilter}
+          onChange={recordViewModel.handleChangeTableFormat}
         />
       </LayoutHeader>
-      <TableLayout>
+      <FunctionWrap>
+        {recordViewModel.recordModel.format !== TableFormatType.ALL ? (
+          <CustomSelector
+            options={recordViewModel.dataFilter}
+            onClick={recordViewModel.handleClickFilter}
+            defaultValue={"all"}
+            defaultTitle={"전체보기"}
+            value={recordViewModel.recordModel.filter}
+            style={{
+              width: "400px",
+            }}
+          />
+        ) : (
+          <div></div>
+        )}
         <DefaultButton
           title={
             <ButtonText>
@@ -81,38 +94,18 @@ function RecordView(props: IProps) {
             border: "0",
             color: "#000",
             fontSize: "16px",
-
-            position: "absolute",
-            right: "16px",
-            top: "16px",
           }}
           activeColor="#fff"
         />
-        {recordViewModel.recordModel.filter !== TableFilterType.ALL && (
-          <CustomSelector
-            options={[
-              { title: "000", id: 1 },
-              { title: "000", id: 1 },
-              { title: "000", id: 1 },
-            ]}
-            onClick={null}
-            // defaultValue={}
-            defaultTitle={"selector"}
-            value={""}
-            style={{
-              width: "400px",
-
-              position: "absolute",
-              left: "16px",
-              top: "16px",
-            }}
-          />
-        )}
+      </FunctionWrap>
+      <TableLayout>
         <TablePadding>
           <RecordTable
             header={recordViewModel.tableHeader}
             data={recordViewModel.list}
             recordRef={tableRef}
+            filter={recordViewModel.recordModel.filter}
+            format={recordViewModel.recordModel.format}
           />
         </TablePadding>
       </TableLayout>
@@ -137,7 +130,6 @@ const TableLayout = styled.section`
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-  padding-top: 88px;
 `;
 
 const TablePadding = styled.div`
@@ -145,5 +137,11 @@ const TablePadding = styled.div`
   height: 100%;
   position: relative;
   overflow: auto;
-  // border: 1px solid ${StyleColor.DARK};
+`;
+
+const FunctionWrap = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;

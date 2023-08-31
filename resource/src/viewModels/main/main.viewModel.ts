@@ -58,7 +58,7 @@ export default class MainViewModel extends DefaultViewModel {
           },
           {
             name: "machine_info",
-            path: "",
+            path: pageUrlConfig.workSchedule,
             title: "스케쥴 관리",
           },
         ],

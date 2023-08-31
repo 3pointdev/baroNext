@@ -17,7 +17,7 @@ interface IProps {
   style?: CSSProperties;
 }
 
-interface Options {
+export interface Options {
   title: string;
   id: number | string;
 }
@@ -48,7 +48,11 @@ export default function CustomSelector({
 
   return (
     <Container style={style}>
-      <SelectWrap onClick={onClickSelector} isOpenOption={isOpenOption}>
+      <SelectWrap
+        onClick={onClickSelector}
+        isOpenOption={isOpenOption}
+        isSelected={value !== defaultValue}
+      >
         <p>{selectedValue}</p>
       </SelectWrap>
       <OptionWrap isOpenOption={isOpenOption}>
@@ -77,10 +81,10 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 56px;
+  background: ${StyleColor.LIGHT};
 `;
 
-const SelectWrap = styled.div<{ isOpenOption: boolean }>`
-
+const SelectWrap = styled.div<{ isOpenOption: boolean; isSelected: boolean }>`
   position: absolute;
   right: 0px;
   top: 0px;
@@ -109,7 +113,8 @@ const SelectWrap = styled.div<{ isOpenOption: boolean }>`
 
   & p {
     padding-left: 10px;
-    color: #777 !important;
+    color: ${({ isSelected }) =>
+      isSelected ? StyleColor.DARK : StyleColor.DISABLE} !important;
     font-size: 16px;
     font-weight: 400;
   }
@@ -127,6 +132,8 @@ const OptionWrap = styled.div<{ isOpenOption: boolean }>`
   display: flex;
   flex-direction: column;
   align-itmes: center;
+  overflow-y: scroll;
+  max-height: 600px;
 
   transition: all 0.2s ease;
   opacity: ${({ isOpenOption }) => (isOpenOption ? "1" : "0")};
