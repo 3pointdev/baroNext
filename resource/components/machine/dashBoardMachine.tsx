@@ -8,6 +8,7 @@ import {
   MachineColorType,
   MachineExecutionType,
   MachineStateType,
+  MachineTextType,
   StyleColor,
 } from "config/constants";
 
@@ -18,21 +19,47 @@ interface IProps {
 export default function DashBoardMachine(props: IProps) {
   const { data } = props;
   const [color, setColor] = useState<string>(MachineColorType.GRAY);
+  const [status, setStatus] = useState<string>(MachineTextType.MODIFY);
   const [endTime, setEndTime] = useState<string>("-");
-
-  useEffect(() => {
-    setColor(machineStatusModule.ToDashBoardColor(data.execution));
-    console.log(data.mid, data, color);
-  }, [data.execution]);
 
   useEffect(() => {
     const time = (data.active + data.wait) * (data.planCount - data.partCount);
     setEndTime(timeInstance.msToHHMM(time));
-
-    if (color === MachineColorType.GRAY || time <= 0) {
+    if (data.execution === MachineExecutionType.OFF || time <= 0) {
       setEndTime("-");
     }
-  }, [color]);
+
+    setColor(
+      machineStatusModule.ToColorStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage
+      )
+    );
+
+    setStatus(
+      machineStatusModule.ToTextStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage,
+        data.isReceivePartCount,
+        data.isChangePalette
+      )
+    );
+  }, [
+    data.active,
+    data.wait,
+    data.planCount,
+    data.partCount,
+    data.execution,
+    data.mode,
+    data.pause,
+    data.isReceiveMessage,
+    data.isReceivePartCount,
+    data.isChangePalette,
+  ]);
 
   return (
     <Container>
@@ -43,21 +70,22 @@ export default function DashBoardMachine(props: IProps) {
             {data.machineNo}
           </Item.MachineNumber>
           <FactoryIcon color={color} />
+          <Item.Status color={color}>{status}</Item.Status>
         </ColFlex>
-        <ColFlex>
-          <RowFlex>
+        <Item.Wrap>
+          <Item.Box>
             <Item.Title>공 정 명</Item.Title>
             <Item.Desc>{data.program}</Item.Desc>
-          </RowFlex>
-          <RowFlex>
+          </Item.Box>
+          <Item.Box>
             <Item.Title>수 량</Item.Title>
             <Item.Desc>{`${data.partCount}/${data.planCount}`}</Item.Desc>
-          </RowFlex>
-          <RowFlex>
+          </Item.Box>
+          <Item.Box>
             <Item.Title>남은시간</Item.Title>
             <Item.Desc>{endTime}</Item.Desc>
-          </RowFlex>
-        </ColFlex>
+          </Item.Box>
+        </Item.Wrap>
       </RowFlex>
       {data.execution === MachineExecutionType.OFF && <BackgroundCover />}
     </Container>
@@ -69,7 +97,7 @@ const Container = styled.div`
   width: 234px;
   min-width: 200px;
   height: 140px;
-  padding: 12px 18px;
+  padding: 18px 18px 24px;
   border-radius: 8px;
   background: ${StyleColor.HOVER};
 
@@ -77,15 +105,8 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 24px;
-
-  @media screen and (max-width: 1248px) {
-    width: 27%;
-  }
-
-  @media screen and (max-width: 917px) {
-    width: 40%;
-  }
 `;
 
 const RowFlex = styled.div`
@@ -96,7 +117,8 @@ const RowFlex = styled.div`
 const ColFlex = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: end;
+  align-items: center;
   gap: 6px;
 `;
 
@@ -116,6 +138,24 @@ const Item = {
     width: 100%;
     text-align: center;
     color: ${({ color }) => color};
+  `,
+  Status: styled.p<{ color: string }>`
+    color: ${({ color }) => color};
+    white-space: nowrap;
+    line-height: 2;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+  `,
+  Wrap: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+  `,
+  Box: styled.div`
+    display: flex;
+    gap: 16px;
   `,
   Title: styled.p`
     flex-shrink: 0;

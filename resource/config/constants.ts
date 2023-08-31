@@ -25,6 +25,7 @@ export const StyleColor = {
   DARK: "#000000",
   WARNNING: "#FF4D49",
   BACKGROUND: "#F7F7F9",
+  POSITIVE: "#71E61A",
 } as const;
 export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];
 
@@ -182,3 +183,14 @@ export const ExceptionBlockType = {
 } as const;
 export type ExceptionBlockType =
   (typeof ExceptionBlockType)[keyof typeof ExceptionBlockType];
+
+/**
+ * 표 포멧 타입
+ */
+export const TableFormatType = {
+  ALL: 0,
+  MACHINE: 1,
+  PROGRAM: 2,
+} as const;
+export type TableFormatType =
+  (typeof TableFormatType)[keyof typeof TableFormatType];

@@ -6,6 +6,7 @@ export interface ITableHeader {
   column: string;
   align: "left" | "center" | "right" | "justify" | "char" | undefined;
   size?: string;
+  rowSpan?: boolean;
 }
 
 interface IProps {
