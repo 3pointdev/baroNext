@@ -1,20 +1,11 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/constants";
+import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import ProductDto from "../../src/dto/report/product.dto";
-import { ILotData } from "../../src/viewModels/report/report.viewModel";
 import ProductDataDto from "../../src/dto/report/productData.dto";
-import DefaultButton from "../button/defaultButton";
-import timeModule from "../../src/modules/time.module";
-import InformationBadge from "../badge/informationBadge";
-import ProgressBar from "../progress/progressBar";
-import BarChart from "../chart/lotBarChart";
-import { MouseEventHandler, useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBuildingCircleXmark,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
+import { ILotData } from "../../src/viewModels/report/report.viewModel";
 import CardLayout from "../layout/cardLayout";
-import { StyleColor } from "config/constants";
 
 interface IProps {
   data: ProductDto;
@@ -29,183 +20,198 @@ export default function ColumnReportCard({
   active,
   onClickLotToggle,
 }: IProps) {
-  const [notWorkTime, setNotWorkTime] = useState<number>(0);
-
-  useEffect(() => {
-    setNotWorkTime(
-      timeModule.getTimeDifferenceInMs(
-        data.data[active].start,
-        data.data[active].end
-      ) - data.data[active].total
-    );
-  }, [active]);
-
   return (
-    <Container>
-      <ColumnWrap>
-        <CardLayout style={{ background: StyleColor.EMPHASIS }}>
-          <MachineName>{data.name}</MachineName>
-        </CardLayout>
-        <CardLayout style={{ width: "24vw", flexShrink: "0" }}>
-          <BusinessTimeWrap>
-            <div>
-              <p>시작시간</p>
-              <p>{data.data[0].start}</p>
-            </div>
-            <div>
-              <p>종료시간</p>
-              <p>{data.data[data.data.length - 1].end}</p>
-            </div>
-          </BusinessTimeWrap>
-          <ColumnTitle>LOT 변경</ColumnTitle>
-          <>
+    <Container style={{ flexDirection: "row" }}>
+      <div>
+        <SectionTitle>{data.name}</SectionTitle>
+        <WorkTimeTable>
+          <tbody>
+            <tr>
+              <th>조업시간</th>
+              <td>{`주: 00:00 ~ 00:00(점심 0시간, 휴식 00분)\n야: 00:00 ~ 00:00(점심 0시간, 휴식 00분)`}</td>
+            </tr>
+            <tr>
+              <th>조업시간 내 가동률</th>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <th>조업시간 내 가동시간</th>
+              <td>00시간 00분 00초</td>
+            </tr>
+            <tr>
+              <th>조업시간 내 비가동시간</th>
+              <td>00시간 00분 00초</td>
+            </tr>
+          </tbody>
+        </WorkTimeTable>
+        <div>
+          <SectionTitle>가공 변경 이력</SectionTitle>
+          <div>
+            <p>가공명</p>
+            <p>시간</p>
+          </div>
+          <div>
             {data.data.map((settingData: ProductDataDto, key: number) => {
-              const isNotFirst = key !== 0;
               return (
-                <div key={`lot_item_${key}`}>
-                  {isNotFirst && (
-                    <LotChange.Item className="is_not_first">
-                      <LotChange.Program>세팅변경 시간</LotChange.Program>
-                      <LotChange.Time>{`${data.data[key - 1].end} ~ ${
-                        settingData.start
-                      }`}</LotChange.Time>
-                    </LotChange.Item>
-                  )}
-                  <LotChange.Item>
-                    <LotChange.Program>{settingData.program}</LotChange.Program>
-                    <LotChange.Time>{`${settingData.start} ~ ${settingData.end}`}</LotChange.Time>
-                  </LotChange.Item>
-                </div>
+                <LotChange.Item
+                  key={`lot_item_${key}`}
+                  onClick={onClickLotToggle}
+                  data-id={data.machineNo}
+                  data-key={key}
+                >
+                  <LotChange.Program>
+                    {settingData.program ? settingData.program : "Unknown Lot"}
+                  </LotChange.Program>
+                  <LotChange.Time>{`${settingData.start} ~ ${settingData.end}`}</LotChange.Time>
+                </LotChange.Item>
               );
             })}
-          </>
-        </CardLayout>
-      </ColumnWrap>
-      <CardLayout style={{ width: "60%" }}>
-        <ManageCycleTime.ButtonWrap>
-          {data.data.map((settingData: ProductDataDto, key: number) => {
-            return (
-              <DefaultButton
-                title={settingData.program.split("(")[0]}
-                onClick={onClickLotToggle}
-                dataId={data.machineNo}
-                value={key}
-                isActive={+active === key}
-                dynamic
-                alwaysHandling={true}
-                key={`program_data_button_${key}`}
-                style={{
-                  width: "80px",
-                  height: "38px",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                }}
-                activeColor="#3A79EC"
-                disableColor="#63657860"
-              />
-            );
-          })}
-        </ManageCycleTime.ButtonWrap>
-        <ManageCycleTime.CycleMonitor>
-          <div>
-            <ManageCycleTime.Time>
-              {timeModule.secToMMSS(
-                data.data[active].active + data.data[active].idle
-              )}
-            </ManageCycleTime.Time>
-            <ManageCycleTime.Title>실 Cycle Time</ManageCycleTime.Title>
           </div>
-          <ManageCycleTime.BadgeWrap>
-            <InformationBadge title="표준시간" desc="00:02:01" />
-            <InformationBadge title="성취율" desc="97%" />
-          </ManageCycleTime.BadgeWrap>
-        </ManageCycleTime.CycleMonitor>
-        <ManageCycleTime.OperationCount>
-          <ManageCycleTime.Title>가공개수</ManageCycleTime.Title>
-          <ManageCycleTime.Title>
-            {`${data.data[active].count} / ${data.data[active].plan}`}
-          </ManageCycleTime.Title>
-          <ProgressBar
-            value={(data.data[active].count / data.data[active].plan) * 100}
-          />
-          <ManageCycleTime.DoneTime>
-            가공완료 예정시간 : 0000
-          </ManageCycleTime.DoneTime>
-          <ManageCycleTime.AverageItem className="production_time">
-            <p>평균단품 가공</p>
-            <p>{timeModule.secToMMSS(data.data[active].active)}</p>
-          </ManageCycleTime.AverageItem>
-          <ManageCycleTime.AverageItem>
-            <p>평균교체 준비</p>
-            <p>{timeModule.secToMMSS(data.data[active].idle)}</p>
-          </ManageCycleTime.AverageItem>
-        </ManageCycleTime.OperationCount>
+        </div>
+      </div>
+      <div>
+        <div>
+          <p>
+            {data.data[active].program
+              ? data.data[active].program
+              : "Unknown Lot"}
+          </p>
+          <table>
+            <thead>
+              <th>목표수량</th>
+              <th>가공수량</th>
+              <th>달성률</th>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* <ManageCycleTime.ButtonWrap>
+        {data.data.map((settingData: ProductDataDto, key: number) => {
+          return (
+            <DefaultButton
+              title={settingData.program.split("(")[0]}
+              onClick={onClickLotToggle}
+              dataId={data.machineNo}
+              value={key}
+              isActive={+active === key}
+              dynamic
+              alwaysHandling={true}
+              key={`program_data_button_${key}`}
+              style={{
+                width: "80px",
+                height: "38px",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+              activeColor="#3A79EC"
+              disableColor="#63657860"
+            />
+          );
+        })}
+      </ManageCycleTime.ButtonWrap>
+      <ManageCycleTime.CycleMonitor>
+        <div>
+          <ManageCycleTime.Time>
+            {timeModule.secToMMSS(
+              data.data[active].active + data.data[active].idle
+            )}
+          </ManageCycleTime.Time>
+          <ManageCycleTime.Title>실 Cycle Time</ManageCycleTime.Title>
+        </div>
+        <ManageCycleTime.BadgeWrap>
+          <InformationBadge title="표준시간" desc="00:02:01" />
+          <InformationBadge title="성취율" desc="97%" />
+        </ManageCycleTime.BadgeWrap>
+      </ManageCycleTime.CycleMonitor>
+      <ManageCycleTime.OperationCount>
+        <ManageCycleTime.Title>가공개수</ManageCycleTime.Title>
+        <ManageCycleTime.Title>
+          {`${data.data[active].count} / ${data.data[active].plan}`}
+        </ManageCycleTime.Title>
         <ProgressBar
-          value={
-            Math.round(
-              (data.data[active].total /
-                (data.data[active].total + notWorkTime)) *
-                10000
-            ) / 100
-          }
-          baseColor="red"
+          value={(data.data[active].count / data.data[active].plan) * 100}
         />
-        <Graph.PercentWrap>
+        <ManageCycleTime.DoneTime>
+          가공완료 예정시간 : 0000
+        </ManageCycleTime.DoneTime>
+        <ManageCycleTime.AverageItem className="production_time">
+          <p>평균단품 가공</p>
+          <p>{timeModule.secToMMSS(data.data[active].active)}</p>
+        </ManageCycleTime.AverageItem>
+        <ManageCycleTime.AverageItem>
+          <p>평균교체 준비</p>
+          <p>{timeModule.secToMMSS(data.data[active].idle)}</p>
+        </ManageCycleTime.AverageItem>
+      </ManageCycleTime.OperationCount>
+      <ProgressBar
+        value={
+          Math.round(
+            (data.data[active].total /
+              (data.data[active].total + notWorkTime)) *
+              10000
+          ) / 100
+        }
+        baseColor="red"
+      />
+      <Graph.PercentWrap>
+        <div>
           <div>
-            <div>
-              <Graph.MachineWorkIcon icon={faGear} className="work" />
-              <p>가동시간</p>
-            </div>
-            <Graph.Percent className="work">
-              {`${
-                Math.round(
-                  (data.data[active].total /
-                    (data.data[active].total + notWorkTime)) *
-                    10000
-                ) / 100
-              }%`}
-            </Graph.Percent>
-            <Graph.Time>
-              {timeModule.msToHHMM(data.data[active].total)}
-            </Graph.Time>
+            <Graph.MachineWorkIcon icon={faGear} className="work" />
+            <p>가동시간</p>
           </div>
-          <Graph.VersusWrap>
-            <p>vs</p>
-          </Graph.VersusWrap>
+          <Graph.Percent className="work">
+            {`${
+              Math.round(
+                (data.data[active].total /
+                  (data.data[active].total + notWorkTime)) *
+                  10000
+              ) / 100
+            }%`}
+          </Graph.Percent>
+          <Graph.Time>
+            {timeModule.msToHHMM(data.data[active].total)}
+          </Graph.Time>
+        </div>
+        <Graph.VersusWrap>
+          <p>vs</p>
+        </Graph.VersusWrap>
+        <div>
           <div>
-            <div>
-              <Graph.MachineWorkIcon
-                icon={faBuildingCircleXmark}
-                className="not_work"
-              />
-              <p>비가동시간</p>
-            </div>
-            <Graph.Percent className="not_work">
-              {`${
-                Math.round(
-                  (notWorkTime / (data.data[active].total + notWorkTime)) *
-                    10000
-                ) / 100
-              }%`}
-            </Graph.Percent>
-            <Graph.Time>{timeModule.msToHHMM(notWorkTime)}</Graph.Time>
+            <Graph.MachineWorkIcon
+              icon={faBuildingCircleXmark}
+              className="not_work"
+            />
+            <p>비가동시간</p>
           </div>
-        </Graph.PercentWrap>
-      </CardLayout>
-      <CardLayout style={{ width: "16vw", flexShrink: "0" }}>
-        <p>가동시간</p>
-        <p>비가동시간</p>
-      </CardLayout>
+          <Graph.Percent className="not_work">
+            {`${
+              Math.round(
+                (notWorkTime / (data.data[active].total + notWorkTime)) * 10000
+              ) / 100
+            }%`}
+          </Graph.Percent>
+          <Graph.Time>{timeModule.msToHHMM(notWorkTime)}</Graph.Time>
+        </div>
+      </Graph.PercentWrap>
+
+      <p>가동시간</p>
+      <p>비가동시간</p> */}
     </Container>
   );
 }
 
-const Container = styled.div`
+const Container = styled(CardLayout)`
   display: flex;
   gap: 12px;
   height: fit-content;
   width: 100%;
   margin-bottom: 16px;
+`;
+
+const WorkTimeTable = styled.table`
+  white-space: pre-line;
 `;
 
 const ColumnTitle = styled.h4`
@@ -233,10 +239,10 @@ const ColumnWrap = styled.div`
   gap: 8px;
 `;
 
-const MachineName = styled.p`
-  font-size: 28px;
+const SectionTitle = styled.p`
+  font-size: 24px;
   font-weight: 600;
-  line-height: 32px;
+  line-height: 38px;
 `;
 
 const LotChange = {
@@ -257,6 +263,8 @@ const LotChange = {
     }
   `,
   Program: styled.p`
+    cursor: pointer;
+    text-decoration: underline;
     font-weight: 400;
     font-size: 14px;
     width: 100%;

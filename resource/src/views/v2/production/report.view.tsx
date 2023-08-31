@@ -1,12 +1,12 @@
-import { useEffect } from "react";
 import PageContainer from "components/container/pageContainer";
-import { inject, observer } from "mobx-react";
-import ReportViewModel from "src/viewModels/report/report.viewModel";
-import ProductDto from "src/dto/report/product.dto";
-import styled from "styled-components";
-import LayoutHeader from "components/layout/layoutHeader";
 import CustomMachineSelector from "components/input/customMachineSelector";
+import LayoutHeader from "components/layout/layoutHeader";
 import ColumnReportCard from "components/machine/columnReportCard";
+import { inject, observer } from "mobx-react";
+import { useEffect } from "react";
+import ProductDto from "src/dto/report/product.dto";
+import ReportViewModel from "src/viewModels/report/report.viewModel";
+import styled from "styled-components";
 
 interface IProps {
   reportViewModel: ReportViewModel;
@@ -26,7 +26,7 @@ function ReportView(props: IProps) {
   return (
     <PageContainer style={{ gap: "16px", overflow: "auto" }}>
       <LayoutHeader
-        title="생산리포트"
+        title="생산분석"
         datePickerType="single"
         value={reportViewModel.productModel.day}
         onChange={reportViewModel.handleChangeDay}

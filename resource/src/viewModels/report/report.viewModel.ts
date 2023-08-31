@@ -1,13 +1,13 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
-import { DatePickerButtonType, ServerUrlType } from "../../../config/constants";
 import dayjs from "dayjs";
-import ProductModel from "../../models/product/product.model";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, MouseEvent } from "react";
-import ProductDto from "../../dto/report/product.dto";
+import { DatePickerButtonType, ServerUrlType } from "../../../config/constants";
 import LotDto from "../../dto/report/lot.dto";
+import ProductDto from "../../dto/report/product.dto";
+import ProductModel from "../../models/product/product.model";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export interface ILotData {
   [key: string]: LotDto[];
@@ -152,15 +152,15 @@ export default class ReportViewModel extends DefaultViewModel {
   };
 
   handleClickLotToggle = (event: MouseEvent<HTMLButtonElement>) => {
-    const { value, dataset } = event.currentTarget;
+    const { key, id } = event.currentTarget.dataset;
 
     const newProducts = [];
     for (let index = 0; index < this.products.length; index++) {
-      if (this.products[index].machineNo === dataset.id) {
-        newProducts[index] = { ...this.products[index], toggle: value };
+      if (this.products[index].machineNo === id) {
+        newProducts[index] = { ...this.products[index], toggle: key };
         this.getLotData(
           this.productModel.day,
-          this.products[index].data[value].lot,
+          this.products[index].data[key].lot,
           this.products[index].machineNo
         );
       } else {
