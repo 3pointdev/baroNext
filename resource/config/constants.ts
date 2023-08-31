@@ -25,6 +25,7 @@ export const StyleColor = {
   DARK: "#000000",
   WARNNING: "#FF4D49",
   BACKGROUND: "#F7F7F9",
+  POSITIVE: "#71E61A",
 } as const;
 export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];
 
@@ -182,3 +183,14 @@ export const ExceptionBlockType = {
 } as const;
 export type ExceptionBlockType =
   (typeof ExceptionBlockType)[keyof typeof ExceptionBlockType];
+
+/**
+ * 표 필터 타입
+ */
+export const TableFilterType = {
+  ALL: 0,
+  MACHINE: 1,
+  PROGRAM: 2,
+} as const;
+export type TableFilterType =
+  (typeof TableFilterType)[keyof typeof TableFilterType];

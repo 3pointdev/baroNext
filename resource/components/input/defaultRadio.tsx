@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface IProps {
   list: RadioList[];
@@ -36,9 +36,35 @@ export default function DefaultRadio({ list, value, onChange }: IProps) {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
 
-const Label = styled.label``;
+const Label = styled.label`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  white-space: nowrap;
+`;
+
+const checkAnimation = keyframes`
+0% {
+  width: 0px;
+  height: 0px;
+}
+60% {
+  width: 14px;
+  height: 14px;
+}
+100% {
+  width: 10px;
+  height: 10px;
+}
+`;
 
 const Radio = styled.input`
   vertical-align: middle;
@@ -50,22 +76,19 @@ const Radio = styled.input`
   border: 1px solid #757575;
   background: #a9a9a9;
 
-  &::after {
-    width: 0px;
-    height: 0px;
-    transition: all 0.2s ease;
-  }
-
   &:checked::after {
+    content: "";
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    content: "";
+
     display: block;
-    border-radius: 6px;
     width: 10px;
     height: 10px;
+    border-radius: 6px;
+
     background: #f9f9f9;
+    animation: ${checkAnimation} 0.4s;
   }
 `;

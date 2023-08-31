@@ -1,27 +1,16 @@
 import { makeObservable, observable } from "mobx";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import MenuModel from "../../models/menu/menu.model";
-import {
-  faBoxesStacked,
-  faDisplay,
-  faHome,
-  faScrewdriverWrench,
-  faUser,
-  faEnvelope,
-  faBell,
-  faCircleQuestion,
-  faMessage,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
-import { faClipboard } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import AlarmListDto from "../../dto/alarm/alarmList.dto";
 import UserMenuModel from "../../models/menu/userMenu.model";
 import pageUrlConfig from "../../../config/pageUrlConfig";
 import HomeIcon from "../../../public/images/icons/homeIcon";
-import BoxsIcon from "../../../public/images/icons/boxsIcon";
 import ScheduleIcon from "../../../public/images/icons/scheduleIcon";
 import ToolsIcon from "../../../public/images/icons/toolsIcon";
 import MonitorIcon from "../../../public/images/icons/monitorIcon";
+import ListIcon from "public/images/icons/listIcon";
+import MagnifyGlassIcon from "../../../public/images/icons/magnifyGlassIcon";
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];
@@ -43,7 +32,7 @@ export default class MainViewModel extends DefaultViewModel {
         name: "production_record",
         path: pageUrlConfig.productionRecord,
         title: "생산이력",
-        icon: BoxsIcon,
+        icon: ListIcon,
         size: 20,
         subMenu: [],
       },
@@ -51,17 +40,28 @@ export default class MainViewModel extends DefaultViewModel {
         name: "production_report",
         path: pageUrlConfig.productionReport,
         title: "생산분석",
-        icon: BoxsIcon,
+        icon: MagnifyGlassIcon,
         size: 20,
         subMenu: [],
       },
       {
-        name: "program",
-        path: pageUrlConfig.workProgram,
-        title: "프로그램 관리",
+        name: "work",
+        path: pageUrlConfig.work,
+        title: "작업관리",
         icon: ScheduleIcon,
         size: 22,
-        subMenu: [],
+        subMenu: [
+          {
+            name: "program",
+            path: pageUrlConfig.workProgram,
+            title: "프로그램 관리",
+          },
+          {
+            name: "machine_info",
+            path: "",
+            title: "스케쥴 관리",
+          },
+        ],
       },
       {
         name: "machine_manage",
@@ -94,7 +94,7 @@ export default class MainViewModel extends DefaultViewModel {
 
     this.userMenu = [
       {
-        title: "암호 재설정",
+        title: "계정정보",
         icon: faUser,
         path: pageUrlConfig.my,
       },

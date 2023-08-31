@@ -1,5 +1,11 @@
 import { StyleColor } from "config/constants";
-import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 interface IProps {
@@ -8,6 +14,7 @@ interface IProps {
   defaultValue?: string | number;
   defaultTitle: string;
   value: string | number;
+  style?: CSSProperties;
 }
 
 interface Options {
@@ -21,6 +28,7 @@ export default function CustomSelector({
   defaultValue = null,
   defaultTitle,
   value,
+  style,
 }: IProps) {
   const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<string>(defaultTitle);
@@ -39,7 +47,7 @@ export default function CustomSelector({
   };
 
   return (
-    <Container>
+    <Container style={style}>
       <SelectWrap onClick={onClickSelector} isOpenOption={isOpenOption}>
         <p>{selectedValue}</p>
       </SelectWrap>
@@ -108,7 +116,7 @@ const SelectWrap = styled.div<{ isOpenOption: boolean }>`
 `;
 
 const OptionWrap = styled.div<{ isOpenOption: boolean }>`
-  z-index: 10;
+  z-index: 99;
   width: calc(100% - 2px);
   position: absolute;
   right: 0px;

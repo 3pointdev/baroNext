@@ -16,7 +16,7 @@ class ExcelModule {
     fileName,
     fileType,
     sheetName,
-    columnWidth,
+    columnWidth = {},
     columnStyle,
   }: IExcelInfomation) {
     const excelFile = XLSX.utils.table_to_book(targetRef.current, {

@@ -87,7 +87,15 @@ const Button = styled.button<{
       }
     } else {
       return `background: ${activeColor};
-      border: 1px solid #BFBFBF;`;
+      border: 1px solid #BFBFBF;
+      &:hover {
+        background: ${StyleColor.PRIMARY};
+        & * {
+          color: ${StyleColor.LIGHT};
+          fill:${StyleColor.LIGHT};
+        }
+      }
+      `;
     }
   }}
 `;

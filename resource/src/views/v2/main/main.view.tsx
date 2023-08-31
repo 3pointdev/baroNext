@@ -81,13 +81,8 @@ const SectionTitle = styled.div`
 `;
 
 const MachineWrap = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 24px;
-
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   overflow-y: auto;
-
-  @media screen and (max-width: 1248px) {
-    justify-content: center;
-  }
 `;

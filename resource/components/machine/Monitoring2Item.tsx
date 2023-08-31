@@ -7,7 +7,7 @@ import {
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProps {
   data: MachineDto;
