@@ -96,6 +96,7 @@ function Monitoring2View(props: IProps) {
       },
     });
   };
+
   if (machineViewModel.machines.length <= NUMBERSEENMONITORING2)
     return (
       <MonitoringContainer>
@@ -208,18 +209,18 @@ const Article = {
 
 const textScroll = keyframes`
   from{
-    transform:translateX(100%);
-    -moz-transform:translateX(100%);
-    -webkit-transform:translateX(100%);
-    -o-transform:translateX(100%);
-    -ms-transform:translateX(100%);
+    transform:translateX(50%);
+    -moz-transform:translateX(50%);
+    -webkit-transform:translateX(50%);
+    -o-transform:translateX(50%);
+    -ms-transform:translateX(50%);
   }
   to{
-    transform:translateX(-80%);
-    -moz-transform:translateX(-80%);
-    -webkit-transform:translateX(-80%);
-    -o-transform:translateX(-80%);
-    -ms-transform:translateX(-80%);
+    transform:translateX(-105%);
+    -moz-transform:translateX(-105%);
+    -webkit-transform:translateX(-105%);
+    -o-transform:translateX(-105%);
+    -ms-transform:translateX(-105%);
   }
 `;
 
@@ -246,6 +247,7 @@ const Footer = {
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
     color: #666666;
+    overflow: hididen;
     animation: ${({ isLongText }) =>
       isLongText
         ? css`
