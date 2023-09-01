@@ -112,7 +112,11 @@ function Monitoring2View(props: IProps) {
         </Article.Wrap>
         <Footer.Wrap>
           <BarofactorySquare color="#000" />
-          <Footer.Notice isLongText={machineViewModel.notice.length > 16}>
+
+          <Footer.Notice
+            isLongText={machineViewModel.notice.length > 16}
+            length={machineViewModel.notice.length}
+          >
             {machineViewModel.notice}
           </Footer.Notice>
         </Footer.Wrap>
@@ -228,30 +232,32 @@ const Footer = {
   Wrap: styled.div`
     height: 100px;
     width: 100%;
-    padding: 0 16px;
+    margin: 0 16px;
     display: flex;
     align-items: center;
     gap: 32px;
     background: #f4f4f5;
     border-top: 1px solid #333333;
-
+    overflow: hidden;
     & svg {
       flex-shrink: 0;
       height: 100px;
       width: 100px;
+      background: #f4f4f5;
+      z-index: 99;
     }
   `,
-  Notice: styled.p<{ isLongText: boolean }>`
+  Notice: styled.p<{ isLongText: boolean; length: number }>`
     font-size: 3vh;
     font-weight: 500;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
     color: #666666;
-    overflow: hididen;
-    animation: ${({ isLongText }) =>
+
+    animation: ${({ isLongText, length }) =>
       isLongText
         ? css`
-            ${textScroll} 8s linear infinite
+            ${textScroll} ${length * 0.2}s linear infinite
           `
         : ""};
   `,
