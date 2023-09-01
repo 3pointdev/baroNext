@@ -110,7 +110,7 @@ const OptionWrap = styled.div<{ isOpenOption: boolean }>`
   align-itmes: center;
   overflow: hidden;
   opacity: ${({ isOpenOption }) => (isOpenOption ? "1" : "0")};
-
+  pointer-events: ${({ isOpenOption }) => (isOpenOption ? "auto" : "none")};
   transition: all 0.2s ease;
 `;
 

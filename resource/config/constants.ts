@@ -194,3 +194,14 @@ export const TableFormatType = {
 } as const;
 export type TableFormatType =
   (typeof TableFormatType)[keyof typeof TableFormatType];
+
+/**
+ * 유저 정보 변경 타입
+ */
+export const UserDataUpdateType = {
+  USERINFOMATION: 0,
+  ACCOUNT: 1,
+  PASSWORD: 2,
+} as const;
+export type UserDataUpdateType =
+  (typeof UserDataUpdateType)[keyof typeof UserDataUpdateType];

@@ -1,7 +1,7 @@
-import { withRouter } from "next/router";
-import MypageView from "src/views/common/my/mypage.view";
-import React from "react";
 import dynamic from "next/dynamic";
+import { withRouter } from "next/router";
+import React from "react";
+import MypageView from "src/views/common/my/mypage.view";
 
 class pages extends React.Component<any, any> {
   private readonly version: string;
@@ -16,6 +16,7 @@ class pages extends React.Component<any, any> {
         return MypageView;
       })
     );
+
     return (
       <section id={"wrap"}>
         <View {...this.props} />

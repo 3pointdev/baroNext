@@ -1,15 +1,15 @@
-import { inject, observer } from "mobx-react";
-import UserViewModel from "src/viewModels/user/user.viewModel";
-import { MouseEvent, useEffect, useState } from "react";
-import PageContainer from "components/container/pageContainer";
-import CardLayout from "components/layout/cardLayout";
-import styled from "styled-components";
-import DefaultButton from "components/button/defaultButton";
-import DefaultInput from "components/input/defaultInput";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
-import { StyleColor } from "config/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alert from "components/alert/alert";
+import DefaultButton from "components/button/defaultButton";
+import PageContainer from "components/container/pageContainer";
+import DefaultInput from "components/input/defaultInput";
+import CardLayout from "components/layout/cardLayout";
+import { StyleColor } from "config/constants";
+import { inject, observer } from "mobx-react";
+import { useEffect } from "react";
+import UserViewModel from "src/viewModels/user/user.viewModel";
+import styled from "styled-components";
 
 interface IProps {
   userViewModel: UserViewModel;
@@ -17,16 +17,8 @@ interface IProps {
 
 function MyPageView(props: IProps) {
   const userViewModel = props.userViewModel;
-  const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
 
   useEffect(() => {}, []);
-
-  const handleClickPasswordUpdate = (event: MouseEvent<HTMLButtonElement>) => {
-    setIsOpenAlert(true);
-    setTimeout(() => {
-      setIsOpenAlert(false);
-    }, 3000);
-  };
 
   return (
     <PageContainer>
@@ -42,6 +34,8 @@ function MyPageView(props: IProps) {
             style={{ height: "24px" }}
             useLabel
             name="admin_name"
+            validState={userViewModel.loginAccountModel.nameValid}
+            validText={"최소 4자 이상으로 설정해 주세요."}
           />
 
           <DefaultInput
@@ -53,6 +47,8 @@ function MyPageView(props: IProps) {
             placeholder="계정전용 핸드폰 번호"
             boxstyle={{ flexShrink: "unset", height: "40px" }}
             style={{ height: "24px" }}
+            validState={userViewModel.loginAccountModel.phoneValid}
+            validText={`"-"를 제외한 휴대폰번호를 입력해 주세요.`}
           />
           <DefaultButton
             title="변경하기"
@@ -62,6 +58,7 @@ function MyPageView(props: IProps) {
               fontSize: "14px",
               flexShrink: "0",
             }}
+            onClick={userViewModel.handleClickUserUpdate}
           />
         </AccountWrap>
       </CardLayout>
@@ -78,6 +75,8 @@ function MyPageView(props: IProps) {
             style={{ height: "24px" }}
             name="admin_account_id"
             useLabel
+            validState={userViewModel.adminAccountModel.idValid}
+            validText={"최소 4자 이상으로 설정해 주세요."}
           />
           <DefaultButton
             title="변경하기"
@@ -87,6 +86,7 @@ function MyPageView(props: IProps) {
               fontSize: "14px",
               flexShrink: "0",
             }}
+            onClick={userViewModel.handleClickAccountUpdate}
           />
         </AccountWrap>
         <SubTitle>비밀번호 변경</SubTitle>
@@ -153,11 +153,14 @@ function MyPageView(props: IProps) {
               fontSize: "14px",
               flexShrink: "0",
             }}
-            onClick={handleClickPasswordUpdate}
+            onClick={userViewModel.handleClickPasswordUpdate}
           />
         </AccountWrap>
       </CardLayout>
-      <Alert title={`변경이 완료 되었습니다.`} isActive={isOpenAlert} />
+      <Alert
+        title={`변경이 완료 되었습니다.`}
+        isActive={userViewModel.isOpenAlert}
+      />
     </PageContainer>
   );
 }

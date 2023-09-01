@@ -53,6 +53,7 @@ function ReportView(props: IProps) {
               return (
                 <ColumnReportCard
                   data={product}
+                  dataIndex={key}
                   lot={reportViewModel.lotList[product.machineNo]}
                   onClickLotToggle={reportViewModel.handleClickLotToggle}
                   active={product.toggle}
@@ -72,6 +73,8 @@ const ReportCardWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  border-radius: 16px;
+  overflow-y: scroll;
+  min-width: 1150px;
+  max-width: 100%;
 `;

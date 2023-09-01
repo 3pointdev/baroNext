@@ -1,15 +1,19 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import { ServerUrlType, ValidType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
-import UserDto from "../../dto/user/user.dto";
 import { plainToInstance } from "class-transformer";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, MouseEvent } from "react";
-import LoginAccountModel from "../../models/account/loginAccount.model";
-import AdminAccountModel from "../../models/account/adminAccount.model";
-import MonitorAccountModel from "../../models/account/monitorAccount.model";
-import BillInformationModel from "../../models/account/billInformation.model";
 import { Address } from "react-daum-postcode";
+import {
+  ServerUrlType,
+  UserDataUpdateType,
+  ValidType,
+} from "../../../config/constants";
+import UserDto from "../../dto/user/user.dto";
+import AdminAccountModel from "../../models/account/adminAccount.model";
+import BillInformationModel from "../../models/account/billInformation.model";
+import LoginAccountModel from "../../models/account/loginAccount.model";
+import MonitorAccountModel from "../../models/account/monitorAccount.model";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class UserViewModel extends DefaultViewModel {
   public user: UserDto = new UserDto();
@@ -20,6 +24,7 @@ export default class UserViewModel extends DefaultViewModel {
   public isOpenAddress: boolean = false;
   public billInformationModel: BillInformationModel =
     new BillInformationModel();
+  public isOpenAlert: boolean = false;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -31,12 +36,18 @@ export default class UserViewModel extends DefaultViewModel {
       monitorAccountModel: observable,
       isOpenAddress: observable,
       billInformationModel: observable,
+      isOpenAlert: observable,
 
       getMe: action,
       handleChangeSmsCheck: action,
       handleChangeLoginAccount: action,
       handleChangeAdminAccount: action,
       handleChangeMonitorAccount: action,
+      handleChangeBillInfomation: action,
+      handleClickAccountUpdate: action,
+      handleClickOpenAddressModal: action,
+      handleClickPasswordUpdate: action,
+      handleClickUserUpdate: action,
     });
   }
 
@@ -211,6 +222,109 @@ export default class UserViewModel extends DefaultViewModel {
           isViewPassword: !this.monitorAccountModel.isViewPassword,
         };
       });
+    }
+  };
+
+  handleClickUserUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.USERINFOMATION);
+    if (valid === "") {
+      runInAction(() => {
+        this.loginAccountModel = {
+          name: "",
+          phone: "",
+          nameValid: ValidType.DEFAULT,
+          phoneValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.loginAccountModel = {
+          ...this.loginAccountModel,
+          [valid]: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  handleClickAccountUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.ACCOUNT);
+    if (valid === "") {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          id: "",
+          idValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          idValid: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  handleClickPasswordUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.PASSWORD);
+    if (valid === "") {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          password: "",
+          passwordCheck: "",
+          passwordValid: ValidType.DEFAULT,
+          passwordCheckValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          [valid]: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  checkValidation = (type: UserDataUpdateType) => {
+    switch (type) {
+      case UserDataUpdateType.USERINFOMATION:
+        if (this.loginAccountModel.name.length < 2) return "nameValid";
+        if (this.loginAccountModel.phone.length < 10) return "phoneValid";
+        return "";
+
+      case UserDataUpdateType.ACCOUNT:
+        if (this.adminAccountModel.id.length < 4) return "idValid";
+        return "";
+
+      case UserDataUpdateType.PASSWORD:
+        if (this.adminAccountModel.password.length < 4) return "passwordValid";
+        if (
+          this.adminAccountModel.password !==
+          this.adminAccountModel.passwordCheck
+        )
+          return "passwordCheckValid";
+        return "";
     }
   };
 }
