@@ -13,7 +13,7 @@ import MonitorListDto from "src/dto/monitor/monitorList.dto";
 import { Alert } from "src/modules/alert.module";
 import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { SweetAlertResult } from "sweetalert2";
 
 interface IProps {
@@ -96,7 +96,6 @@ function Monitoring2View(props: IProps) {
       },
     });
   };
-
   if (machineViewModel.machines.length <= NUMBERSEENMONITORING2)
     return (
       <MonitoringContainer>
@@ -112,7 +111,9 @@ function Monitoring2View(props: IProps) {
         </Article.Wrap>
         <Footer.Wrap>
           <BarofactorySquare color="#000" />
-          <Footer.Notice>{machineViewModel.notice}</Footer.Notice>
+          <Footer.Notice isLongText={machineViewModel.notice.length > 16}>
+            {machineViewModel.notice}
+          </Footer.Notice>
         </Footer.Wrap>
         <SlideMenu.Wrap className={isOpenMenu ? "is_open" : ""}>
           <SlideMenu.Head>
@@ -205,6 +206,23 @@ const Article = {
   `,
 };
 
+const textScroll = keyframes`
+  from{
+    transform:translateX(100%);
+    -moz-transform:translateX(100%);
+    -webkit-transform:translateX(100%);
+    -o-transform:translateX(100%);
+    -ms-transform:translateX(100%);
+  }
+  to{
+    transform:translateX(-80%);
+    -moz-transform:translateX(-80%);
+    -webkit-transform:translateX(-80%);
+    -o-transform:translateX(-80%);
+    -ms-transform:translateX(-80%);
+  }
+`;
+
 const Footer = {
   Wrap: styled.div`
     height: 100px;
@@ -217,16 +235,23 @@ const Footer = {
     border-top: 1px solid #333333;
 
     & svg {
+      flex-shrink: 0;
       height: 100px;
       width: 100px;
     }
   `,
-  Notice: styled.p`
+  Notice: styled.p<{ isLongText: boolean }>`
     font-size: 3vh;
     font-weight: 500;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
     color: #666666;
+    animation: ${({ isLongText }) =>
+      isLongText
+        ? css`
+            ${textScroll} 8s linear infinite
+          `
+        : ""};
   `,
 };
 
