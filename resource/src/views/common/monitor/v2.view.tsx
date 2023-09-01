@@ -36,9 +36,9 @@ function Monitoring2View(props: IProps) {
 
     initialize();
 
-    // setTimeout(() => {
-    //   location.reload();
-    // }, 1200000);
+    setTimeout(() => {
+      location.reload();
+    }, 1200000);
 
     return () => {
       machineViewModel.socketDisconnect();
@@ -131,6 +131,7 @@ function Monitoring2View(props: IProps) {
             </Linker>
             <SlideMenu.FolderMenu
               className={isOpenMonitorMenu ? "is_open" : ""}
+              count={monitorViewModel.list.length}
             >
               {monitorViewModel.list.map(
                 (monitor: MonitorListDto, key: number) => {
@@ -287,7 +288,7 @@ const SlideMenu = {
     color: #00000087;
     text-align: center;
   `,
-  FolderMenu: styled.div`
+  FolderMenu: styled.div<{ count: number }>`
     overflow: hidden;
     height: 0 !important;
     margin: 0 !important;
@@ -296,7 +297,7 @@ const SlideMenu = {
     flex-direction: column;
 
     &.is_open {
-      height: 240px !important;
+      height: ${({ count }) => 120 * count}px !important;
       margin: 24px 0 !important;
     }
   `,
