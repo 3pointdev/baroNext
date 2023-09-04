@@ -14,6 +14,7 @@ interface IProps {
   defaultValue?: string | number;
   defaultTitle: string;
   value: string | number;
+  type?: string | number;
   style?: CSSProperties;
 }
 
@@ -28,6 +29,7 @@ export default function CustomSelector({
   defaultValue = null,
   defaultTitle,
   value,
+  type,
   style,
 }: IProps) {
   const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
@@ -66,6 +68,7 @@ export default function CustomSelector({
             <SelectorOption
               key={`filter_options_${option.title}_${option.id}`}
               data-id={option.id}
+              data-type={type}
               onClick={onClickOption}
             >
               {option.title}

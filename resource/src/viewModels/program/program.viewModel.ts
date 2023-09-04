@@ -1,19 +1,18 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import { AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
+import dayjs from "dayjs";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { MouseEvent } from "react";
 import {
-  BinaryMessageType,
   DatePickerButtonType,
   ServerUrlType,
   SocketResponseType,
 } from "../../../config/constants";
+import FunctionDto from "../../dto/program/function.dto";
+import ProgramDto from "../../dto/program/program.dto";
 import TransmitterDto from "../../dto/transmitters/transmitters.dto";
 import { ServerResponse } from "../../modules/api.module";
-import ProgramDto from "../../dto/program/program.dto";
-import FunctionDto from "../../dto/program/function.dto";
-import { MouseEvent } from "react";
-import dayjs from "dayjs";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export interface IActiveTarget {
   machine: number;
@@ -34,7 +33,7 @@ export default class ProgramViewModel extends DefaultViewModel {
   public isLoading: ILoding = { machine: true, code: false };
 
   public targetDate: string = dayjs().format("YYYY-MM-DD");
-  public activeComponent: number = 0;
+  public activeComponent: number = 2;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -254,6 +253,7 @@ export default class ProgramViewModel extends DefaultViewModel {
     } else {
       this.getCallFuncListByDate(+value);
     }
+
     runInAction(() => {
       this.activeCallfunc = [];
       this.activeCode = "";

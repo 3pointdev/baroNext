@@ -1,5 +1,5 @@
 import { StyleColor, TableFormatType } from "config/constants";
-import { ReactElement, Ref, useEffect, useState } from "react";
+import { Ref, useEffect, useState } from "react";
 import styled from "styled-components";
 
 export interface ITableHeader {
@@ -49,7 +49,7 @@ export default function RecordTable({
 
       return merginsArray.reverse();
     });
-    console.log(merged);
+
     setMergedCells(merged);
   };
 

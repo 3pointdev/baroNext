@@ -1,19 +1,63 @@
-import styled, { keyframes } from "styled-components";
-import timeModule from "../../src/modules/time.module";
-import machineStatusModule from "../../src/modules/machineStatus.module";
-import MachineDto from "../../src/dto/machine/machine.dto";
-import machineStatusInstance from "../../src/modules/machineStatus.module";
-import { MachineExecutionType } from "../../config/constants";
+import { MachineColorType, MachineTextType } from "config/constants";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import MachineDto from "../../src/dto/machine/machine.dto";
+import {
+  default as machineStatusInstance,
+  default as machineStatusModule,
+} from "../../src/modules/machineStatus.module";
+import timeModule from "../../src/modules/time.module";
 
 interface IProps {
   data: MachineDto;
 }
 
 export default function MonitoringRow({ data }: IProps) {
-  const progress = Math.floor(
-    data.partCount > 0 ? (data.partCount / data.planCount) * 100 : 0
+  const [progress, setProgress] = useState<number>(0);
+  const [executionText, setExecutionText] = useState<string>(
+    MachineTextType.MODIFY
   );
+  const [executionColor, setExecutionColor] = useState<string>(
+    MachineColorType.YELLOW
+  );
+
+  useEffect(() => {
+    setProgress(
+      Math.floor(
+        data.partCount > 0 ? (data.partCount / data.planCount) * 100 : 0
+      )
+    );
+
+    setExecutionColor(
+      machineStatusInstance.ToColorStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage
+      )
+    );
+
+    setExecutionText(
+      machineStatusModule.ToTextStatus(
+        data.execution,
+        data.mode,
+        data.pause,
+        data.isReceiveMessage,
+        data.isReceivePartCount,
+        data.isChangePalette
+      )
+    );
+  }, [
+    data.execution,
+    data.mode,
+    data.pause,
+    data.isReceiveMessage,
+    data.isReceivePartCount,
+    data.isChangePalette,
+    data.partCount,
+    data.planCount,
+  ]);
 
   if (data.execution !== "" && data.program !== "")
     return (
@@ -47,25 +91,8 @@ export default function MonitoringRow({ data }: IProps) {
         <td className="cycle_time">
           {data.partCount ? timeModule.msToHHMM(data.active) : "-"}
         </td>
-        <Article.StatusBadge
-          className={
-            data.execution === MachineExecutionType.OFF ? "is_turn_off" : ""
-          }
-          backgroundColor={machineStatusInstance.ToColorStatus(
-            data.execution,
-            data.mode,
-            data.pause,
-            data.isReceiveMessage
-          )}
-        >
-          {machineStatusModule.ToTextStatus(
-            data.execution,
-            data.mode,
-            data.pause,
-            data.isReceiveMessage,
-            data.isReceivePartCount,
-            data.isChangePalette
-          )}
+        <Article.StatusBadge backgroundColor={executionColor}>
+          {executionText}
         </Article.StatusBadge>
       </Article.TBodyRow>
     );
@@ -231,12 +258,6 @@ const Article = {
   StatusBadge: styled.td<{ backgroundColor: string }>`
     font-weight: 600;
     text-align: center;
-    color: #000 !important;
     background: ${({ backgroundColor }) => backgroundColor};
-
-    &.is_turn_off {
-      background: #d9d9d980;
-      color: #e4e4e4 !important;
-    }
   `,
 };
