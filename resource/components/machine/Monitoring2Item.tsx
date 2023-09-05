@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   MachineExecutionType,
@@ -7,7 +8,6 @@ import {
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
-import { useEffect, useState } from "react";
 
 interface IProps {
   data: MachineDto;
@@ -46,24 +46,6 @@ export default function Monitoring2Item({ data }: IProps) {
    * 머신상태에 따라 텍스트, 색상 변경함수
    */
   useEffect(() => {
-    if (data.mid === "Lynx220LSY") {
-      console.log(data.mid, "execution :", data.execution);
-      console.log(data.mid, "pause :", data.pause);
-      console.log(data.mid, "block :", data.block);
-      console.log(data.mid, "isReceivePartCount :", data.isReceivePartCount);
-      console.log(
-        data.mid,
-        "status :",
-        machineStatusInstance.ToTextStatus(
-          data.execution,
-          data.mode,
-          data.pause,
-          data.isReceiveMessage,
-          data.isReceivePartCount,
-          data.isChangePalette
-        )
-      );
-    }
     setExecutionText(
       machineStatusInstance.ToTextStatus(
         data.execution,

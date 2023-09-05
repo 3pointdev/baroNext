@@ -1,19 +1,18 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 import { AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
+import dayjs from "dayjs";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import {
-  BinaryMessageType,
   DatePickerButtonType,
   ServerUrlType,
   SocketResponseType,
 } from "../../../config/constants";
+import FunctionDto from "../../dto/program/function.dto";
+import ProgramDto from "../../dto/program/program.dto";
 import TransmitterDto from "../../dto/transmitters/transmitters.dto";
 import { ServerResponse } from "../../modules/api.module";
-import ProgramDto from "../../dto/program/program.dto";
-import FunctionDto from "../../dto/program/function.dto";
-import { MouseEvent } from "react";
-import dayjs from "dayjs";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export interface IActiveTarget {
   machine: number;
@@ -32,6 +31,7 @@ export default class ProgramViewModel extends DefaultViewModel {
   public activeCode: string = "";
   public activeTarget: IActiveTarget = { machine: 1, code: 0 };
   public isLoading: ILoding = { machine: true, code: false };
+  public searchKeyword: string = "";
 
   public targetDate: string = dayjs().format("YYYY-MM-DD");
   public activeComponent: number = 0;
@@ -48,10 +48,21 @@ export default class ProgramViewModel extends DefaultViewModel {
       isLoading: observable,
       activeComponent: observable,
       targetDate: observable,
-
+      searchKeyword: observable,
       insertInstalledTransmitters: action,
+      dataReset: action,
     });
   }
+
+  public dataReset = () => {
+    runInAction(() => {
+      this.activeCallfunc = [];
+      this.activeCode = "";
+      this.activeTarget = { machine: 1, code: 0 };
+      this.isLoading = { machine: true, code: false };
+      this.targetDate = dayjs().format("YYYY-MM-DD");
+    });
+  };
 
   public onOpen = () => {
     console.log("WebSocket connected");
@@ -254,6 +265,7 @@ export default class ProgramViewModel extends DefaultViewModel {
     } else {
       this.getCallFuncListByDate(+value);
     }
+
     runInAction(() => {
       this.activeCallfunc = [];
       this.activeCode = "";
@@ -363,5 +375,32 @@ export default class ProgramViewModel extends DefaultViewModel {
     }
 
     this.getCallFuncListByDate(this.activeTarget.machine);
+  };
+
+  handleKeydownSearch = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      this.handleClickSearch();
+    }
+  };
+
+  handleChangeSearchKeyword = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    runInAction(() => {
+      this.searchKeyword = value;
+    });
+  };
+
+  handleClickSearch = () => {
+    if (this.searchKeyword === "") {
+      return this.getCallFuncListByDate(this.activeTarget.machine);
+    }
+    const newCallFunction = this.activeCallfunc.filter(
+      (callFunc: FunctionDto) => callFunc.comment.includes(this.searchKeyword)
+    );
+
+    runInAction(() => {
+      this.activeCallfunc = newCallFunction;
+    });
   };
 }

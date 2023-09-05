@@ -26,6 +26,7 @@ export const StyleColor = {
   WARNNING: "#FF4D49",
   BACKGROUND: "#F7F7F9",
   POSITIVE: "#71E61A",
+  BORDER: "#D9D9D9",
 } as const;
 export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];
 
@@ -150,10 +151,10 @@ export type ValidType = (typeof ValidType)[keyof typeof ValidType];
  * 기계 상황별 색상 타입
  */
 export const MachineColorType = {
-  GREEN: "#6ebd33",
-  YELLOW: "#f5b117",
-  RED: "#e8661c",
-  GRAY: "#9c9c9c",
+  GREEN: "#2F983E",
+  YELLOW: "#F2994A",
+  RED: "#D11313",
+  GRAY: "#777",
 } as const;
 export type MachineColorType =
   (typeof MachineColorType)[keyof typeof MachineColorType];
@@ -205,3 +206,12 @@ export const UserDataUpdateType = {
 } as const;
 export type UserDataUpdateType =
   (typeof UserDataUpdateType)[keyof typeof UserDataUpdateType];
+
+/**
+ * 코드비교 타입
+ */
+export const CompareType = {
+  CRITERIA: 0,
+  COMPARE: 1,
+} as const;
+export type CompareType = (typeof CompareType)[keyof typeof CompareType];

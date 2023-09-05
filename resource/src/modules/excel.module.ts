@@ -44,7 +44,7 @@ class ExcelModule {
     //     },
     //   };
     // }
-
+    console.log(excelFile);
     XLSX.write(excelFile, {
       bookType: fileType,
       bookSST: true,

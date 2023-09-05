@@ -1,16 +1,17 @@
+import { configure } from "mobx";
+import CompareViewModel from "src/viewModels/program/compare.viewModel";
 import AuthViewModel from "../viewModels/auth/auth.viewModel";
 import DefaultViewModel, {
   IDefaultProps,
 } from "../viewModels/default.viewModel";
-import MainViewModel from "../viewModels/main/main.viewModel";
-import { configure } from "mobx";
-import UserViewModel from "../viewModels/user/user.viewModel";
-import MachineViewModel from "../viewModels/machine/machine.viewModel";
-import ReportViewModel from "../viewModels/report/report.viewModel";
-import RecordViewModel from "../viewModels/record/record.viewModel";
 import IndicatorViewModel from "../viewModels/indicator/indicator.viewModel";
-import ProgramViewModel from "../viewModels/program/program.viewModel";
+import MachineViewModel from "../viewModels/machine/machine.viewModel";
+import MainViewModel from "../viewModels/main/main.viewModel";
 import MonitorViewModel from "../viewModels/monitor/monitor.viewModel";
+import ProgramViewModel from "../viewModels/program/program.viewModel";
+import RecordViewModel from "../viewModels/record/record.viewModel";
+import ReportViewModel from "../viewModels/report/report.viewModel";
+import UserViewModel from "../viewModels/user/user.viewModel";
 
 const isServer = typeof window === "undefined";
 
@@ -28,6 +29,7 @@ export class RootStore {
   public reportViewModel: ReportViewModel;
   public recordViewModel: RecordViewModel;
   public programViewModel: ProgramViewModel;
+  public compareViewModel: CompareViewModel;
   public monitorViewModel: MonitorViewModel;
 
   constructor(initialData: IDefaultProps) {
@@ -44,6 +46,7 @@ export class RootStore {
     this.recordViewModel = new RecordViewModel(initData);
     this.reportViewModel = new ReportViewModel(initData);
     this.programViewModel = new ProgramViewModel(initData);
+    this.compareViewModel = new CompareViewModel(initData);
     this.monitorViewModel = new MonitorViewModel(initData);
   }
 }

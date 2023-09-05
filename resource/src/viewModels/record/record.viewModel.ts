@@ -1,13 +1,14 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import RecordModel from "../../models/record/record.model";
-import dayjs from "dayjs";
-import { ServerUrlType, TableFormatType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
-import RecordDto from "../../dto/record/record.dto";
-import { ITableHeader } from "../../../components/table/defaultTable";
-import { ChangeEvent, MouseEvent } from "react";
 import { Options } from "components/input/customSelector";
+import dayjs from "dayjs";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import mockData from "public/mockdb.json";
+import { ChangeEvent, MouseEvent } from "react";
+import { ITableHeader } from "../../../components/table/defaultTable";
+import { ServerUrlType, TableFormatType } from "../../../config/constants";
+import RecordDto from "../../dto/record/record.dto";
+import RecordModel from "../../models/record/record.model";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class RecordViewModel extends DefaultViewModel {
   public tableHeader: ITableHeader[] = [];
@@ -121,35 +122,7 @@ export default class RecordViewModel extends DefaultViewModel {
         runInAction(() => {
           // this.list = data;
 
-          // mock data
-          const mockData = [
-            ...Array.from({ length: 10 }, (mock, key) => {
-              return {
-                date: `07/0${key + 1 > 9 ? 8 : key + 1}`,
-                mid: `Puma94`,
-                program: `O1234(program_name)_25`,
-                planCount: 99,
-                partCount: 99,
-                achieve: "100%",
-                uptime: "62%",
-                tolerance: "2%",
-              };
-            }),
-            ...Array.from({ length: 10 }, (mock, key) => {
-              return {
-                date: `08/0${key + 1 > 9 ? 8 : key + 1}`,
-                mid: `Puma9${key}`,
-                program: `O1234(program_name)_${30 - key}`,
-                planCount: 99,
-                partCount: 99,
-                achieve: "100%",
-                uptime: "62%",
-                tolerance: "2%",
-              };
-            }),
-          ];
-
-          this.list = this.setAverage(mockData);
+          this.list = this.setAverage(mockData.data);
         });
       })
       .catch((error: AxiosError) => {
@@ -162,8 +135,6 @@ export default class RecordViewModel extends DefaultViewModel {
     const { value } = event.target;
 
     this.setHeader(+value);
-    this.setSort(+value);
-    this.setFilterOptions(+value);
 
     runInAction(() => {
       this.recordModel = {
@@ -171,8 +142,9 @@ export default class RecordViewModel extends DefaultViewModel {
         format: +value,
         filter: "all",
       };
-      this.list = this.setAverage(this.list);
     });
+    this.setSort(+value);
+    this.setFilterOptions(+value);
   };
 
   setFilterOptions = (value: number) => {
@@ -369,26 +341,60 @@ export default class RecordViewModel extends DefaultViewModel {
   setSort = (value: number) => {
     switch (value) {
       case TableFormatType.ALL:
-        runInAction(() => {
-          this.list = this.list.sort(
-            (a, b) => +a.date.replace("/", "") - +b.date.replace("/", "")
-          );
-        });
+        this.sortProgram();
+        this.sortMachine();
+        this.sortDate();
+        this.list = this.setAverage(this.list);
         break;
       case TableFormatType.MACHINE:
-        runInAction(() => {
-          this.list = this.list
-            .slice()
-            .sort((a, b) => a.mid.localeCompare(b.mid));
-        });
+        this.list = this.setAverage(this.list);
+        this.sortProgram();
+        this.sortDate();
+        this.sortMachine();
         break;
       case TableFormatType.PROGRAM:
-        runInAction(() => {
-          this.list = this.list
-            .slice()
-            .sort((a, b) => a.program.localeCompare(b.program));
-        });
+        this.list = this.setAverage(this.list);
+        this.sortMachine();
+        this.sortDate();
+        this.sortProgram();
         break;
     }
   };
+
+  sortProgram() {
+    runInAction(() => {
+      this.list = this.list.sort((a, b) => {
+        console.log(
+          +a.program.match(/(\d+)/g)?.[1],
+          +b.program.match(/(\d+)/g)?.[1]
+        );
+        if (
+          +a.program.match(/(\d+)/g)?.[0] - +b.program.match(/(\d+)/g)?.[0] !==
+          0
+        ) {
+          return (
+            +a.program.match(/(\d+)/g)?.[0] - +b.program.match(/(\d+)/g)?.[0]
+          );
+        } else {
+          return (
+            +a.program.match(/(\d+)/g)?.[1] - +b.program.match(/(\d+)/g)?.[1]
+          );
+        }
+      });
+    });
+  }
+
+  sortMachine() {
+    runInAction(() => {
+      this.list = this.list.slice().sort((a, b) => a.mid.localeCompare(b.mid));
+    });
+  }
+
+  sortDate() {
+    runInAction(() => {
+      this.list = this.list.sort(
+        (a, b) => +a.date.replace("/", "") - +b.date.replace("/", "")
+      );
+    });
+  }
 }
