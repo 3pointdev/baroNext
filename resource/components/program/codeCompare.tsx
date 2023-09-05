@@ -7,7 +7,6 @@ import FunctionDto from "src/dto/program/function.dto";
 import ProgramDto from "src/dto/program/program.dto";
 import CompareViewModel from "src/viewModels/program/compare.viewModel";
 import styled from "styled-components";
-import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   title: string;
@@ -19,9 +18,7 @@ interface IProps {
 function CodeCompare({ title, type, compareViewModel, machineList }: IProps) {
   const { target, data } = compareViewModel;
   const [programOption, setProgramOption] = useState<Options[]>([]);
-  const machineOption = machineList.map((machine: ProgramDto) => {
-    return { title: machine.name, id: +machine.machineNo };
-  });
+  const [machineOption, setMachineOption] = useState<Options[]>([]);
 
   useEffect(() => {
     if (type === CompareType.CRITERIA) {
@@ -39,23 +36,28 @@ function CodeCompare({ title, type, compareViewModel, machineList }: IProps) {
     }
   }, [target, data]);
 
+  useEffect(() => {
+    setMachineOption(
+      machineList.map((machine: ProgramDto) => {
+        return { title: machine.name, id: +machine.machineNo };
+      })
+    );
+  }, [machineList]);
+
   const handleChangeDate = (date: string) => {
     compareViewModel.handleChangeDate(date, type);
   };
 
-  console.log(data.compareCode, data.criteriaCode);
-
   return (
-    <CardLayout
+    <Container
       style={{
         width: "100%",
         overflow: "auto",
         gap: "0",
       }}
     >
-      {/* {isLoading.machine && <DefaultLoading />} */}
-      <LayoutTitle>{title}</LayoutTitle>
       <FilterWrap>
+        <LayoutTitle>{title}</LayoutTitle>
         <MachineWrap>
           <CustomSelector
             options={machineOption}
@@ -89,16 +91,78 @@ function CodeCompare({ title, type, compareViewModel, machineList }: IProps) {
               : target.compareProgram
           }
           type={type}
+          disable={
+            type === CompareType.CRITERIA
+              ? compareViewModel.target.criteriaMachine < 1
+              : compareViewModel.target.compareMachine < 1
+          }
+          disableText="기계를 먼저 선택해 주세요."
         />
       </FilterWrap>
       <CodeParagraph>
-        {type === CompareType.CRITERIA ? data.criteriaCode : data.compareCode}
+        <OverflowWrap>
+          {type === CompareType.CRITERIA
+            ? data.criteriaCode.map((line: string, index: number) => {
+                const compareTarget = compareViewModel.compareTarget[index];
+                return (
+                  <div key={`code_criteria_${index}`}>
+                    <p
+                      className={
+                        compareTarget?.includes(true) ? "different" : ""
+                      }
+                    >
+                      {index}
+                    </p>
+                    <SyllableWrap>
+                      {line.split("").map((code: string, key: number) => {
+                        return (
+                          <p
+                            key={`criteria_text_syllable_${key}`}
+                            className={compareTarget?.[key] ? "different" : ""}
+                          >
+                            {code}
+                          </p>
+                        );
+                      })}
+                    </SyllableWrap>
+                  </div>
+                );
+              })
+            : data.compareCode.map((line: string, index: number) => {
+                const compareTarget = compareViewModel.compareTarget[index];
+                return (
+                  <div key={`code_compare_${index}`}>
+                    <p
+                      className={
+                        compareTarget?.includes(true) ? "different" : ""
+                      }
+                    >
+                      {index}
+                    </p>
+                    <SyllableWrap>
+                      {line.split("").map((code: string, key: number) => {
+                        return (
+                          <p
+                            key={`compare_text_syllable_${key}`}
+                            className={compareTarget?.[key] ? "different" : ""}
+                          >
+                            {code}
+                          </p>
+                        );
+                      })}
+                    </SyllableWrap>
+                  </div>
+                );
+              })}
+        </OverflowWrap>
       </CodeParagraph>
-    </CardLayout>
+    </Container>
   );
 }
 
 export default inject("compareViewModel")(observer(CodeCompare));
+
+const Container = styled.div``;
 
 const LayoutTitle = styled.p`
   z-index: 2 !important;
@@ -111,14 +175,41 @@ const LayoutTitle = styled.p`
 `;
 
 const FilterWrap = styled.div`
+  position: sticky;
+  top: 0px;
+  background: ${StyleColor.LIGHT};
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 16px 0;
 `;
 const MachineWrap = styled.div`
   display: flex;
   gap: 16px;
+
+  & .option_wrap {
+    z-index: 100;
+  }
 `;
 
-const CodeParagraph = styled.p``;
+const CodeParagraph = styled.div`
+  margin-top: 16px;
+  white-space: pre-line;
+  line-height: 2;
+  height: calc(100% - 240px);
+`;
+
+const OverflowWrap = styled.div`
+  height: 100%;
+  overflow: scroll;
+  & > div {
+    display: flex;
+    gap: 16px;
+  }
+  & .different {
+    color: ${StyleColor.WARNNING};
+  }
+`;
+
+const SyllableWrap = styled.div`
+  display: flex;
+`;

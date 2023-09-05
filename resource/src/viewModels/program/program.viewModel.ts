@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
 import dayjs from "dayjs";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { MouseEvent } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import {
   DatePickerButtonType,
   ServerUrlType,
@@ -31,9 +31,10 @@ export default class ProgramViewModel extends DefaultViewModel {
   public activeCode: string = "";
   public activeTarget: IActiveTarget = { machine: 1, code: 0 };
   public isLoading: ILoding = { machine: true, code: false };
+  public searchKeyword: string = "";
 
   public targetDate: string = dayjs().format("YYYY-MM-DD");
-  public activeComponent: number = 2;
+  public activeComponent: number = 0;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -47,10 +48,21 @@ export default class ProgramViewModel extends DefaultViewModel {
       isLoading: observable,
       activeComponent: observable,
       targetDate: observable,
-
+      searchKeyword: observable,
       insertInstalledTransmitters: action,
+      dataReset: action,
     });
   }
+
+  public dataReset = () => {
+    runInAction(() => {
+      this.activeCallfunc = [];
+      this.activeCode = "";
+      this.activeTarget = { machine: 1, code: 0 };
+      this.isLoading = { machine: true, code: false };
+      this.targetDate = dayjs().format("YYYY-MM-DD");
+    });
+  };
 
   public onOpen = () => {
     console.log("WebSocket connected");
@@ -363,5 +375,32 @@ export default class ProgramViewModel extends DefaultViewModel {
     }
 
     this.getCallFuncListByDate(this.activeTarget.machine);
+  };
+
+  handleKeydownSearch = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      this.handleClickSearch();
+    }
+  };
+
+  handleChangeSearchKeyword = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    runInAction(() => {
+      this.searchKeyword = value;
+    });
+  };
+
+  handleClickSearch = () => {
+    if (this.searchKeyword === "") {
+      return this.getCallFuncListByDate(this.activeTarget.machine);
+    }
+    const newCallFunction = this.activeCallfunc.filter(
+      (callFunc: FunctionDto) => callFunc.comment.includes(this.searchKeyword)
+    );
+
+    runInAction(() => {
+      this.activeCallfunc = newCallFunction;
+    });
   };
 }

@@ -1,5 +1,6 @@
 import ActiveBadge from "components/badge/activeBadge";
 import BrightButton from "components/button/brightButton";
+import DefaultButton from "components/button/defaultButton";
 import MachineButton from "components/button/machineButton";
 import PageContainer from "components/container/pageContainer";
 import DefaultInput from "components/input/defaultInput";
@@ -10,17 +11,19 @@ import NcCode from "components/program/ncCode";
 import { CompareType, StyleColor } from "config/constants";
 import { inject, observer } from "mobx-react";
 import ListIcon from "public/images/icons/listIcon";
-import { useEffect } from "react";
+import { MouseEvent, useEffect } from "react";
 import ProgramDto from "src/dto/program/program.dto";
+import CompareViewModel from "src/viewModels/program/compare.viewModel";
 import ProgramViewModel from "src/viewModels/program/program.viewModel";
 import styled from "styled-components";
 
 interface IProps {
   programViewModel: ProgramViewModel;
+  compareViewModel: CompareViewModel;
 }
 
 function ProgramView(props: IProps) {
-  const programViewModel = props.programViewModel;
+  const { compareViewModel, programViewModel } = props;
 
   useEffect(() => {
     const initialize = async () => {
@@ -38,6 +41,12 @@ function ProgramView(props: IProps) {
       }
     };
   }, []);
+
+  const handleClickActiveComponent = (event: MouseEvent<HTMLButtonElement>) => {
+    programViewModel.handleClickActiveComponent(event);
+    programViewModel.dataReset();
+    compareViewModel.dataReset();
+  };
 
   return (
     <PageContainer>
@@ -60,7 +69,7 @@ function ProgramView(props: IProps) {
               }
               style={{ width: "100%" }}
               isActive={programViewModel.activeComponent === 0}
-              onClick={programViewModel.handleClickActiveComponent}
+              onClick={handleClickActiveComponent}
               value={0}
             />
             <div>
@@ -73,7 +82,7 @@ function ProgramView(props: IProps) {
                 }
                 isActive={programViewModel.activeComponent === 1}
                 style={{ width: "50%" }}
-                onClick={programViewModel.handleClickActiveComponent}
+                onClick={handleClickActiveComponent}
                 value={1}
               />
               <BrightButton
@@ -85,7 +94,7 @@ function ProgramView(props: IProps) {
                 }
                 isActive={programViewModel.activeComponent === 2}
                 style={{ width: "50%" }}
-                onClick={programViewModel.handleClickActiveComponent}
+                onClick={handleClickActiveComponent}
                 value={2}
               />
             </div>
@@ -151,11 +160,10 @@ function ProgramView(props: IProps) {
             >
               <DefaultInput
                 type={"text"}
-                value={""}
+                value={programViewModel.searchKeyword}
                 placeholder={"코드 이름 검색"}
-                onChange={null}
-                onClick={null}
-                onKeyDown={null}
+                onChange={programViewModel.handleChangeSearchKeyword}
+                onKeyDown={programViewModel.handleKeydownSearch}
                 boxstyle={{ height: "40px", width: "320px" }}
                 style={{ height: "24px" }}
                 useLabel
@@ -167,11 +175,11 @@ function ProgramView(props: IProps) {
                 style={{
                   boxShadow: "none",
                   border: `1px solid ${StyleColor.BORDER}`,
-                  width: "48px",
+                  width: "72px",
                   height: "42px",
                   fontWeight: "500",
                 }}
-                onClick={null}
+                onClick={programViewModel.handleClickSearch}
               />
             </DayTraverseHeader>
             <NcCode
@@ -185,7 +193,14 @@ function ProgramView(props: IProps) {
             />
           </DateCodeWrap>
         ) : (
-          <>
+          <CardLayout
+            style={{
+              width: "100%",
+              overflow: "auto",
+              gap: "24px",
+              flexDirection: "row",
+            }}
+          >
             <CodeCompare
               title="기준 프로그램"
               type={CompareType.CRITERIA}
@@ -196,14 +211,28 @@ function ProgramView(props: IProps) {
               type={CompareType.COMPARE}
               machineList={programViewModel.activeMachineList}
             />
-          </>
+            <CompareResultWrap>
+              <DefaultButton
+                title={"비교하기"}
+                style={{ width: "120px", border: "0" }}
+                activeColor={StyleColor.DISABLE}
+                onClick={compareViewModel.handleClickCompare}
+              />
+              {compareViewModel.compareDifferentCount > 0 && (
+                <p>{`${compareViewModel.compareDifferentCount}개 발견`}</p>
+              )}
+            </CompareResultWrap>
+          </CardLayout>
         )}
       </FlexLayout>
     </PageContainer>
   );
 }
 
-export default inject("programViewModel")(observer(ProgramView));
+export default inject(
+  "programViewModel",
+  "compareViewModel"
+)(observer(ProgramView));
 
 const FlexLayout = styled.div`
   display: flex;
@@ -247,4 +276,23 @@ const ButtonTitle = styled.div`
   align-items: center;
   justify-content: center;
   margin-left: -4px;
+`;
+
+const CompareResultWrap = styled.div`
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 64px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  & > p {
+    position: absolute;
+    right: 40px;
+    color: ${StyleColor.WARNNING};
+  }
 `;

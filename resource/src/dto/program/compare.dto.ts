@@ -11,8 +11,8 @@ export default class CompareDto {
   public readonly compareProgram: FunctionDto[] = [];
 
   @Expose({ name: "criteriaCode" })
-  public readonly criteriaCode: string = "";
+  public readonly criteriaCode: string[] = [];
 
   @Expose({ name: "compareCode" })
-  public readonly compareCode: string = "";
+  public readonly compareCode: string[] = [];
 }
