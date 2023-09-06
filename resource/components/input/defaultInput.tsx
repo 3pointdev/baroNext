@@ -13,7 +13,7 @@ import { StyleColor, ValidType } from "../../config/constants";
 interface IProps {
   type: HTMLInputTypeAttribute;
   value: string;
-  name?: string;
+  name?: string | number;
   placeholder?: string;
   onChange?: ChangeEventHandler;
   onClick?: MouseEventHandler;
@@ -28,12 +28,13 @@ interface IProps {
   useLabel?: boolean;
   validState?: number;
   validText?: string;
+  dataId?: string | number;
 }
 
 export default function DefaultInput({
   type,
   value,
-  name = "",
+  name,
   placeholder = "",
   useLabel = false,
   onChange,
@@ -48,6 +49,7 @@ export default function DefaultInput({
   validState = ValidType.PASS,
   validText,
   labelStyle,
+  dataId,
 }: IProps) {
   return (
     <InputWrap style={boxstyle} onClick={onClick}>
@@ -55,21 +57,22 @@ export default function DefaultInput({
         style={style}
         type={type}
         value={value}
-        name={name}
+        name={name?.toString()}
         onChange={onChange}
         required={requied}
         readOnly={readOnly}
         ref={reference}
         onKeyDown={onKeyDown}
-        id={name}
+        id={name?.toString()}
         placeholder={useLabel ? "" : placeholder}
         isOnValue={value.length > 0}
         autoComplete="new-password"
         className={readOnly ? "readonly" : ""}
+        data-id={dataId}
       />
       {useLabel && (
         <Placeholder
-          htmlFor={name}
+          htmlFor={name?.toString()}
           className={readOnly ? "readonly" : ""}
           style={labelStyle}
         >
@@ -79,7 +82,7 @@ export default function DefaultInput({
       {validText && (
         <ValidLabel
           style={labelStyle}
-          htmlFor={name}
+          htmlFor={name?.toString()}
           isViewAble={validState > ValidType.PASS}
           className={
             validState === ValidType.FAIL
@@ -97,6 +100,7 @@ export default function DefaultInput({
   );
 }
 const InputWrap = styled.div`
+  width: 100%;
   height: 56px;
   position: relative;
   flex-shrink: 0;
@@ -169,7 +173,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
   }
 
   &.readonly {
-    background: ${StyleColor.DISABLE};
+    background: ${StyleColor.HOVER};
   }
 `;
 

@@ -215,3 +215,13 @@ export const CompareType = {
   COMPARE: 1,
 } as const;
 export type CompareType = (typeof CompareType)[keyof typeof CompareType];
+
+/**
+ * 코드비교 타입
+ */
+export const ScheduleType = {
+  STD: "STD",
+  EAT: "EAT",
+  BRK: "BRK",
+} as const;
+export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType];

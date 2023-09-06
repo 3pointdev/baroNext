@@ -35,7 +35,7 @@ function MyPageView(props: IProps) {
             useLabel
             name="admin_name"
             validState={userViewModel.loginAccountModel.nameValid}
-            validText={"최소 4자 이상으로 설정해 주세요."}
+            validText={"최소 2자 이상으로 설정해 주세요."}
           />
 
           <DefaultInput
