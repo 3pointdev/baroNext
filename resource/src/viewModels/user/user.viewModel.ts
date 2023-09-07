@@ -3,6 +3,7 @@ import { plainToInstance } from "class-transformer";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, MouseEvent } from "react";
 import { Address } from "react-daum-postcode";
+import sha256 from "sha256";
 import {
   ServerUrlType,
   UserDataUpdateType,
@@ -102,7 +103,7 @@ export default class UserViewModel extends DefaultViewModel {
 
   updatePassword = async () => {
     const params = {
-      password: this.adminAccountModel.password,
+      password: sha256(this.adminAccountModel.password),
     };
     await this.api
       .patch(ServerUrlType.BARO, "/mypage/modiPass", params)
@@ -295,6 +296,7 @@ export default class UserViewModel extends DefaultViewModel {
   handleClickUserUpdate = (event: MouseEvent<HTMLButtonElement>) => {
     const valid = this.checkValidation(UserDataUpdateType.USERINFOMATION);
     if (valid === "") {
+      this.updateManager();
       runInAction(() => {
         this.loginAccountModel = {
           name: "",
@@ -309,7 +311,6 @@ export default class UserViewModel extends DefaultViewModel {
           });
         }, 3000);
       });
-      this.updateManager();
     } else {
       runInAction(() => {
         this.loginAccountModel = {
@@ -323,6 +324,7 @@ export default class UserViewModel extends DefaultViewModel {
   handleClickAccountUpdate = (event: MouseEvent<HTMLButtonElement>) => {
     const valid = this.checkValidation(UserDataUpdateType.ACCOUNT);
     if (valid === "") {
+      this.updateAccount();
       runInAction(() => {
         this.adminAccountModel = {
           ...this.adminAccountModel,
@@ -336,7 +338,6 @@ export default class UserViewModel extends DefaultViewModel {
           });
         }, 3000);
       });
-      this.updateAccount();
     } else {
       runInAction(() => {
         this.adminAccountModel = {
@@ -350,6 +351,7 @@ export default class UserViewModel extends DefaultViewModel {
   handleClickPasswordUpdate = (event: MouseEvent<HTMLButtonElement>) => {
     const valid = this.checkValidation(UserDataUpdateType.PASSWORD);
     if (valid === "") {
+      this.updatePassword();
       runInAction(() => {
         this.adminAccountModel = {
           ...this.adminAccountModel,
@@ -365,7 +367,6 @@ export default class UserViewModel extends DefaultViewModel {
           });
         }, 3000);
       });
-      this.updatePassword();
     } else {
       runInAction(() => {
         this.adminAccountModel = {

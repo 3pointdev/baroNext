@@ -1,11 +1,11 @@
-import sha256 from "sha256";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import AccountModel from "../../models/login/account.model";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import sha256 from "sha256";
 import { ServerUrlType } from "../../../config/constants";
+import AccountModel from "../../models/login/account.model";
 import FindAccountModel from "../../models/login/contact.model";
 import { Alert } from "../../modules/alert.module";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class AuthViewModel extends DefaultViewModel {
   public account: AccountModel = new AccountModel();
@@ -81,8 +81,17 @@ export default class AuthViewModel extends DefaultViewModel {
   };
 
   handleLogin = async () => {
+    if (this.account.account.length < 4) {
+      return Alert.alert("아이디를 다시 확인해 주세요.");
+    }
+
+    if (this.account.password.length < 4) {
+      return Alert.alert("암호를 다시 확인해 주세요.");
+    }
+
     const params = {
       username: this.account.account,
+      // password: "",
       password: sha256(this.account.password),
       sender: window.localStorage.sender,
     };

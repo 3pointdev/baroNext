@@ -140,9 +140,33 @@ export default class ScheduleViewModel extends DefaultViewModel {
    */
   handleChangeStartTime = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (
+      /[^0-9:]/g.test(value) ||
+      (value.length !== 3 && value.charAt(value.length - 1) === ":")
+    )
+      return;
+
+    let newValue = value;
+
+    // 만약 :를 포함해 5자가 넘는 입력이 있을 경우 마지막 글자 대체
+    if (value.length > 5) {
+      const sliced = newValue.slice(0, 4);
+      newValue = sliced + value.charAt(value.length - 1);
+    }
+
+    // : 삭제
+    newValue = newValue.replace(":", "");
+    if (value.length > 2) {
+      // 숫자를 시간 형식으로 변환 (예: "1234" => "12:34")
+      newValue = newValue.replace(/(\d{2})(\d{0,2})/, (match, p1, p2) => {
+        return p2 ? `${p1}:${p2}` : p1;
+      });
+    }
+
     let newSchedule = this.list.map((schedule: ScheduleModel) => {
       if (schedule.id === +name) {
-        return { ...schedule, startTime: value };
+        return { ...schedule, startTime: newValue };
       } else {
         return schedule;
       }
@@ -159,9 +183,26 @@ export default class ScheduleViewModel extends DefaultViewModel {
    */
   handleChangeEndTime = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    let newValue = value;
+
+    // 만약 :를 포함해 5자가 넘는 입력이 있을 경우 마지막 글자 대체
+    if (value.length > 5) {
+      const sliced = newValue.slice(0, 4);
+      newValue = sliced + value.charAt(value.length - 1);
+    }
+
+    // : 삭제
+    newValue = newValue.replace(":", "");
+    if (value.length > 2) {
+      // 숫자를 시간 형식으로 변환 (예: "1234" => "12:34")
+      newValue = newValue.replace(/(\d{2})(\d{0,2})/, (match, p1, p2) => {
+        return p2 ? `${p1}:${p2}` : p1;
+      });
+    }
+
     let newSchedule = this.list.map((schedule: ScheduleModel) => {
       if (schedule.id === +name) {
-        return { ...schedule, endTime: value };
+        return { ...schedule, endTime: newValue };
       } else {
         return schedule;
       }
