@@ -9,6 +9,7 @@ import CustomSelector from "components/input/customSelector";
 import DefaultInput from "components/input/defaultInput";
 import { StyleColor } from "config/constants";
 import { inject, observer } from "mobx-react";
+import { NextRouter } from "next/router";
 import Alert1 from "public/images/login/login-alert-1.svg";
 import Alert2 from "public/images/login/login-alert-2.svg";
 import Alert3 from "public/images/login/login-alert-3.svg";
@@ -20,6 +21,7 @@ import styled, { keyframes } from "styled-components";
 
 interface IProps {
   authViewModel: AuthViewModel;
+  router: NextRouter;
 }
 
 function LoginView(props: IProps) {
@@ -27,8 +29,11 @@ function LoginView(props: IProps) {
   const alertImages = [Alert1.src, Alert2.src, Alert3.src];
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [isContactMode, setIsContactMode] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isMount, setIsMount] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isRedirect = props.router.query.redirect === "1";
+
+  console.log(isRedirect);
   const handleTogglePasswordView = () => {
     setViewPassword(!viewPassword);
     inputRef.current?.focus();
@@ -140,7 +145,9 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeAccount}
               placeholder="비밀번호"
               reference={inputRef}
-              onKeyDown={authViewModel.handleKeyDownEnter}
+              onKeyDown={(event) =>
+                authViewModel.handleKeyDownEnter(event, isRedirect)
+              }
             >
               <FontAwesomeIcon
                 icon={viewPassword ? faEye : faEyeSlash}
@@ -153,7 +160,10 @@ function LoginView(props: IProps) {
               onChange={authViewModel.handleChangeAutoLogin}
               value={authViewModel.isAutoLogin}
             />
-            <DefaultButton title="로그인" onClick={authViewModel.handleLogin} />
+            <DefaultButton
+              title="로그인"
+              onClick={() => authViewModel.handleLogin(isRedirect)}
+            />
             <Login.ContactUs>
               <p>아이디 및 비밀번호를 잊으셨나요?</p>
               <a onClick={handleToggleContactMode}>문의하기</a>

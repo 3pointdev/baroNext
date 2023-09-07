@@ -1,12 +1,13 @@
-import { inject, observer } from "mobx-react";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Alert from "components/alert/alert";
 import PageContainer from "components/container/pageContainer";
 import CardLayout from "components/layout/cardLayout";
-import MachineViewModel from "src/viewModels/machine/machine.viewModel";
+import { inject, observer } from "mobx-react";
 import { useEffect } from "react";
 import MachineSummaryDto from "src/dto/machine/machineSummary.dto";
+import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 interface IProps {
   machineViewModel: MachineViewModel;
@@ -42,6 +43,11 @@ function MachineInfoView(props: IProps) {
           )}
         </MachineWrap>
       </CardLayout>
+      <Alert
+        title={machineViewModel.alertState.title}
+        isActive={machineViewModel.alertState.isActive}
+        isPositive={machineViewModel.alertState.isPositive}
+      />
     </PageContainer>
   );
 }

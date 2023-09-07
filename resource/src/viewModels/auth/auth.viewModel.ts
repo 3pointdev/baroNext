@@ -80,7 +80,7 @@ export default class AuthViewModel extends DefaultViewModel {
       });
   };
 
-  handleLogin = async () => {
+  handleLogin = async (isRedirect: boolean) => {
     if (this.account.account.length < 4) {
       return Alert.alert("아이디를 다시 확인해 주세요.");
     }
@@ -96,7 +96,7 @@ export default class AuthViewModel extends DefaultViewModel {
       sender: window.localStorage.sender,
     };
 
-    this.insertLogin(params);
+    this.insertLogin(params, isRedirect);
   };
 
   checkContactReady = () => {
@@ -113,11 +113,11 @@ export default class AuthViewModel extends DefaultViewModel {
     });
   };
 
-  handleKeyDownEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+  handleKeyDownEnter = (event: KeyboardEvent<Element>, isRedirect: boolean) => {
     const { key } = event;
 
     if (key === "Enter") {
-      this.handleLogin();
+      this.handleLogin(isRedirect);
     }
   };
 }

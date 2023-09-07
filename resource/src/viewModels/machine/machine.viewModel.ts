@@ -5,6 +5,7 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import Swal from "sweetalert2";
 
+import { IAlertState } from "components/alert/alert";
 import TableModel from "src/models/table/table.model";
 import {
   BinaryMessageType,
@@ -46,6 +47,12 @@ export default class MachineViewModel extends DefaultViewModel {
   public notice: string = "";
   public unMount: boolean = false;
 
+  public alertState: IAlertState = {
+    isPositive: true,
+    isActive: false,
+    title: "string",
+  };
+
   constructor(props: IDefaultProps) {
     super(props);
     this.tableHeader = [
@@ -85,6 +92,7 @@ export default class MachineViewModel extends DefaultViewModel {
       notiModel: observable,
       mountedList: observable,
       notice: observable,
+      alertState: observable,
 
       onMessage: action,
       getMachineList: action,
@@ -236,9 +244,41 @@ export default class MachineViewModel extends DefaultViewModel {
       .patch(ServerUrlType.BARO, "/machine", updateModel)
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "기기정보를 저장하였습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
         return false;
       });
   };
@@ -348,7 +388,7 @@ export default class MachineViewModel extends DefaultViewModel {
     Alert.freeFormat({
       title: "기계 정보 수정",
       html:
-        '<input type="number" id="numberInput" class="swal2-input" placeholder="기계 번호" value="' +
+        '<input type="number" id="numberInput" class="swal2-input" placeholder="기계 번호" min="1" value="' +
         target.machineNo +
         '" required>' +
         '<input type="text" id="textInput" class="swal2-input" placeholder="기계 이름" value="' +
@@ -367,6 +407,17 @@ export default class MachineViewModel extends DefaultViewModel {
         // 유효성 검사
         if (!numberInput.value && !textInput.value) {
           Swal.showValidationMessage("입력 된 정보가 없습니다.");
+        }
+        if (+numberInput.value < 1 || +numberInput.value > 999) {
+          Swal.showValidationMessage(
+            "기기번호는 1부터 999까지 입력 가능합니다."
+          );
+        }
+        if (/[^a-zA-Z0-9]/.test(textInput.value)) {
+          Swal.showValidationMessage("기계명은 영문, 숫자만 입력 가능합니다.");
+        }
+        if (textInput.value.length > 15) {
+          Swal.showValidationMessage("기계명은 15자 이내로 입력 가능합니다.");
         }
 
         return { numberInput: numberInput.value, textInput: textInput.value };

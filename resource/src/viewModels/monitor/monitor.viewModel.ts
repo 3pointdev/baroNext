@@ -1,25 +1,30 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import MonitorListDto from "../../dto/monitor/monitorList.dto";
 import { AxiosError, AxiosResponse } from "axios";
-import { ServerUrlType } from "../../../config/constants";
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { DropResult } from "react-beautiful-dnd";
+import { IAlertState } from "components/alert/alert";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { MouseEvent } from "react";
-import { Alert } from "../../modules/alert.module";
+import { DropResult } from "react-beautiful-dnd";
+import { ServerUrlType } from "../../../config/constants";
 import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
-import MonitorNoticeDto from "../../dto/monitor/notice.dto";
+import MonitorListDto from "../../dto/monitor/monitorList.dto";
+import { Alert } from "../../modules/alert.module";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MonitorViewModel extends DefaultViewModel {
   public list: MonitorListDto[] = [];
   public machineList: MachineSummaryDto[] = [];
-
+  public alertState: IAlertState = {
+    title: "",
+    isActive: false,
+    isPositive: true,
+  };
   constructor(props: IDefaultProps) {
     super(props);
 
     makeObservable(this, {
       list: observable,
       machineList: observable,
+      alertState: observable,
 
       getList: action,
       getListMachine: action,
@@ -67,9 +72,41 @@ export default class MonitorViewModel extends DefaultViewModel {
       .post(ServerUrlType.BARO, "/mon/mon", { monitor_name: name })
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "모니터를 추가했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -82,9 +119,41 @@ export default class MonitorViewModel extends DefaultViewModel {
       })
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "모니터를 수정했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -94,9 +163,41 @@ export default class MonitorViewModel extends DefaultViewModel {
       .delete(ServerUrlType.BARO, `/mon/mon/${targetId}`)
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "모니터를 삭제했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -114,9 +215,42 @@ export default class MonitorViewModel extends DefaultViewModel {
       })
       .then((result: AxiosResponse) => {
         this.getList();
+
+        runInAction(() => {
+          this.alertState = {
+            title: "기계를 추가했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -129,9 +263,41 @@ export default class MonitorViewModel extends DefaultViewModel {
       })
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "기계를 수정했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -141,9 +307,41 @@ export default class MonitorViewModel extends DefaultViewModel {
       .delete(ServerUrlType.BARO, `/mon/machine/${targetId}`)
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "기계를 삭제했습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        });
         return false;
       });
   };
@@ -230,9 +428,10 @@ export default class MonitorViewModel extends DefaultViewModel {
 
   handleClickDeleteMonitor = (event: MouseEvent<HTMLButtonElement>) => {
     const { value } = event.currentTarget;
+    const monitorName = this.getNameMonitor(+value);
 
     Alert.confirm({
-      title: "이 모니터를 삭제합니다",
+      title: `모니터 ${monitorName}를 삭제합니다`,
       callback: () => {
         this.delete(+value);
       },
@@ -276,14 +475,46 @@ export default class MonitorViewModel extends DefaultViewModel {
 
   handleClickDeleteMachine = (event: MouseEvent<HTMLButtonElement>) => {
     const { value } = event.currentTarget;
+    const target = this.getNameMachine(+value);
 
     Alert.confirm({
-      title: "이 기계를 모니터에서 삭제합니다",
+      title: `${target.machine}을(를) ${target.monitor}에서 삭제합니다`,
       callback: () => {
         this.deleteMachine(+value);
       },
       confirm: "삭제",
       cancel: "취소",
     });
+  };
+
+  getNameMachine = (itemId: number) => {
+    let monitor = "";
+    let machine = "";
+
+    for (let i = 0; i < this.list.length; i++) {
+      for (let j = 0; j < this.list[i].data.length; j++) {
+        if (this.list[i].data[j].itemId === +itemId) {
+          monitor = this.list[i].name;
+          machine = this.list[i].data[j].mid;
+          break;
+        }
+      }
+    }
+
+    return { monitor, machine };
+  };
+
+  getNameMonitor = (itemId: number) => {
+    let monitor = "";
+
+    for (let i = 0; i < this.list.length; i++) {
+      if (this.list[i].id === +itemId) {
+        monitor = this.list[i].name;
+
+        break;
+      }
+    }
+
+    return monitor;
   };
 }

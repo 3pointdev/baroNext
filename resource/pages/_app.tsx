@@ -1,14 +1,13 @@
-import "reflect-metadata";
+import Header from "components/header/header";
+import LoadingIndicator from "components/indicator/loadingIndicator";
+import pageUrlConfig from "config/pageUrlConfig";
 import { Provider } from "mobx-react";
 import App from "next/app";
-import React from "react";
+import "reflect-metadata";
 import initializeStore, { RootStore } from "src/mobx/store";
-import "styles/globals.css";
-import Header from "components/header/header";
-import { IDefaultProps } from "src/viewModels/default.viewModel";
 import authModule from "src/modules/auth.module";
-import pageUrlConfig from "config/pageUrlConfig";
-import LoadingIndicator from "components/indicator/loadingIndicator";
+import { IDefaultProps } from "src/viewModels/default.viewModel";
+import "styles/globals.css";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
@@ -42,7 +41,7 @@ class MyApp extends App<any, any, any> {
     this.mobxStore.mainViewModel.popAuth();
 
     if (!authModule.isLogin() && this.props.router.pathname !== "/login") {
-      this.props.router.push(pageUrlConfig.login);
+      this.props.router.push(`${pageUrlConfig.login}?redirect=1`);
     }
   }
 

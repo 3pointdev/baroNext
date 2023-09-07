@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
+import { IAlertState } from "components/alert/alert";
 import { ScheduleType, ServerUrlType } from "config/constants";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, MouseEvent } from "react";
@@ -7,11 +8,6 @@ import ScheduleModel from "src/models/schedule/schedule.model";
 import { Alert } from "src/modules/alert.module";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
-interface IAlertState {
-  isPositive: boolean;
-  isActive: boolean;
-  title: string;
-}
 export default class ScheduleViewModel extends DefaultViewModel {
   public list: ScheduleModel[] = [];
   public isOpenAlert: IAlertState = {

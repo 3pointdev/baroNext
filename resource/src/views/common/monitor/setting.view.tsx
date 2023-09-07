@@ -1,25 +1,26 @@
-import { inject, observer } from "mobx-react";
-import PageContainer from "components/container/pageContainer";
-import CardLayout from "components/layout/cardLayout";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DroppableProvided,
-  DraggableProvided,
-} from "react-beautiful-dnd";
-import MonitorListDto from "src/dto/monitor/monitorList.dto";
-import MonitorDto from "src/dto/monitor/monitor.dto";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Alert from "components/alert/alert";
 import CircleButton from "components/button/circleButton";
+import PageContainer from "components/container/pageContainer";
+import CardLayout from "components/layout/cardLayout";
+import { inject, observer } from "mobx-react";
+import { useEffect, useState } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  DraggableProvided,
+  Droppable,
+  DroppableProvided,
+} from "react-beautiful-dnd";
+import MonitorDto from "src/dto/monitor/monitor.dto";
+import MonitorListDto from "src/dto/monitor/monitorList.dto";
+import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
+import styled from "styled-components";
 
 interface IProps {
   monitorViewModel: MonitorViewModel;
@@ -160,6 +161,11 @@ function MonitorSettingView(props: IProps) {
           )}
         </DragWrap>
       </CardLayout>
+      <Alert
+        title={monitorViewModel.alertState.title}
+        isActive={monitorViewModel.alertState.isActive}
+        isPositive={monitorViewModel.alertState.isPositive}
+      />
     </PageContainer>
   );
 }

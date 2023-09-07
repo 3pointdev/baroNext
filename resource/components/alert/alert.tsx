@@ -6,13 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StyleColor } from "config/constants";
 import styled, { css, keyframes } from "styled-components";
 
-interface IProps {
-  title: string;
-  isActive: boolean;
+export interface IAlertState {
   isPositive?: boolean;
+  isActive: boolean;
+  title: string;
 }
 
-export default function Alert({ title, isActive, isPositive = true }: IProps) {
+export default function Alert({
+  title,
+  isActive,
+  isPositive = true,
+}: IAlertState) {
   return (
     <Container isPositive={isPositive} isActive={isActive}>
       <FontAwesomeIcon
