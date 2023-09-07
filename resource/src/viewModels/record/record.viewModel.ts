@@ -4,14 +4,14 @@ import dayjs from "dayjs";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import mockData from "public/mockdb.json";
 import { ChangeEvent, MouseEvent } from "react";
-import { ITableHeader } from "../../../components/table/defaultTable";
+import TableModel from "src/models/table/table.model";
 import { ServerUrlType, TableFormatType } from "../../../config/constants";
 import RecordDto from "../../dto/record/record.dto";
 import RecordModel from "../../models/record/record.model";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class RecordViewModel extends DefaultViewModel {
-  public tableHeader: ITableHeader[] = [];
+  public tableHeader: TableModel[] = [];
   public recordModel: RecordModel = new RecordModel();
   public list: RecordDto[] = [];
   public dataFilter: Options[] = [];
@@ -180,7 +180,7 @@ export default class RecordViewModel extends DefaultViewModel {
   };
 
   setHeader = (value: number) => {
-    const fixHeader: ITableHeader[] = [
+    const fixHeader: TableModel[] = [
       {
         title: "목표량",
         column: "planCount",

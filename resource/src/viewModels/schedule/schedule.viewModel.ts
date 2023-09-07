@@ -7,14 +7,25 @@ import ScheduleModel from "src/models/schedule/schedule.model";
 import { Alert } from "src/modules/alert.module";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
+interface IAlertState {
+  isPositive: boolean;
+  isActive: boolean;
+  title: string;
+}
 export default class ScheduleViewModel extends DefaultViewModel {
   public list: ScheduleModel[] = [];
+  public isOpenAlert: IAlertState = {
+    isPositive: true,
+    isActive: false,
+    title: "",
+  };
 
   constructor(props: IDefaultProps) {
     super(props);
 
     makeObservable(this, {
       list: observable,
+      isOpenAlert: observable,
 
       getList: action,
       handleChangeColumnTitle: action,
@@ -69,10 +80,32 @@ export default class ScheduleViewModel extends DefaultViewModel {
 
         runInAction(() => {
           this.list = newSchedule;
+          this.isOpenAlert = {
+            title: "저장이 완료 되었습니다.",
+            isPositive: true,
+            isActive: true,
+          };
         });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.isOpenAlert = {
+            title: "실패 하였습니다.\n잠시 후 다시 시도해주세요.",
+            isPositive: false,
+            isActive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
         return false;
       });
   };
@@ -91,10 +124,32 @@ export default class ScheduleViewModel extends DefaultViewModel {
 
         runInAction(() => {
           this.list = newSchedule;
+          this.isOpenAlert = {
+            title: "저장이 완료 되었습니다.",
+            isPositive: true,
+            isActive: true,
+          };
         });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.isOpenAlert = {
+            title: "실패 하였습니다.\n잠시 후 다시 시도해주세요.",
+            isPositive: false,
+            isActive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
         return false;
       });
   };
@@ -107,10 +162,33 @@ export default class ScheduleViewModel extends DefaultViewModel {
           this.list = this.list.filter(
             (schedule: ScheduleModel) => schedule.id !== targetId
           );
+
+          this.isOpenAlert = {
+            title: "삭제가 완료 되었습니다.",
+            isPositive: true,
+            isActive: true,
+          };
         });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.isOpenAlert = {
+            title: "실패 하였습니다.\n잠시 후 다시 시도해주세요.",
+            isPositive: false,
+            isActive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = { title: "", isPositive: true, isActive: false };
+          });
+        }, 3000);
         return false;
       });
   };
@@ -317,6 +395,21 @@ export default class ScheduleViewModel extends DefaultViewModel {
             this.list = this.list.filter(
               (schedule: ScheduleModel) => schedule.id !== +name
             );
+
+            this.isOpenAlert = {
+              title: "삭제가 완료 되었습니다.",
+              isPositive: true,
+              isActive: true,
+            };
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              this.isOpenAlert = {
+                title: "",
+                isPositive: true,
+                isActive: false,
+              };
+            });
           });
         } else {
           this.delete(+name);

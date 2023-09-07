@@ -1,9 +1,11 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import MachineDto from "../../dto/machine/machine.dto";
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
-import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
+import dayjs from "dayjs";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import Swal from "sweetalert2";
+
+import TableModel from "src/models/table/table.model";
 import {
   BinaryMessageType,
   ServerUrlType,
@@ -11,24 +13,22 @@ import {
   SocketResponseType,
   SortType,
 } from "../../../config/constants";
+import pageUrlConfig from "../../../config/pageUrlConfig";
+import MachineDto from "../../dto/machine/machine.dto";
+import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
+import NotificationDto from "../../dto/machine/notification.dto";
+import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
 import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
+import MonitorListDto from "../../dto/monitor/monitorList.dto";
+import MountedDto from "../../dto/monitor/mounted.dto";
+import MonitorNoticeDto from "../../dto/monitor/notice.dto";
 import TransmitterDto from "../../dto/transmitters/transmitters.dto";
+import NotificationModel from "../../models/machine/notification.model";
+import { Alert } from "../../modules/alert.module";
 import { ServerResponse } from "../../modules/api.module";
 import chartModule from "../../modules/chart.module";
 import mapperModule from "../../modules/mapper.module";
-import { ITableHeader } from "../../../components/table/defaultTable";
-import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
-import NotificationDto from "../../dto/machine/notification.dto";
-import NotificationModel from "../../models/machine/notification.model";
-import NotificationListDto from "../../dto/machine/notificationList.dto";
-import dayjs from "dayjs";
-import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
-import { Alert } from "../../modules/alert.module";
-import Swal from "sweetalert2";
-import pageUrlConfig from "../../../config/pageUrlConfig";
-import MountedDto from "../../dto/monitor/mounted.dto";
-import MonitorListDto from "../../dto/monitor/monitorList.dto";
-import MonitorNoticeDto from "../../dto/monitor/notice.dto";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
@@ -38,8 +38,8 @@ export default class MachineViewModel extends DefaultViewModel {
   public edgeData: TransmitterDto[] = [];
 
   public machineSummary: MachineSummaryDto[] = [];
-  public tableHeader: ITableHeader[] = [];
-  public notiList: NotificationListDto = new NotificationListDto();
+  public tableHeader: TableModel[] = [];
+  public notiList: NotificationDto[] = [];
   public notiModel: NotificationModel = new NotificationModel();
   public mountedList: MountedDto = new MountedDto();
 
@@ -49,9 +49,29 @@ export default class MachineViewModel extends DefaultViewModel {
   constructor(props: IDefaultProps) {
     super(props);
     this.tableHeader = [
-      { title: "기계명", column: "mid", align: "center", size: "20vw" },
-      { title: "알람일자", column: "date", align: "left", size: "20vw" },
-      { title: "알람내용", column: "message", align: "left", size: "55vw" },
+      plainToInstance(TableModel, {
+        title: "기계명",
+        column: "mid",
+        align: "center",
+        size: "20vw",
+        isSort: true,
+        sortState: SortType.DEFAULT,
+      }),
+      plainToInstance(TableModel, {
+        title: "알람일자",
+        column: "date",
+        align: "left",
+        size: "20vw",
+        isSort: true,
+        sortState: SortType.DESCENDING,
+      }),
+      plainToInstance(TableModel, {
+        title: "알람내용",
+        column: "message",
+        align: "left",
+        size: "55vw",
+        isSort: false,
+      }),
     ];
     makeObservable(this, {
       machines: observable,
@@ -71,6 +91,7 @@ export default class MachineViewModel extends DefaultViewModel {
       getProcessedQuantity: action,
       setChart: action,
       getMounted: action,
+      handleClickSort: action,
     });
   }
 
@@ -178,7 +199,11 @@ export default class MachineViewModel extends DefaultViewModel {
       })
       .then((result: AxiosResponse<NotificationDto[]>) => {
         const data = result.data.map((item: NotificationDto) => {
-          return { date: item.date, message: item.message, mid: item.mid };
+          return plainToInstance(NotificationDto, {
+            date: item.date,
+            message: item.message,
+            mid: item.mid,
+          });
         });
 
         let filterData = this.searchKeywordFilter(
@@ -188,15 +213,16 @@ export default class MachineViewModel extends DefaultViewModel {
 
         if (filterData.length < 1) {
           filterData = [
-            { mid: "-", date: "-", message: "검색 된 데이터가 없습니다." },
+            plainToInstance(NotificationDto, {
+              mid: "-",
+              date: "-",
+              message: "검색 된 데이터가 없습니다.",
+            }),
           ];
         }
 
         runInAction(() => {
-          this.notiList = plainToInstance(NotificationListDto, {
-            sort: SortType.DESCENDING,
-            notifications: filterData,
-          });
+          this.notiList = filterData;
         });
       })
       .catch((error: AxiosError) => {
@@ -237,16 +263,50 @@ export default class MachineViewModel extends DefaultViewModel {
     });
   };
 
-  handleChangeSort = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (value === this.notiList.sort) return;
+  /**
+   * 테이블 내 헤더 별 정렬 변경 함수
+   * @id 헤더 index
+   */
+  handleClickSort = (event: MouseEvent<HTMLTableCellElement>) => {
+    const { id } = event.currentTarget.dataset;
+    let newHeader = this.tableHeader;
+    let targetHeader = newHeader[+id];
+    let newList = this.notiList;
+    newHeader[+id] = targetHeader;
+
+    if (targetHeader.sortState === SortType.DESCENDING) {
+      targetHeader.sortState = SortType.ASCENDING;
+      if (targetHeader.column === "date") {
+        newList.sort(
+          (a, b) =>
+            +new Date(a[targetHeader.column]) -
+            +new Date(b[targetHeader.column])
+        );
+        newHeader[0].sortState = SortType.DEFAULT;
+      } else if (targetHeader.column === "mid") {
+        newList.sort((a, b) => a.mid.localeCompare(b.mid));
+        newHeader[1].sortState = SortType.DEFAULT;
+      }
+    } else {
+      targetHeader.sortState = SortType.DESCENDING;
+      if (targetHeader.column === "date") {
+        newList.sort(
+          (a, b) =>
+            +new Date(b[targetHeader.column]) -
+            +new Date(a[targetHeader.column])
+        );
+        newHeader[0].sortState = SortType.DEFAULT;
+      } else if (targetHeader.column === "mid") {
+        newList.sort((a, b) =>
+          b.mid.toLowerCase().localeCompare(a.mid.toLowerCase())
+        );
+        newHeader[1].sortState = SortType.DEFAULT;
+      }
+    }
 
     runInAction(() => {
-      this.notiList = {
-        notifications: [...this.notiList.notifications.reverse()],
-        sort: value,
-      };
-      this.notiModel = { ...this.notiModel, mkey: 0 };
+      this.tableHeader = plainToInstance(TableModel, newHeader);
+      this.notiList = newList;
     });
   };
 

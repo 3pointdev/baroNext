@@ -1,16 +1,17 @@
-import { MouseEventHandler } from "react";
-import React from "react";
+import { faAngleRight, faFileLines } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/constants";
+import dayjs from "dayjs";
+import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import styled from "styled-components";
+import FunctionDto from "../../src/dto/program/function.dto";
 import {
   IActiveTarget,
   ILoding,
 } from "../../src/viewModels/program/program.viewModel";
-import FunctionDto from "../../src/dto/program/function.dto";
-import styled from "styled-components";
-import CardLayout from "../layout/cardLayout";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faFileLines } from "@fortawesome/free-solid-svg-icons";
-import DefaultLoading from "../indicator/defaultLoding";
 import DefaultButton from "../button/defaultButton";
+import DefaultLoading from "../indicator/defaultLoding";
+import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   isAllComponent: boolean;
@@ -31,6 +32,29 @@ export default function NcCode({
   activeCode,
   isAllComponent,
 }: IProps) {
+  const [activeFunction, setActiveFunction] = useState<FunctionDto>(null);
+
+  useEffect(() => {
+    setActiveFunction(null);
+  }, [activeCallfunc]);
+
+  const onClickFunction = (event: MouseEvent<HTMLButtonElement>) => {
+    setActiveFunction(
+      activeCallfunc.find(
+        (callFunc) => +callFunc.name === +event.currentTarget.value
+      )
+    );
+    handleClickFunction(event);
+  };
+
+  const getActiveTime = (activeTime: number) => {
+    return `${Math.floor(activeTime / 3600)
+      .toString()
+      .padStart(2, "0")}:${Math.floor(activeTime / 60)
+      .toString()
+      .padStart(2, "0")}:${(activeTime % 60).toString().padStart(2, "0")}`;
+  };
+
   return (
     <>
       <CardLayout
@@ -49,7 +73,7 @@ export default function NcCode({
               return (
                 <ProgramButton
                   key={key}
-                  onClick={handleClickFunction}
+                  onClick={onClickFunction}
                   value={callFunction.name}
                   highlight={+callFunction.name === activeTarget.code}
                 >
@@ -60,7 +84,16 @@ export default function NcCode({
                       }`}
                     </p>
                   ) : (
-                    <p>{callFunction.comment}</p>
+                    <div>
+                      <div>
+                        <p>{callFunction.mid}</p>
+                        <p className="program">{callFunction.comment}</p>
+                      </div>
+                      <div>
+                        <p>{dayjs(callFunction.date).format("YYYY/MM/DD")}</p>
+                        <p>{getActiveTime(callFunction.activeTime)}</p>
+                      </div>
+                    </div>
                   )}
                   <FontAwesomeIcon icon={faAngleRight} />
                 </ProgramButton>
@@ -79,7 +112,18 @@ export default function NcCode({
       >
         {isLoading.code && <DefaultLoading />}
         <LayoutTitle>
-          <p>NC CODE</p>
+          <div>
+            <p>NC CODE</p>
+
+            {activeFunction && !isAllComponent && (
+              <div>
+                <p className="program">{activeFunction.comment}</p>
+                <p className="active_time">{`평균 가공 시간 : ${getActiveTime(
+                  activeFunction.activeTime
+                )}`}</p>
+              </div>
+            )}
+          </div>
           <DefaultButton
             title={
               <ButtonText>
@@ -90,15 +134,13 @@ export default function NcCode({
             onClick={handleClickDownloadText}
             style={{
               width: "auto",
-              height: "22px",
-              padding: "0 8px",
+              height: "36px",
+              padding: "0 16px",
               border: "0",
-              borderRadius: "4px",
-              color: "#000",
-              fontSize: "14px",
+              borderRadius: "8px",
             }}
-            activeColor="#3a79ec10"
-            disableColor="#E0E0E0"
+            activeColor={StyleColor.LIGHT}
+            disableColor={StyleColor.BORDER}
             dynamic
             isActive={activeTarget.code !== 0}
           />
@@ -141,6 +183,28 @@ const ProgramButton = styled.button<{ highlight: boolean }>`
     text-align: left;
     white-space: wrap;
   }
+
+  & .program {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 32px);
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+
+      &:last-child {
+        align-items: end;
+      }
+    }
+  }
 `;
 
 const LayoutTitle = styled.div`
@@ -159,6 +223,18 @@ const LayoutTitle = styled.div`
   height: 24px;
   padding: 16px 16px;
   flex-shrink: 0;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+
+    & .program,
+    .active_time {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
 `;
 
 const ButtonWrap = styled.div`
@@ -173,4 +249,5 @@ const ButtonText = styled.p`
   align-items: center;
   gap: 8px;
   padding-top: 2px;
+  font-size: 16px;
 `;

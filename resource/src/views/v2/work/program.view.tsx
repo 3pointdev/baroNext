@@ -43,9 +43,12 @@ function ProgramView(props: IProps) {
   }, []);
 
   const handleClickActiveComponent = (event: MouseEvent<HTMLButtonElement>) => {
-    programViewModel.handleClickActiveComponent(event);
+    const { value } = event.currentTarget;
+    if (+value === programViewModel.activeComponent) return;
+
     programViewModel.dataReset();
     compareViewModel.dataReset();
+    programViewModel.handleClickActiveComponent(event);
   };
 
   return (

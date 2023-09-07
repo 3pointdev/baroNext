@@ -1,3 +1,4 @@
+import Alert from "components/alert/alert";
 import PageContainer from "components/container/pageContainer";
 import ScheduleEditer from "components/editor/scheduleEditor";
 import CardLayout from "components/layout/cardLayout";
@@ -68,6 +69,11 @@ function ScheduleView({ scheduleViewModel }: IProps) {
           onClickDelete={scheduleViewModel.handleClickDelete}
         />
       </CardLayout>
+      <Alert
+        title={scheduleViewModel.isOpenAlert.title}
+        isActive={scheduleViewModel.isOpenAlert.isActive}
+        isPositive={scheduleViewModel.isOpenAlert.isPositive}
+      />
     </PageContainer>
   );
 }

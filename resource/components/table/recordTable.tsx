@@ -1,17 +1,10 @@
 import { StyleColor, TableFormatType } from "config/constants";
 import { Ref, useEffect, useState } from "react";
+import TableModel from "src/models/table/table.model";
 import styled from "styled-components";
 
-export interface ITableHeader {
-  title: string;
-  column: string;
-  align: "left" | "center" | "right" | "justify" | "char" | undefined;
-  size?: string;
-  rowSpan?: boolean;
-}
-
 interface IProps {
-  header: ITableHeader[];
+  header: TableModel[];
   data: any[];
   recordRef?: Ref<HTMLTableElement>;
   filter?: string | number;
@@ -91,7 +84,7 @@ export default function RecordTable({
     <Table.Container ref={recordRef}>
       <Table.Head>
         <tr>
-          {header.map((head: ITableHeader, key: number) => {
+          {header.map((head: TableModel, key: number) => {
             return (
               <th
                 key={`table_header_${head.title}_${key}`}
@@ -108,7 +101,7 @@ export default function RecordTable({
         {tableData.map((item: any, key: number) => {
           return (
             <tr key={`table_body_rows_${key}`}>
-              {header.map((head: ITableHeader, inkey: number) => {
+              {header.map((head: TableModel, inkey: number) => {
                 const thisMergeCount = mergedCells[inkey][key];
 
                 const shoudSkip = head.rowSpan && thisMergeCount === 0;

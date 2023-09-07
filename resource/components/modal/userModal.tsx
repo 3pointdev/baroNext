@@ -1,15 +1,13 @@
-import styled from "styled-components";
-import { MouseEventHandler } from "react";
-import AuthDto from "../../src/dto/auth/auth.dto";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import UserMenuModel from "../../src/models/menu/userMenu.model";
-import pageUrlConfig from "../../config/pageUrlConfig";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MouseEventHandler } from "react";
+import styled from "styled-components";
+import pageUrlConfig from "../../config/pageUrlConfig";
+import UserMenuModel from "../../src/models/menu/userMenu.model";
 import Linker from "../linker/linker";
 
 interface IProps {
-  data: AuthDto;
+  // data: AuthDto;
   onClick: MouseEventHandler;
   onClickLogout: MouseEventHandler;
   active: boolean;
@@ -18,7 +16,7 @@ interface IProps {
 }
 
 export default function UserModal({
-  data,
+  // data,
   menus,
   active,
   onClick,
@@ -28,13 +26,13 @@ export default function UserModal({
   return (
     <>
       <UserContainer active={active}>
-        <HeadLine>
+        {/* <HeadLine>
           <img src={data.profileImage} alt="user_profile_image" />
           <div>
             <p>{data.name}</p>
             <span>{data.account.toUpperCase()}</span>
           </div>
-        </HeadLine>
+        </HeadLine> */}
         <Menu.Wrap>
           {menus.map((menu: UserMenuModel, key) => {
             return (

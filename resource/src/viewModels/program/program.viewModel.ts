@@ -183,6 +183,8 @@ export default class ProgramViewModel extends DefaultViewModel {
             date: item.date,
             name: item.lot,
             len: 0,
+            active_time: item.active_time,
+            mid: item.mid,
           })
         );
 
@@ -293,8 +295,6 @@ export default class ProgramViewModel extends DefaultViewModel {
 
   handleClickActiveComponent = (event: MouseEvent<HTMLButtonElement>) => {
     const { value } = event.currentTarget;
-
-    if (+value === this.activeComponent) return;
 
     if (+value === 0) {
       const active = this.activeMachineList.find(

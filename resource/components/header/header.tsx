@@ -1,20 +1,20 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SquareLogo from "public/images/logo/barofactory-square.svg";
-import styled from "styled-components";
-import MainViewModel from "../../src/viewModels/main/main.viewModel";
-import MenuModel from "../../src/models/menu/menu.model";
-import { NextRouter, useRouter } from "next/router";
-import SubMenuModel from "../../src/models/menu/subMenu.model";
-import { useEffect, useState } from "react";
-import Logo from "../image/logo";
-import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
-import { inject, observer } from "mobx-react";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import UserModal from "../modal/userModal";
-import Linker from "../linker/linker";
-import pageUrlConfig from "../../config/pageUrlConfig";
-import authModule from "../../src/modules/auth.module";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StyleColor } from "config/constants";
+import { inject, observer } from "mobx-react";
+import { NextRouter, useRouter } from "next/router";
+import SquareLogo from "public/images/logo/barofactory-square.svg";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import pageUrlConfig from "../../config/pageUrlConfig";
+import MenuModel from "../../src/models/menu/menu.model";
+import SubMenuModel from "../../src/models/menu/subMenu.model";
+import authModule from "../../src/modules/auth.module";
+import MainViewModel from "../../src/viewModels/main/main.viewModel";
+import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
+import Logo from "../image/logo";
+import Linker from "../linker/linker";
+import UserModal from "../modal/userModal";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -108,7 +108,7 @@ function Header(props: IProps) {
           onClick={handleToggleUserModal}
           onClickLogout={mainViewModel.insertLogout}
           active={isOpenUserModal}
-          data={mainViewModel.auth}
+          // data={mainViewModel.auth}
           menus={mainViewModel.userMenu}
           alarm={mainViewModel.alarm.unRead}
         />

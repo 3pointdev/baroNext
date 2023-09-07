@@ -7,6 +7,7 @@ import { MouseEvent } from "react";
 import CompareDto from "src/dto/program/compare.dto";
 import FunctionDto from "src/dto/program/function.dto";
 import CompareModel from "src/models/program/compare.model";
+import { Alert } from "src/modules/alert.module";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export interface ILoding {
@@ -185,6 +186,10 @@ export default class CompareViewModel extends DefaultViewModel {
         };
       });
     }
+    runInAction(() => {
+      this.compareDifferentCount = 0;
+      this.compareTarget = [[]];
+    });
     this.getListProgram(+type);
   };
 
@@ -208,10 +213,21 @@ export default class CompareViewModel extends DefaultViewModel {
         };
       });
     }
+
+    runInAction(() => {
+      this.compareDifferentCount = 0;
+      this.compareTarget = [[]];
+    });
     this.getCode(+type);
   };
 
   handleClickCompare = () => {
+    if (this.data.criteriaCode.length < 1) {
+      return Alert.alert("기준 프로그램을 먼저 선택해 주세요.");
+    }
+    if (this.data.compareCode.length < 1) {
+      return Alert.alert("비교 프로그램을 먼저 선택해 주세요.");
+    }
     let result: [boolean[]] = [[]];
     let compareDifferentCount: number = 0;
     const { criteriaCode, compareCode } = this.data;
