@@ -3,6 +3,7 @@ import LoadingIndicator from "components/indicator/loadingIndicator";
 import pageUrlConfig from "config/pageUrlConfig";
 import { Provider } from "mobx-react";
 import App from "next/app";
+import { NextRouter, withRouter } from "next/router";
 import "reflect-metadata";
 import initializeStore, { RootStore } from "src/mobx/store";
 import authModule from "src/modules/auth.module";
@@ -11,7 +12,7 @@ import "styles/globals.css";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
-
+  public router: NextRouter;
   static async getInitialProps(appContext: any) {
     const appProps = await App.getInitialProps(appContext);
     const headers =
@@ -26,7 +27,7 @@ class MyApp extends App<any, any, any> {
 
   constructor(props: IDefaultProps) {
     super(props);
-
+    this.router = props.router;
     this.mobxStore = initializeStore({
       headers: props.headers,
       host: props.headers.host,
@@ -64,10 +65,11 @@ class MyApp extends App<any, any, any> {
           {...pageProps}
           headers={headers}
           version={process.env.NEXT_PUBLIC_VERSION}
+          router={this.router}
         />
       </Provider>
     );
   }
 }
 
-export default MyApp;
+export default withRouter(MyApp);

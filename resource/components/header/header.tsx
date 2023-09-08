@@ -22,6 +22,7 @@ interface IProps {
 
 function Header(props: IProps) {
   const mainViewModel: MainViewModel = props.mainViewModel;
+  const [isLocal, setIsLocal] = useState(false);
   const [hover, setHover] = useState("");
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
@@ -30,6 +31,7 @@ function Header(props: IProps) {
     if (!authModule.isLogin()) {
       router.push(pageUrlConfig.login);
     }
+    setIsLocal(window.location.origin.includes("localhost"));
   }, []);
 
   const handleToggleUserModal = () => {
@@ -45,11 +47,13 @@ function Header(props: IProps) {
             <p>{mainViewModel.auth.name}</p>
           </Head.Company>
         </Linker>
-        <WorkEnvironmentBadge
-          title={`${
-            process.env.NEXT_PUBLIC_APP_MARK
-          }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
-        />
+        {isLocal && (
+          <WorkEnvironmentBadge
+            title={`${
+              process.env.NEXT_PUBLIC_APP_MARK
+            }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
+          />
+        )}
 
         <Head.Profile
           src={mainViewModel.auth.profileImage}

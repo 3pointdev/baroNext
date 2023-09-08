@@ -1,8 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
+import { plainToInstance } from "class-transformer";
 import { Options } from "components/input/customSelector";
 import dayjs from "dayjs";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import mockData from "public/mockdb.json";
 import { ChangeEvent, MouseEvent } from "react";
 import TableModel from "src/models/table/table.model";
 import { ServerUrlType, TableFormatType } from "../../../config/constants";
@@ -98,6 +98,7 @@ export default class RecordViewModel extends DefaultViewModel {
         ...this.recordModel,
         [type]: dayjs(date).format("YYYY-MM-DD"),
       };
+
       this.getList();
     });
   };
@@ -109,20 +110,27 @@ export default class RecordViewModel extends DefaultViewModel {
         `report/${this.recordModel.startDay}/${this.recordModel.endDay}`
       )
       .then((result: AxiosResponse) => {
-        // const data = result.data.map((item) =>
-        //   plainToInstance(RecordDto, {
-        //     mid: item.mid,
-        //     program: item.program?.includes("(")
-        //       ? item.program.split("(")[1].replace(")", "")
-        //       : item.program,
-        //     count: `${item.count} / ${item.plan_count}`,
-        //   })
-        // );
+        //임시데이터 포함
+        const data = result.data.map((item) =>
+          plainToInstance(RecordDto, {
+            mid: item.mid,
+            program: item.program?.includes("(")
+              ? item.program.split("(")[1].replace(")", "")
+              : item.program === ""
+              ? "Unknown Lot"
+              : item.program,
+            count: `${item.count} / ${item.plan_count}`,
+            date: "07/01",
+            plan_count: item.plan_count,
+            part_count: item.count,
+            achieve: "100%",
+            uptime: "62%",
+            tolerance: "2%",
+          })
+        );
 
         runInAction(() => {
-          // this.list = data;
-
-          this.list = this.setAverage(mockData.data);
+          this.list = this.setAverage(data);
         });
       })
       .catch((error: AxiosError) => {
@@ -364,10 +372,6 @@ export default class RecordViewModel extends DefaultViewModel {
   sortProgram() {
     runInAction(() => {
       this.list = this.list.sort((a, b) => {
-        console.log(
-          +a.program.match(/(\d+)/g)?.[1],
-          +b.program.match(/(\d+)/g)?.[1]
-        );
         if (
           +a.program.match(/(\d+)/g)?.[0] - +b.program.match(/(\d+)/g)?.[0] !==
           0

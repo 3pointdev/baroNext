@@ -1,8 +1,8 @@
+import RangeDatePicker from "components/datePicker/rangeDatePicker";
+import { StyleColor } from "config/constants";
 import { CSSProperties, ReactElement } from "react";
 import styled from "styled-components";
 import DefaultDatePicker from "../datePicker/defaultDatePicker";
-import RangeDatePicker from "components/datePicker/rangeDatePicker";
-import { StyleColor } from "config/constants";
 
 interface IProps {
   title: string;
@@ -72,7 +72,11 @@ const LeftSide = {
     align-items: center;
     gap: 24px;
   `,
-  Title: styled.h3``,
+  Title: styled.h3`
+    font-size: 24px;
+    line-height: 1.5;
+    font-weight: 600;
+  `,
 };
 const RightSide = {
   Wrap: styled.div`

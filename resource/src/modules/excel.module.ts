@@ -1,5 +1,6 @@
 import { RefObject } from "react";
-import XLSX, { BookType } from "xlsx";
+import { BookType } from "xlsx";
+import XLSXStyle from "xlsx-style";
 
 interface IExcelInfomation {
   targetRef: RefObject<HTMLTableElement>;
@@ -19,39 +20,47 @@ class ExcelModule {
     columnWidth = {},
     columnStyle,
   }: IExcelInfomation) {
-    const excelFile = XLSX.utils.table_to_book(targetRef.current, {
-      sheet: sheetName,
-      raw: true,
-    });
-    excelFile.Sheets[sheetName]["!cols"] = Object.keys(columnWidth).map(
-      (key: string) => ({
-        wch: columnWidth[key],
-      })
-    );
+    //   const excelFile = XLSX.utils.table_to_book(targetRef.current, {
+    //     sheet: sheetName,
+    //     raw: true,
+    //   });
 
-    //열에 일괄 색상입히기 (기능확인 중)
+    //   excelFile.Sheets[sheetName]["!cols"] = Object.keys(columnWidth).map(
+    //     (key: string) => ({
+    //       wch: columnWidth[key],
+    //     })
+    //   );
 
-    // const columnRange = XLSX.utils.decode_range(
-    //   excelFile.Sheets[sheetName]["!ref"]
-    // );
-    // for (let row = columnRange.s.r; row <= columnRange.e.r; row++) {
-    //   const cellAddress = XLSX.utils.encode_cell({ r: row, c: columnIndex });
-    //   excelFile.Sheets[sheetName][cellAddress].s = {
-    //     fill: {
-    //       patternType: "solid",
-    //       bgColor: { rgb: "111111" },
-    //       fgColor: { rgb: "111111" },
-    //     },
-    //   };
-    // }
-    console.log(excelFile);
-    XLSX.write(excelFile, {
-      bookType: fileType,
-      bookSST: true,
-      type: "base64",
-      ignoreEC: false,
-    });
-    XLSX.writeFile(excelFile, fileName + fileType);
+    //   console.log(excelFile);
+
+    //   for (
+    //     let i = 5;
+    //     i < Object.keys(excelFile.Sheets[sheetName]).length - 3;
+    //     i++
+    //   ) {
+    //     excelFile.Sheets[sheetName][
+    //       Object.keys(excelFile.Sheets[sheetName])[i]
+    //     ].s = { alignment: { horizontal: "center" } };
+    //   }
+
+    //   XLSX.write(excelFile, {
+    //     bookType: fileType,
+    //     bookSST: true,
+    //     type: "base64",
+    //     ignoreEC: false,
+    //   });
+
+    //   XLSX.writeFileXLSX(excelFile, fileName + fileType);
+
+    const workbook = XLSXStyle.readFile("template.xlsx"); // 기존 템플릿 파일 불러오기
+    const worksheet = workbook.Sheets["Sheet1"]; // 'Sheet1'에 해당하는 워크시트 선택
+    const cellStyle = {
+      fill: {
+        fgColor: { rgb: "FFFF00" }, // 노란색 배경색
+      },
+    };
+    worksheet["A1"].s = cellStyle;
+    XLSXStyle.writeFile(workbook, "output.xlsx");
   }
 }
 

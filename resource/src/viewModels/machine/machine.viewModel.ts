@@ -350,12 +350,12 @@ export default class MachineViewModel extends DefaultViewModel {
     });
   };
 
-  handleChangeMachineFilter = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (+value === this.notiModel.mkey) return;
+  handleClickFilter = (event: MouseEvent<HTMLDivElement>) => {
+    const { id } = event.currentTarget.dataset;
+    if (+id === this.notiModel.mkey) return;
 
     runInAction(() => {
-      this.notiModel = { ...this.notiModel, mkey: +value };
+      this.notiModel = { ...this.notiModel, mkey: +id };
       this.insertListNotification();
     });
   };

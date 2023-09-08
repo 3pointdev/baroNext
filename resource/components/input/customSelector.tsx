@@ -61,6 +61,8 @@ export default function CustomSelector({
     onClick(event);
   };
 
+  console.log(defaultValue, defaultTitle);
+
   return (
     <Container style={style}>
       <SelectWrap
@@ -71,7 +73,7 @@ export default function CustomSelector({
         <p>{selectedValue}</p>
       </SelectWrap>
       <OptionWrap isOpenOption={isOpenOption} className="option_wrap">
-        {defaultValue && (
+        {defaultValue !== null && (
           <SelectorOption onClick={onClickOption} data-id={defaultValue}>
             {defaultTitle}
           </SelectorOption>

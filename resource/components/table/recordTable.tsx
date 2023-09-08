@@ -68,7 +68,7 @@ export default function RecordTable({
         setTableData(data);
         break;
     }
-    return true;
+    console.log(tableData);
   };
 
   useEffect(() => {
