@@ -31,7 +31,8 @@ function Header(props: IProps) {
     if (!authModule.isLogin()) {
       router.push(pageUrlConfig.login);
     }
-    setIsLocal(window.location.origin.includes("localhost"));
+
+    setIsLocal(window.location.protocol === "http:");
   }, []);
 
   const handleToggleUserModal = () => {
@@ -48,11 +49,19 @@ function Header(props: IProps) {
           </Head.Company>
         </Linker>
         {isLocal && (
-          <WorkEnvironmentBadge
-            title={`${
-              process.env.NEXT_PUBLIC_APP_MARK
-            }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
-          />
+          <>
+            <WorkEnvironmentBadge
+              title={`${
+                process.env.NEXT_PUBLIC_APP_MARK
+              }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
+            />
+            <MonitoringWrap>
+              <Linker href={`${pageUrlConfig.monitor2}?monitor=mon1`}>
+                V2 모티터링
+              </Linker>
+              <Linker href={pageUrlConfig.monitor3}>V3 모티터링</Linker>
+            </MonitoringWrap>
+          </>
         )}
 
         <Head.Profile
@@ -250,3 +259,10 @@ const Navi = {
     height: 16px !important;
   `,
 };
+const MonitoringWrap = styled.div`
+  width: 180px;
+  position: absolute;
+  right: 120px;
+  display: flex;
+  align-items: center;
+`;
