@@ -3,6 +3,7 @@ import { plainToInstance } from "class-transformer";
 import dayjs from "dayjs";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import { Alert } from "src/modules/alert.module";
 import {
   DatePickerButtonType,
   ServerUrlType,
@@ -32,9 +33,10 @@ export default class ProgramViewModel extends DefaultViewModel {
   public activeTarget: IActiveTarget = { machine: 1, code: 0 };
   public isLoading: ILoding = { machine: true, code: false };
   public searchKeyword: string = "";
-
+  public callCount: number = 0;
   public targetDate: string = dayjs().format("YYYY-MM-DD");
   public activeComponent: number = 0;
+  public unMount = false;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -49,6 +51,7 @@ export default class ProgramViewModel extends DefaultViewModel {
       activeComponent: observable,
       targetDate: observable,
       searchKeyword: observable,
+      unMount: observable,
       insertInstalledTransmitters: action,
       dataReset: action,
     });
@@ -94,6 +97,7 @@ export default class ProgramViewModel extends DefaultViewModel {
 
       switch (objectMessage.response) {
         case SocketResponseType.CALL_FUNC:
+          if (this.callCount > 1) return this.callCount--;
           if (this.activeComponent !== 0) {
             return runInAction(() => {
               this.isLoading = { machine: false, code: false };
@@ -113,18 +117,36 @@ export default class ProgramViewModel extends DefaultViewModel {
               this.isLoading = { machine: false, code: false };
             });
           }
+          this.callCount--;
           break;
         case SocketResponseType.CALL_FUNC_FAIL:
-          runInAction(() => {
-            this.isLoading = { machine: false, code: false };
-          });
+          Alert.alert(
+            "불러오는 도중 요청이 실패했습니다.\n잠시 후 다시 시도해주세요.",
+            () => {
+              runInAction(() => {
+                this.isLoading = { machine: false, code: false };
+              });
+            }
+          );
           break;
         case SocketResponseType.CONNECT:
           break;
         case SocketResponseType.CLOSED:
+          if (!this.unMount) {
+            location.reload();
+          }
           break;
       }
     }
+  };
+
+  socketDisconnect = () => {
+    runInAction(() => {
+      this.unMount = true;
+      if (this.socket?.socket?.readyState === WebSocket.OPEN) {
+        this.socket.disconnect();
+      }
+    });
   };
 
   insertListActiveMachine = async () => {
@@ -153,6 +175,7 @@ export default class ProgramViewModel extends DefaultViewModel {
             (a, b) => +a.machineNo - +b.machineNo
           );
           this.activeTarget = { machine: +active.machineNo, code: 0 };
+          this.callCount++;
           this.insertCallfunc(targetInformation);
         });
       })
@@ -233,7 +256,7 @@ export default class ProgramViewModel extends DefaultViewModel {
         func: "loadfile",
         no: value.padStart(4, "0"),
       };
-
+      this.callCount++;
       this.insertCallfunc(targetInfomation);
     } else {
       this.getCode(+value);
@@ -262,7 +285,7 @@ export default class ProgramViewModel extends DefaultViewModel {
         portORG: targetMachine.port,
         func: "prgdir",
       };
-
+      this.callCount++;
       this.insertCallfunc(targetInfomation);
     } else {
       this.getCallFuncListByDate(+value);
@@ -310,6 +333,7 @@ export default class ProgramViewModel extends DefaultViewModel {
       };
 
       runInAction(() => {
+        this.callCount++;
         this.insertCallfunc(targetInformation);
       });
     } else {

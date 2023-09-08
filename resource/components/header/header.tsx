@@ -4,6 +4,7 @@ import { StyleColor } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { NextRouter, useRouter } from "next/router";
 import SquareLogo from "public/images/logo/barofactory-square.svg";
+import defaultUser from "public/images/profile/defaultUser.png";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import pageUrlConfig from "../../config/pageUrlConfig";
@@ -31,7 +32,7 @@ function Header(props: IProps) {
     if (!authModule.isLogin()) {
       router.push(pageUrlConfig.login);
     }
-
+    mainViewModel.popAuth();
     setIsLocal(window.location.protocol === "http:");
   }, []);
 
@@ -65,7 +66,11 @@ function Header(props: IProps) {
         )}
 
         <Head.Profile
-          src={mainViewModel.auth.profileImage}
+          src={
+            mainViewModel.auth.profileImage
+              ? mainViewModel.auth.profileImage
+              : defaultUser.src
+          }
           alt="profile"
           onClick={handleToggleUserModal}
         />
@@ -120,8 +125,7 @@ function Header(props: IProps) {
         <UserModal
           onClick={handleToggleUserModal}
           onClickLogout={mainViewModel.insertLogout}
-          active={isOpenUserModal}
-          // data={mainViewModel.auth}
+          isOpen={isOpenUserModal}
           menus={mainViewModel.userMenu}
           alarm={mainViewModel.alarm.unRead}
         />

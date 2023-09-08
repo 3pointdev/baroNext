@@ -38,9 +38,7 @@ function ProgramView(props: IProps) {
     initialize();
 
     return () => {
-      if (programViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
-        programViewModel.socket.disconnect();
-      }
+      programViewModel.socketDisconnect();
     };
   }, []);
 

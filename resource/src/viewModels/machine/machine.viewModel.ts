@@ -18,7 +18,6 @@ import pageUrlConfig from "../../../config/pageUrlConfig";
 import MachineDto from "../../dto/machine/machine.dto";
 import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
 import NotificationDto from "../../dto/machine/notification.dto";
-import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
 import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
 import MonitorListDto from "../../dto/monitor/monitorList.dto";
 import MountedDto from "../../dto/monitor/mounted.dto";
@@ -27,14 +26,12 @@ import TransmitterDto from "../../dto/transmitters/transmitters.dto";
 import NotificationModel from "../../models/machine/notification.model";
 import { Alert } from "../../modules/alert.module";
 import { ServerResponse } from "../../modules/api.module";
-import chartModule from "../../modules/chart.module";
 import mapperModule from "../../modules/mapper.module";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
   public realTimeData: RealTimeDataDto[] = [];
-  public processedQuantity: ProcessedQuantityDto[] = [];
   public processChart: any = false;
   public edgeData: TransmitterDto[] = [];
 
@@ -83,7 +80,6 @@ export default class MachineViewModel extends DefaultViewModel {
     makeObservable(this, {
       machines: observable,
       realTimeData: observable,
-      processedQuantity: observable,
       processChart: observable,
       edgeData: observable,
       machineSummary: observable,
@@ -96,8 +92,6 @@ export default class MachineViewModel extends DefaultViewModel {
 
       onMessage: action,
       getMachineList: action,
-      getProcessedQuantity: action,
-      setChart: action,
       getMounted: action,
       handleClickSort: action,
     });
@@ -154,24 +148,6 @@ export default class MachineViewModel extends DefaultViewModel {
         runInAction(() => {
           this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
           this.initializeSocket(this.onMessage, this.onOpen);
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  getProcessedQuantity = async () => {
-    await this.api
-      .get(ServerUrlType.BARO, "/baro")
-      .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
-        runInAction(() => {
-          const data = result.data.map((item: ProcessedQuantityDto) =>
-            plainToInstance(ProcessedQuantityDto, item)
-          );
-          this.setChart(data);
-          this.processedQuantity = data;
         });
       })
       .catch((error: AxiosError) => {
@@ -704,65 +680,6 @@ export default class MachineViewModel extends DefaultViewModel {
       result = false;
     }
     return result;
-  };
-
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-
-  setChart = (data: ProcessedQuantityDto[]) => {
-    runInAction(() => {
-      this.processChart = {
-        options: chartModule.setChart({
-          tooltip: {
-            callbacks: {
-              title: () => "",
-              label: (context) => {
-                const target = data[context.dataIndex];
-                const label = `${target.mid} : ${target.count}`;
-
-                return label;
-              },
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-              tickLength: 8, // 눈금 길이를 지정합니다.
-            },
-            title: {
-              align: "end",
-              display: true,
-              text: "호기",
-            },
-            ticks: { padding: 0 },
-          },
-          y: {
-            title: {
-              align: "end",
-              display: true,
-              text: "총 가공 수량(개)",
-            },
-            ticks: {
-              padding: 0,
-              margin: 0,
-            },
-          },
-          thickness: 80,
-        }),
-        data: {
-          labels: data.map((item) => item.machineNo),
-          datasets: [
-            {
-              data: data.map((item) => item.count),
-              backgroundColor: "rgba(0, 143, 251, 0.4)",
-            },
-          ],
-        },
-      };
-    });
   };
 
   setMountByMonitor = () => {

@@ -61,8 +61,6 @@ export default function CustomSelector({
     onClick(event);
   };
 
-  console.log(defaultValue, defaultTitle);
-
   return (
     <Container style={style}>
       <SelectWrap
