@@ -1,7 +1,7 @@
 export default function BarofactorySquare({ color }) {
   return (
     <svg
-      width="57"
+      width="58"
       height="34"
       viewBox="0 0 341 205"
       fill="none"

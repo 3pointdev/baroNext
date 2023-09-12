@@ -1,17 +1,10 @@
 import { StyleColor, TableFormatType } from "config/constants";
-import { ReactElement, Ref, useEffect, useState } from "react";
+import { Ref, useEffect, useState } from "react";
+import TableModel from "src/models/table/table.model";
 import styled from "styled-components";
 
-export interface ITableHeader {
-  title: string;
-  column: string;
-  align: "left" | "center" | "right" | "justify" | "char" | undefined;
-  size?: string;
-  rowSpan?: boolean;
-}
-
 interface IProps {
-  header: ITableHeader[];
+  header: TableModel[];
   data: any[];
   recordRef?: Ref<HTMLTableElement>;
   filter?: string | number;
@@ -49,7 +42,7 @@ export default function RecordTable({
 
       return merginsArray.reverse();
     });
-    console.log(merged);
+
     setMergedCells(merged);
   };
 
@@ -75,7 +68,6 @@ export default function RecordTable({
         setTableData(data);
         break;
     }
-    return true;
   };
 
   useEffect(() => {
@@ -86,12 +78,11 @@ export default function RecordTable({
     findMergeCell();
   }, [tableData, format]);
 
-  if (mergedCells.length < 1) return <></>;
   return (
     <Table.Container ref={recordRef}>
       <Table.Head>
         <tr>
-          {header.map((head: ITableHeader, key: number) => {
+          {header.map((head: TableModel, key: number) => {
             return (
               <th
                 key={`table_header_${head.title}_${key}`}
@@ -105,33 +96,49 @@ export default function RecordTable({
         </tr>
       </Table.Head>
       <Table.Body>
-        {tableData.map((item: any, key: number) => {
-          return (
-            <tr key={`table_body_rows_${key}`}>
-              {header.map((head: ITableHeader, inkey: number) => {
-                const thisMergeCount = mergedCells[inkey][key];
+        {mergedCells.length >= 1 ? (
+          tableData.map((item: any, key: number) => {
+            return (
+              <tr key={`table_body_rows_${key}`}>
+                {header.map((head: TableModel, inkey: number) => {
+                  const thisMergeCount = mergedCells[inkey][key];
 
-                const shoudSkip = head.rowSpan && thisMergeCount === 0;
-                if (shoudSkip || item[head.column] === -1) return;
+                  const shoudSkip = head.rowSpan && thisMergeCount === 0;
+                  if (shoudSkip || item[head.column] === -1) return;
 
-                const shouldMerge = head.rowSpan && thisMergeCount > 0;
-                const isAverage = item[head.column] === "전체" ? 3 : 1;
-                return (
-                  <td
-                    key={`table_body_row_data_${head.column}_${inkey}`}
-                    align={head.align}
-                    rowSpan={head.rowSpan && shouldMerge ? thisMergeCount : 1}
-                    colSpan={isAverage}
-                    className={isAverage === 3 ? "is_average" : ""}
-                    style={{ width: `${head.size}%` }}
-                  >
-                    {`${item[head.column]}`}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
+                  const shouldMerge = head.rowSpan && thisMergeCount > 0;
+                  const isAverage = item[head.column] === "전체" ? 3 : 1;
+                  return (
+                    <td
+                      key={`table_body_row_data_${head.column}_${inkey}`}
+                      align={head.align}
+                      rowSpan={head.rowSpan && shouldMerge ? thisMergeCount : 1}
+                      colSpan={isAverage}
+                      className={isAverage === 3 ? "is_average" : ""}
+                      style={{ width: `${head.size}%` }}
+                    >
+                      {`${item[head.column]}`}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })
+        ) : (
+          <tr>
+            {header.map((head: TableModel, inkey: number) => {
+              return (
+                <td
+                  key={`table_body_row_data_${head.column}_${inkey}`}
+                  align={head.align}
+                  style={{ width: `${head.size}%` }}
+                >
+                  -
+                </td>
+              );
+            })}
+          </tr>
+        )}
       </Table.Body>
     </Table.Container>
   );

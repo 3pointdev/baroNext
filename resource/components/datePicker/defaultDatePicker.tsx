@@ -1,19 +1,25 @@
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/constants";
+import ko from "date-fns/locale/ko";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import ko from "date-fns/locale/ko";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { ChangeEventHandler } from "react";
-import { StyleColor } from "config/constants";
 
 interface IProps {
   selected: string;
   onChange: ((date: string) => void) | ((date: string, type: string) => void);
+  width?: string;
+  height?: string;
 }
 
-export default function DefaultDatePicker({ selected, onChange }: IProps) {
+export default function DefaultDatePicker({
+  selected,
+  onChange,
+  width,
+  height,
+}: IProps) {
   const months = [
     "1월",
     "2월",
@@ -46,6 +52,8 @@ export default function DefaultDatePicker({ selected, onChange }: IProps) {
     <Container>
       <CalendarIcon icon={faCalendar} />
       <Picker
+        customHeight={height}
+        customWidth={width}
         dateFormat="yyyy-MM-dd"
         onKeyDown={(e) => e.preventDefault()}
         locale={ko}
@@ -133,20 +141,23 @@ const CalendarIcon = styled(FontAwesomeIcon)`
   z-index: 1;
   position: absolute;
   top: 50%;
-  left: 8px;
+  left: 16px;
   width: 16px;
   height: 16px;
   font-size: 16px;
   transform: translate(0, -50%);
 `;
 
-const Picker = styled(DatePicker)`
+const Picker = styled(DatePicker)<{
+  customHeight: string;
+  customWidth: string;
+}>`
   z-index: 101;
-  border: 1px solid ${StyleColor.HOVER};
+  border: 1px solid ${StyleColor.BORDER};
   border-radius: 8px;
-  padding: 6px 10px;
-  height: 28px;
-  width: 160px;
+  padding: 6px 16px;
+  height: ${({ customHeight }) => (customHeight ? customHeight : "28px")};
+  width: ${({ customWidth }) => (customWidth ? customWidth : "160px")};
 
   background: ${StyleColor.LIGHT};
 

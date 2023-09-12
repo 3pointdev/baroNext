@@ -18,6 +18,7 @@ export const StyleColor = {
   PRIMARY: "#3A79EC",
   EMPHASIS: "#E7EFFD",
   BRIGHTEMPHASIS: "#F5F8FE",
+  DARKEMPHASIS: "#4C4E64",
   INFOMATION: "#FFEAE9",
   HOVER: "#F0F0F0",
   DISABLE: "#9C9C9C",
@@ -25,7 +26,10 @@ export const StyleColor = {
   DARK: "#000000",
   WARNNING: "#FF4D49",
   BACKGROUND: "#F7F7F9",
+  DARKBACKGROUND: "#282A42",
   POSITIVE: "#71E61A",
+  FINISH: "#F2994A",
+  BORDER: "#D9D9D9",
 } as const;
 export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];
 
@@ -150,10 +154,10 @@ export type ValidType = (typeof ValidType)[keyof typeof ValidType];
  * 기계 상황별 색상 타입
  */
 export const MachineColorType = {
-  GREEN: "#6ebd33",
-  YELLOW: "#f5b117",
-  RED: "#e8661c",
-  GRAY: "#9c9c9c",
+  GREEN: "#2F983E",
+  YELLOW: "#F2994A",
+  RED: "#D11313",
+  GRAY: "#777",
 } as const;
 export type MachineColorType =
   (typeof MachineColorType)[keyof typeof MachineColorType];
@@ -194,3 +198,33 @@ export const TableFormatType = {
 } as const;
 export type TableFormatType =
   (typeof TableFormatType)[keyof typeof TableFormatType];
+
+/**
+ * 유저 정보 변경 타입
+ */
+export const UserDataUpdateType = {
+  USERINFOMATION: 0,
+  ACCOUNT: 1,
+  PASSWORD: 2,
+} as const;
+export type UserDataUpdateType =
+  (typeof UserDataUpdateType)[keyof typeof UserDataUpdateType];
+
+/**
+ * 코드비교 타입
+ */
+export const CompareType = {
+  CRITERIA: 0,
+  COMPARE: 1,
+} as const;
+export type CompareType = (typeof CompareType)[keyof typeof CompareType];
+
+/**
+ * 코드비교 타입
+ */
+export const ScheduleType = {
+  STD: "STD",
+  EAT: "EAT",
+  BRK: "BRK",
+} as const;
+export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType];

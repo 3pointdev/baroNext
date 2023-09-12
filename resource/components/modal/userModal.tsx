@@ -1,40 +1,38 @@
-import styled from "styled-components";
-import { MouseEventHandler } from "react";
-import AuthDto from "../../src/dto/auth/auth.dto";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import UserMenuModel from "../../src/models/menu/userMenu.model";
-import pageUrlConfig from "../../config/pageUrlConfig";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MouseEventHandler } from "react";
+import styled from "styled-components";
+import pageUrlConfig from "../../config/pageUrlConfig";
+import UserMenuModel from "../../src/models/menu/userMenu.model";
 import Linker from "../linker/linker";
 
 interface IProps {
-  data: AuthDto;
+  // data: AuthDto;
   onClick: MouseEventHandler;
   onClickLogout: MouseEventHandler;
-  active: boolean;
+  isOpen: boolean;
   menus: UserMenuModel[];
   alarm: number;
 }
 
 export default function UserModal({
-  data,
+  // data,
   menus,
-  active,
+  isOpen,
   onClick,
   alarm,
   onClickLogout,
 }: IProps) {
   return (
     <>
-      <UserContainer active={active}>
-        <HeadLine>
+      <UserContainer isOpen={isOpen}>
+        {/* <HeadLine>
           <img src={data.profileImage} alt="user_profile_image" />
           <div>
             <p>{data.name}</p>
             <span>{data.account.toUpperCase()}</span>
           </div>
-        </HeadLine>
+        </HeadLine> */}
         <Menu.Wrap>
           {menus.map((menu: UserMenuModel, key) => {
             return (
@@ -57,12 +55,12 @@ export default function UserModal({
           </Menu.Item>
         </Menu.Wrap>
       </UserContainer>
-      <Background active={active} onClick={onClick} />
+      <Background isOpen={isOpen} onClick={onClick} />
     </>
   );
 }
 
-const UserContainer = styled.div<{ active: boolean }>`
+const UserContainer = styled.div<{ isOpen: boolean }>`
   z-index: 2;
   position: absolute;
   width: 230px;
@@ -74,8 +72,8 @@ const UserContainer = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: column;
   background: #fff;
-  pointer-events: ${({ active }) => (active ? "auto" : "none")};
-  opacity: ${({ active }) => (active ? "1" : "0")};
+  pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
   transition: all 0.4s ease;
 
   overflow: hidden;
@@ -161,11 +159,11 @@ const Menu = {
   `,
 };
 
-const Background = styled.div<{ active: boolean }>`
+const Background = styled.div<{ isOpen: boolean }>`
   position: fixed;
   z-index: 1;
   width: 100vw;
   height: 100vh;
 
-  pointer-events: ${({ active }) => (active ? "auto" : "none")};
+  pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
 `;

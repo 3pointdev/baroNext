@@ -1,15 +1,20 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import { ServerUrlType, ValidType } from "../../../config/constants";
 import { AxiosError, AxiosResponse } from "axios";
-import UserDto from "../../dto/user/user.dto";
 import { plainToInstance } from "class-transformer";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, MouseEvent } from "react";
-import LoginAccountModel from "../../models/account/loginAccount.model";
-import AdminAccountModel from "../../models/account/adminAccount.model";
-import MonitorAccountModel from "../../models/account/monitorAccount.model";
-import BillInformationModel from "../../models/account/billInformation.model";
 import { Address } from "react-daum-postcode";
+import sha256 from "sha256";
+import {
+  ServerUrlType,
+  UserDataUpdateType,
+  ValidType,
+} from "../../../config/constants";
+import UserDto from "../../dto/user/user.dto";
+import AdminAccountModel from "../../models/account/adminAccount.model";
+import BillInformationModel from "../../models/account/billInformation.model";
+import LoginAccountModel from "../../models/account/loginAccount.model";
+import MonitorAccountModel from "../../models/account/monitorAccount.model";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class UserViewModel extends DefaultViewModel {
   public user: UserDto = new UserDto();
@@ -20,6 +25,7 @@ export default class UserViewModel extends DefaultViewModel {
   public isOpenAddress: boolean = false;
   public billInformationModel: BillInformationModel =
     new BillInformationModel();
+  public isOpenAlert: boolean = false;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -31,12 +37,18 @@ export default class UserViewModel extends DefaultViewModel {
       monitorAccountModel: observable,
       isOpenAddress: observable,
       billInformationModel: observable,
+      isOpenAlert: observable,
 
       getMe: action,
       handleChangeSmsCheck: action,
       handleChangeLoginAccount: action,
       handleChangeAdminAccount: action,
       handleChangeMonitorAccount: action,
+      handleChangeBillInfomation: action,
+      handleClickAccountUpdate: action,
+      handleClickOpenAddressModal: action,
+      handleClickPasswordUpdate: action,
+      handleClickUserUpdate: action,
     });
   }
 
@@ -58,6 +70,52 @@ export default class UserViewModel extends DefaultViewModel {
       });
   };
 
+  updateManager = async () => {
+    const params = {
+      manager: this.loginAccountModel.name,
+      phone: this.loginAccountModel.phone,
+    };
+    await this.api
+      .patch(ServerUrlType.BARO, "/mypage/modiManager", params)
+      .then((result: AxiosResponse<any>) => {
+        console.log(result);
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  updateAccount = async () => {
+    const params = {
+      id: this.adminAccountModel.id,
+    };
+    await this.api
+      .patch(ServerUrlType.BARO, "/mypage/modiId", params)
+      .then((result: AxiosResponse<any>) => {
+        console.log(result);
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
+  updatePassword = async () => {
+    const params = {
+      password: sha256(this.adminAccountModel.password),
+    };
+    await this.api
+      .patch(ServerUrlType.BARO, "/mypage/modiPass", params)
+      .then((result: AxiosResponse<any>) => {
+        console.log(result);
+      })
+      .catch((error: AxiosError) => {
+        console.log("error : ", error);
+        return false;
+      });
+  };
+
   handleChangeSmsCheck = (event: ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
       this.smsChecked = !this.smsChecked;
@@ -66,10 +124,15 @@ export default class UserViewModel extends DefaultViewModel {
 
   handleChangeLoginAccount = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    const targetKey = name.split("_")[1];
+
+    const validState = this.accountValid(targetKey, value);
+
     runInAction(() => {
       this.loginAccountModel = {
         ...this.loginAccountModel,
-        [name.split("_")[1]]: value,
+        [targetKey]: value,
+        [`${targetKey}Valid`]: validState,
       };
     });
   };
@@ -78,11 +141,7 @@ export default class UserViewModel extends DefaultViewModel {
     const { name, value } = event.target;
     const targetKey = name.split("_")[2];
 
-    const validState = this.passwordValid(
-      targetKey,
-      value,
-      this.adminAccountModel[targetKey]
-    );
+    const validState = this.accountValid(targetKey, value);
 
     runInAction(() => {
       this.adminAccountModel = {
@@ -97,11 +156,7 @@ export default class UserViewModel extends DefaultViewModel {
     const { name, value } = event.target;
     const targetKey = name.split("_")[2];
 
-    const validState = this.passwordValid(
-      targetKey,
-      value,
-      this.monitorAccountModel[targetKey]
-    );
+    const validState = this.accountValid(targetKey, value);
 
     runInAction(() => {
       this.monitorAccountModel = {
@@ -173,22 +228,46 @@ export default class UserViewModel extends DefaultViewModel {
     }
   };
 
-  passwordValid = (
-    key: string,
-    value: string,
-    password?: string
-  ): ValidType => {
-    if (value === "") {
+  accountValid = (key: string, newValue: string): ValidType => {
+    if (newValue === "") {
       return ValidType.DEFAULT; // 빈 문자열은 항상 허용
     }
 
     switch (key) {
+      case "id":
+        return newValue.length > 3
+          ? ValidType.PASS
+          : newValue.length < 1
+          ? ValidType.DEFAULT
+          : ValidType.FAIL;
       case "password":
-        if (value.length >= 4) return ValidType.PASS;
-        break;
+        return newValue.length > 3
+          ? ValidType.PASS
+          : newValue.length < 1
+          ? ValidType.DEFAULT
+          : ValidType.FAIL;
+
       case "passwordCheck":
-        if (value.length >= 4 && password) return ValidType.PASS;
-        break;
+        return this.adminAccountModel.password === newValue
+          ? ValidType.PASS
+          : newValue.length < 1
+          ? ValidType.DEFAULT
+          : ValidType.FAIL;
+
+      case "name":
+        return newValue.length > 1
+          ? ValidType.PASS
+          : newValue.length < 1
+          ? ValidType.DEFAULT
+          : ValidType.FAIL;
+
+      case "phone":
+        return newValue.length > 9
+          ? ValidType.PASS
+          : newValue.length < 1
+          ? ValidType.DEFAULT
+          : ValidType.FAIL;
+
       default:
         return ValidType.FAIL; // 지정된 키가 아닌 경우는 유효하지 않음
     }
@@ -211,6 +290,112 @@ export default class UserViewModel extends DefaultViewModel {
           isViewPassword: !this.monitorAccountModel.isViewPassword,
         };
       });
+    }
+  };
+
+  handleClickUserUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.USERINFOMATION);
+    if (valid === "") {
+      this.updateManager();
+      runInAction(() => {
+        this.loginAccountModel = {
+          name: "",
+          phone: "",
+          nameValid: ValidType.DEFAULT,
+          phoneValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.loginAccountModel = {
+          ...this.loginAccountModel,
+          [valid]: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  handleClickAccountUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.ACCOUNT);
+    if (valid === "") {
+      this.updateAccount();
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          id: "",
+          idValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          idValid: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  handleClickPasswordUpdate = (event: MouseEvent<HTMLButtonElement>) => {
+    const valid = this.checkValidation(UserDataUpdateType.PASSWORD);
+    if (valid === "") {
+      this.updatePassword();
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          password: "",
+          passwordCheck: "",
+          passwordValid: ValidType.DEFAULT,
+          passwordCheckValid: ValidType.DEFAULT,
+        };
+        this.isOpenAlert = true;
+        setTimeout(() => {
+          runInAction(() => {
+            this.isOpenAlert = false;
+          });
+        }, 3000);
+      });
+    } else {
+      runInAction(() => {
+        this.adminAccountModel = {
+          ...this.adminAccountModel,
+          [valid]: ValidType.FAIL,
+        };
+      });
+    }
+  };
+
+  checkValidation = (type: UserDataUpdateType) => {
+    switch (type) {
+      case UserDataUpdateType.USERINFOMATION:
+        if (this.loginAccountModel.name.length < 2) return "nameValid";
+        if (this.loginAccountModel.phone.length < 10) return "phoneValid";
+        return "";
+
+      case UserDataUpdateType.ACCOUNT:
+        if (this.adminAccountModel.id.length < 4) return "idValid";
+        return "";
+
+      case UserDataUpdateType.PASSWORD:
+        if (this.adminAccountModel.password.length < 4) return "passwordValid";
+        if (
+          this.adminAccountModel.password !==
+          this.adminAccountModel.passwordCheck
+        )
+          return "passwordCheckValid";
+        return "";
     }
   };
 }

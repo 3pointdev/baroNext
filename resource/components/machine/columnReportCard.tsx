@@ -11,6 +11,7 @@ interface IProps {
   lot: ILotData;
   active: number;
   onClickLotToggle: MouseEventHandler;
+  dataIndex: number;
 }
 
 export default function ColumnReportCard({
@@ -18,6 +19,7 @@ export default function ColumnReportCard({
   lot,
   active,
   onClickLotToggle,
+  dataIndex,
 }: IProps) {
   return (
     <Container style={{ flexDirection: "row" }}>
@@ -27,7 +29,7 @@ export default function ColumnReportCard({
           <tbody>
             <tr>
               <th>조업시간</th>
-              <td>{`주: 00:00 ~ 00:00(점심 0시간, 휴식 00분)\n야: 00:00 ~ 00:00(점심 0시간, 휴식 00분)`}</td>
+              <td>00:00 ~ 00:00(점심 0시간, 휴식 00분)</td>
             </tr>
             <tr>
               <th>조업시간 내 가동률</th>
@@ -43,46 +45,61 @@ export default function ColumnReportCard({
             </tr>
           </tbody>
         </WorkTimeTable>
-        <div>
-          <SectionTitle>가공 변경 이력</SectionTitle>
-          <table>
-            <thead>
-              <tr>
-                <th colSpan={1}>가공명</th>
-                <th colSpan={2}>시간</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.map((settingData: ProductDataDto, key: number) => {
-                return (
-                  <tr
-                    key={`lot_item_${key}`}
+
+        <SectionTitle>가공 변경 이력</SectionTitle>
+        <LotChangeTable>
+          <thead>
+            <tr>
+              <th colSpan={1}>가공명</th>
+              <th colSpan={2}>시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.data.map((settingData: ProductDataDto, key: number) => {
+              return (
+                <tr key={`lot_item_${key}`}>
+                  <td
                     onClick={onClickLotToggle}
                     data-id={data.machineNo}
+                    data-index={dataIndex}
                     data-key={key}
                   >
-                    <td>
-                      {settingData.program
-                        ? settingData.program
-                        : "Unknown Lot"}
-                    </td>
-                    <td>{`${settingData.start} ~ ${settingData.end}`}</td>
-                    <td>{`${settingData.start} ~ ${settingData.end}`}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    {settingData.program ? settingData.program : "Unknown Lot"}
+                  </td>
+                  <td>
+                    <div>
+                      <p>시작</p>
+                      <p>{settingData.start}</p>
+                    </div>
+                    <div>
+                      <p>종료</p>
+                      <p>{settingData.end}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <p>전체가공</p>
+                      <p>00:00:00</p>
+                    </div>
+                    <div>
+                      <p>셋팅</p>
+                      <p>00:00:00</p>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </LotChangeTable>
       </SectionWrap>
-      <div>
-        <div>
+      <SectionWrap>
+        <LotWrap>
           <p>
             {data.data[active].program
               ? data.data[active].program
               : "Unknown Lot"}
           </p>
-          <table>
+          <CountTable>
             <thead>
               <tr>
                 <th>목표수량</th>
@@ -101,9 +118,9 @@ export default function ColumnReportCard({
                 </td>
               </tr>
             </tbody>
-          </table>
-        </div>
-        <div>
+          </CountTable>
+        </LotWrap>
+        <TimeWrap>
           <div>
             <p>시작</p>
             <p>{data.data[active].start}</p>
@@ -112,8 +129,28 @@ export default function ColumnReportCard({
             <p>종료</p>
             <p>{data.data[active].end}</p>
           </div>
-        </div>
-      </div>
+        </TimeWrap>
+        <DataTable>
+          <thead>
+            <tr>
+              <th>셋팅시간</th>
+              <th>{`평균\n단품 실가공 시간`}</th>
+              <th>{`평균\n준비교체시간`}</th>
+              <th>{`평균\n실 Cycle time`}</th>
+              <th>표준 가공 시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>00:00:00</td>
+              <td>00:00:00</td>
+              <td>00:00:00</td>
+              <td>00:00:00</td>
+              <td>00:00:00</td>
+            </tr>
+          </tbody>
+        </DataTable>
+      </SectionWrap>
     </Container>
   );
 }
@@ -122,18 +159,20 @@ const Container = styled(CardLayout)`
   display: flex;
   gap: 12px;
   height: fit-content;
-  width: 100%;
-  margin-bottom: 16px;
 `;
 
 const SectionWrap = styled.div`
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const SectionTitle = styled.p`
-  width: calc(100% - 16px);
+  width: calc(100% - 18px);
   height: 56px;
   background: ${StyleColor.EMPHASIS};
+  border: 1px solid ${StyleColor.HOVER};
   font-size: 24px;
   font-weight: 600;
   line-height: 38px;
@@ -144,29 +183,164 @@ const SectionTitle = styled.p`
 `;
 
 const WorkTimeTable = styled.table`
-  white-space: pre-line;
   width: 100%;
   border-spacing: 0;
-
-  & tr {
-  }
+  margin-bottom: 8px;
+  white-space: nowrap;
+  text-align: left;
 
   & th {
+    padding-left: 8px;
+    border: 1px solid ${StyleColor.HOVER};
     border-bottom: 1px solid ${StyleColor.LIGHT};
     background: ${StyleColor.HOVER};
     width: 40%;
     height: 40px;
+  }
+
+  & tr:last-child th {
+    border: 1px solid ${StyleColor.HOVER};
+  }
+
+  & td {
+    padding-left: 8px;
+    width: 100%;
+    border-bottom: 1px solid ${StyleColor.HOVER};
+    border-right: 1px solid ${StyleColor.HOVER};
+  }
+`;
+
+const LotChangeTable = styled.table`
+  width: 100%;
+  border-spacing: 0;
+
+  & th {
+    border: 1px solid ${StyleColor.HOVER};
+    background: ${StyleColor.HOVER};
+    height: 32px;
+    width: 300px;
+
     &:first-child {
-      height: 52px;
+      border-right: 1px solid ${StyleColor.LIGHT};
+    }
+  }
+
+  & tbody tr td {
+    padding-left: 8px;
+    border-right: 1px solid ${StyleColor.HOVER};
+    border-bottom: 1px solid ${StyleColor.HOVER};
+
+    &:first-child {
+      border-left: 1px solid ${StyleColor.HOVER};
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    & p:first-child {
+      font-weight: 600;
+    }
+  }
+
+  & div {
+    white-space: nowrap;
+    display: flex;
+    gap: 4px;
+    margin: 4px;
+  }
+`;
+
+const LotWrap = styled.div`
+  display: flex;
+  gap: 16px;
+
+  & p {
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    width: 50%;
+    height: 88px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+  }
+`;
+const TimeWrap = styled.div`
+  width: 50%;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  padding-left: 16px;
+  gap: 8px;
+
+  & div {
+    display: flex;
+    gap: 16px;
+
+    & p:first-child {
+      font-weight: 600;
+    }
+  }
+`;
+
+const CountTable = styled.table`
+  width: 50%;
+  text-align: center;
+  border-spacing: 0;
+
+  & th {
+    padding-left: 8px;
+    border: 1px solid ${StyleColor.HOVER};
+    border-right: 1px solid ${StyleColor.LIGHT};
+    background: ${StyleColor.HOVER};
+    height: 40px;
+    width: 33%;
+
+    &:last-child {
+      border-right: 1px solid ${StyleColor.HOVER};
     }
   }
 
   & td {
-    width: 100%;
-    border-bottom: 1px solid ${StyleColor.DISABLE};
+    padding-left: 8px;
+    border-bottom: 1px solid ${StyleColor.HOVER};
+    border-right: 1px solid ${StyleColor.HOVER};
+
+    &:first-child {
+      border-left: 1px solid ${StyleColor.HOVER};
+    }
   }
-  & tr:last-child td,
-  tr:last-child {
-    border-bottom: 0;
+`;
+
+const DataTable = styled.table`
+  width: 100%;
+  text-align: center;
+  border-spacing: 0;
+
+  & th {
+    padding-left: 8px;
+    border: 1px solid ${StyleColor.HOVER};
+    border-right: 1px solid ${StyleColor.LIGHT};
+    background: ${StyleColor.HOVER};
+    height: 60px;
+    width: 20%;
+    white-space: pre-line;
+    &:last-child {
+      border-right: 1px solid ${StyleColor.HOVER};
+    }
+  }
+
+  & td {
+    height: 100px;
+    padding-left: 8px;
+    border-bottom: 1px solid ${StyleColor.HOVER};
+    border-right: 1px solid ${StyleColor.HOVER};
+
+    &:first-child {
+      border-left: 1px solid ${StyleColor.HOVER};
+    }
   }
 `;

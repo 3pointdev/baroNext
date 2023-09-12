@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Alert } from "src/modules/alert.module";
 import styled from "styled-components";
 
 interface IProps {
@@ -14,7 +15,10 @@ interface IProps {
   defaultValue?: string | number;
   defaultTitle: string;
   value: string | number;
+  type?: string | number;
   style?: CSSProperties;
+  disable?: boolean;
+  disableText?: string;
 }
 
 export interface Options {
@@ -28,7 +32,10 @@ export default function CustomSelector({
   defaultValue = null,
   defaultTitle,
   value,
+  type,
   style,
+  disable,
+  disableText,
 }: IProps) {
   const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<string>(defaultTitle);
@@ -37,8 +44,16 @@ export default function CustomSelector({
     setSelectedValue(target?.title ? target.title : defaultTitle);
   }, [value]);
 
+  useEffect(() => {
+    setIsOpenOption(false);
+  }, [options, disable]);
+
   const onClickSelector = () => {
-    setIsOpenOption(!isOpenOption);
+    if (disable) {
+      Alert.alert(disableText);
+    } else {
+      setIsOpenOption(!isOpenOption);
+    }
   };
 
   const onClickOption = (event: MouseEvent<HTMLSpanElement>) => {
@@ -55,8 +70,8 @@ export default function CustomSelector({
       >
         <p>{selectedValue}</p>
       </SelectWrap>
-      <OptionWrap isOpenOption={isOpenOption}>
-        {defaultValue && (
+      <OptionWrap isOpenOption={isOpenOption} className="option_wrap">
+        {defaultValue !== null && (
           <SelectorOption onClick={onClickOption} data-id={defaultValue}>
             {defaultTitle}
           </SelectorOption>
@@ -66,6 +81,7 @@ export default function CustomSelector({
             <SelectorOption
               key={`filter_options_${option.title}_${option.id}`}
               data-id={option.id}
+              data-type={type}
               onClick={onClickOption}
             >
               {option.title}

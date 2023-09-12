@@ -12,4 +12,10 @@ export default class FunctionDto {
 
   @Expose({ name: "name" })
   public readonly name: string = "";
+
+  @Expose({ name: "active_time" })
+  public readonly activeTime?: number = 0;
+
+  @Expose({ name: "mid" })
+  public readonly mid?: string = "";
 }

@@ -1,18 +1,18 @@
-import "reflect-metadata";
+import Header from "components/header/header";
+import LoadingIndicator from "components/indicator/loadingIndicator";
+import pageUrlConfig from "config/pageUrlConfig";
 import { Provider } from "mobx-react";
 import App from "next/app";
-import React from "react";
+import { NextRouter, withRouter } from "next/router";
+import "reflect-metadata";
 import initializeStore, { RootStore } from "src/mobx/store";
-import "styles/globals.css";
-import Header from "components/header/header";
-import { IDefaultProps } from "src/viewModels/default.viewModel";
 import authModule from "src/modules/auth.module";
-import pageUrlConfig from "config/pageUrlConfig";
-import LoadingIndicator from "components/indicator/loadingIndicator";
+import { IDefaultProps } from "src/viewModels/default.viewModel";
+import "styles/globals.css";
 
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
-
+  public router: NextRouter;
   static async getInitialProps(appContext: any) {
     const appProps = await App.getInitialProps(appContext);
     const headers =
@@ -27,7 +27,7 @@ class MyApp extends App<any, any, any> {
 
   constructor(props: IDefaultProps) {
     super(props);
-
+    this.router = props.router;
     this.mobxStore = initializeStore({
       headers: props.headers,
       host: props.headers.host,
@@ -42,7 +42,7 @@ class MyApp extends App<any, any, any> {
     this.mobxStore.mainViewModel.popAuth();
 
     if (!authModule.isLogin() && this.props.router.pathname !== "/login") {
-      this.props.router.push(pageUrlConfig.login);
+      this.props.router.push(`${pageUrlConfig.login}?redirect=1`);
     }
   }
 
@@ -65,10 +65,11 @@ class MyApp extends App<any, any, any> {
           {...pageProps}
           headers={headers}
           version={process.env.NEXT_PUBLIC_VERSION}
+          router={this.router}
         />
       </Provider>
     );
   }
 }
 
-export default MyApp;
+export default withRouter(MyApp);

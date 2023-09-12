@@ -1,20 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SquareLogo from "public/images/logo/barofactory-square.svg";
-import styled from "styled-components";
-import MainViewModel from "../../src/viewModels/main/main.viewModel";
-import MenuModel from "../../src/models/menu/menu.model";
-import { NextRouter, useRouter } from "next/router";
-import SubMenuModel from "../../src/models/menu/subMenu.model";
-import { useEffect, useState } from "react";
-import Logo from "../image/logo";
-import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
-import { inject, observer } from "mobx-react";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import UserModal from "../modal/userModal";
-import Linker from "../linker/linker";
-import pageUrlConfig from "../../config/pageUrlConfig";
-import authModule from "../../src/modules/auth.module";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StyleColor } from "config/constants";
+import { inject, observer } from "mobx-react";
+import { NextRouter, useRouter } from "next/router";
+import SquareLogo from "public/images/logo/barofactory-square.svg";
+import defaultUser from "public/images/profile/defaultUser.png";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import pageUrlConfig from "../../config/pageUrlConfig";
+import MenuModel from "../../src/models/menu/menu.model";
+import SubMenuModel from "../../src/models/menu/subMenu.model";
+import authModule from "../../src/modules/auth.module";
+import MainViewModel from "../../src/viewModels/main/main.viewModel";
+import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
+import Logo from "../image/logo";
+import Linker from "../linker/linker";
+import UserModal from "../modal/userModal";
 
 interface IProps {
   mainViewModel: MainViewModel;
@@ -22,6 +23,7 @@ interface IProps {
 
 function Header(props: IProps) {
   const mainViewModel: MainViewModel = props.mainViewModel;
+  const [isLocal, setIsLocal] = useState(false);
   const [hover, setHover] = useState("");
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
@@ -30,6 +32,8 @@ function Header(props: IProps) {
     if (!authModule.isLogin()) {
       router.push(pageUrlConfig.login);
     }
+    mainViewModel.popAuth();
+    setIsLocal(window.location.protocol === "http:");
   }, []);
 
   const handleToggleUserModal = () => {
@@ -45,14 +49,28 @@ function Header(props: IProps) {
             <p>{mainViewModel.auth.name}</p>
           </Head.Company>
         </Linker>
-        <WorkEnvironmentBadge
-          title={`${
-            process.env.NEXT_PUBLIC_APP_MARK
-          }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
-        />
+        {isLocal && (
+          <>
+            <WorkEnvironmentBadge
+              title={`${
+                process.env.NEXT_PUBLIC_APP_MARK
+              }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
+            />
+            <MonitoringWrap>
+              <Linker href={`${pageUrlConfig.monitor2}?monitor=mon1`}>
+                V2 모티터링
+              </Linker>
+              <Linker href={pageUrlConfig.monitor3}>V3 모티터링</Linker>
+            </MonitoringWrap>
+          </>
+        )}
 
         <Head.Profile
-          src={mainViewModel.auth.profileImage}
+          src={
+            mainViewModel.auth.profileImage
+              ? mainViewModel.auth.profileImage
+              : defaultUser.src
+          }
           alt="profile"
           onClick={handleToggleUserModal}
         />
@@ -107,8 +125,7 @@ function Header(props: IProps) {
         <UserModal
           onClick={handleToggleUserModal}
           onClickLogout={mainViewModel.insertLogout}
-          active={isOpenUserModal}
-          data={mainViewModel.auth}
+          isOpen={isOpenUserModal}
           menus={mainViewModel.userMenu}
           alarm={mainViewModel.alarm.unRead}
         />
@@ -233,11 +250,15 @@ const Navi = {
     }
 
     & div {
-      padding: 12px;
       transition: all 0.2s ease;
 
       &:hover {
         background: ${StyleColor.HOVER};
+      }
+
+      & a {
+        padding: 12px;
+        display: block;
       }
     }
   `,
@@ -246,3 +267,10 @@ const Navi = {
     height: 16px !important;
   `,
 };
+const MonitoringWrap = styled.div`
+  width: 180px;
+  position: absolute;
+  right: 120px;
+  display: flex;
+  align-items: center;
+`;

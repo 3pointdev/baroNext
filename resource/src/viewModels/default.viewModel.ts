@@ -1,15 +1,16 @@
+import { AxiosResponse } from "axios";
+import { plainToInstance } from "class-transformer";
+import pageUrlConfig from "config/pageUrlConfig";
 import { action, makeObservable, observable, runInAction } from "mobx";
+import { NextRouter } from "next/router";
+import DefaultProfile from "public/images/profile/default-profile.jpg";
+import { Alert } from "src/modules/alert.module";
+import { ServerUrlType } from "../../config/constants";
 import AuthDto from "../dto/auth/auth.dto";
 import { ApiModule } from "../modules/api.module";
-import { AxiosError, AxiosResponse } from "axios";
-import { plainToInstance } from "class-transformer";
-import DefaultProfile from "public/images/profile/default-profile.jpg";
 import authModule from "../modules/auth.module";
-import { ServerUrlType } from "../../config/constants";
 import { SocketModule } from "../modules/socket.module";
-import { NextRouter } from "next/router";
 import IndicatorViewModel from "./indicator/indicator.viewModel";
-import { Alert } from "src/modules/alert.module";
 
 export interface IDefaultProps {
   headers: any;
@@ -56,7 +57,7 @@ export default class DefaultViewModel {
     });
   };
 
-  insertLogin = async (params: ILogin) => {
+  insertLogin = async (params: ILogin, isRedirect: boolean) => {
     await this.api
       .post(ServerUrlType.BARO, "/login/login", params)
       .then((result: AxiosResponse<any>) => {
@@ -69,7 +70,13 @@ export default class DefaultViewModel {
           });
           runInAction(() => {
             this.auth = auth;
-            authModule.saveStorage(auth);
+            if (isRedirect) {
+              authModule.saveStorage(auth);
+              this.router.back();
+            } else {
+              authModule.saveStorage(auth);
+              this.router.replace(pageUrlConfig.main);
+            }
           });
         } else {
           Alert.alert(result.data.msg);

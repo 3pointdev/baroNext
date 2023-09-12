@@ -13,7 +13,7 @@ import { StyleColor, ValidType } from "../../config/constants";
 interface IProps {
   type: HTMLInputTypeAttribute;
   value: string;
-  name?: string;
+  name?: string | number;
   placeholder?: string;
   onChange?: ChangeEventHandler;
   onClick?: MouseEventHandler;
@@ -24,15 +24,17 @@ interface IProps {
   onKeyDown?: KeyboardEventHandler;
   boxstyle?: CSSProperties;
   style?: CSSProperties;
+  labelStyle?: CSSProperties;
   useLabel?: boolean;
   validState?: number;
   validText?: string;
+  dataId?: string | number;
 }
 
 export default function DefaultInput({
   type,
   value,
-  name = "",
+  name,
   placeholder = "",
   useLabel = false,
   onChange,
@@ -46,6 +48,8 @@ export default function DefaultInput({
   style,
   validState = ValidType.PASS,
   validText,
+  labelStyle,
+  dataId,
 }: IProps) {
   return (
     <InputWrap style={boxstyle} onClick={onClick}>
@@ -53,26 +57,32 @@ export default function DefaultInput({
         style={style}
         type={type}
         value={value}
-        name={name}
+        name={name?.toString()}
         onChange={onChange}
         required={requied}
         readOnly={readOnly}
         ref={reference}
         onKeyDown={onKeyDown}
-        id={name}
+        id={name?.toString()}
         placeholder={useLabel ? "" : placeholder}
         isOnValue={value.length > 0}
         autoComplete="new-password"
         className={readOnly ? "readonly" : ""}
+        data-id={dataId}
       />
       {useLabel && (
-        <Placeholder htmlFor={name} className={readOnly ? "readonly" : ""}>
+        <Placeholder
+          htmlFor={name?.toString()}
+          className={readOnly ? "readonly" : ""}
+          style={labelStyle}
+        >
           {placeholder}
         </Placeholder>
       )}
       {validText && (
         <ValidLabel
-          htmlFor={name}
+          style={labelStyle}
+          htmlFor={name?.toString()}
           isViewAble={validState > ValidType.PASS}
           className={
             validState === ValidType.FAIL
@@ -90,8 +100,8 @@ export default function DefaultInput({
   );
 }
 const InputWrap = styled.div`
-  height: 56px;
   width: 100%;
+  height: 56px;
   position: relative;
   flex-shrink: 0;
   display: flex;
@@ -141,6 +151,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
     left: 8px;
     top: -8px;
     color: #3a79ec !important;
+    font-size: 12px !important;
   }
 
   & + label {
@@ -148,7 +159,8 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
       isOnValue
         ? `left: 8px;
       top: -8px;
-      color: #3a79ec !important;`
+      color: #3a79ec !important;
+      font-size:12px !important;`
         : ``}
   }
 
@@ -161,7 +173,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
   }
 
   &.readonly {
-    background: ${StyleColor.DISABLE};
+    background: ${StyleColor.HOVER};
   }
 `;
 
@@ -171,12 +183,12 @@ const Placeholder = styled.label`
   left: 12px;
   font-size: 12px;
   color: #bfbfbf;
-  transition: all 0.4s ease;
   cursor: text;
   background: ${StyleColor.LIGHT};
   padding: 0 8px;
   border-radius: 8px;
-
+  transition: all 0.4s ease;
+  pointer-events: none;
   &.readonly {
     background: ${StyleColor.DISABLE};
     color: #a0a0a0;

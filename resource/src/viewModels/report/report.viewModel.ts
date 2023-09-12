@@ -152,21 +152,24 @@ export default class ReportViewModel extends DefaultViewModel {
   };
 
   handleClickLotToggle = (event: MouseEvent<HTMLButtonElement>) => {
-    const { key, id } = event.currentTarget.dataset;
+    const { index, key, id } = event.currentTarget.dataset;
+
+    if (this.products[index].toggle === +key) return;
 
     const newProducts = [];
-    for (let index = 0; index < this.products.length; index++) {
-      if (this.products[index].machineNo === id) {
-        newProducts[index] = { ...this.products[index], toggle: key };
+    for (let idx = 0; idx < this.products.length; idx++) {
+      if (this.products[idx].machineNo === id) {
+        newProducts[idx] = { ...this.products[idx], toggle: key };
         this.getLotData(
           this.productModel.day,
-          this.products[index].data[key].lot,
-          this.products[index].machineNo
+          this.products[idx].data[key].lot,
+          this.products[idx].machineNo
         );
       } else {
-        newProducts[index] = this.products[index];
+        newProducts[idx] = this.products[idx];
       }
     }
+
     runInAction(() => {
       this.products = newProducts;
     });

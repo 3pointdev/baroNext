@@ -23,27 +23,12 @@ class ExcelModule {
       sheet: sheetName,
       raw: true,
     });
+
     excelFile.Sheets[sheetName]["!cols"] = Object.keys(columnWidth).map(
       (key: string) => ({
         wch: columnWidth[key],
       })
     );
-
-    //열에 일괄 색상입히기 (기능확인 중)
-
-    // const columnRange = XLSX.utils.decode_range(
-    //   excelFile.Sheets[sheetName]["!ref"]
-    // );
-    // for (let row = columnRange.s.r; row <= columnRange.e.r; row++) {
-    //   const cellAddress = XLSX.utils.encode_cell({ r: row, c: columnIndex });
-    //   excelFile.Sheets[sheetName][cellAddress].s = {
-    //     fill: {
-    //       patternType: "solid",
-    //       bgColor: { rgb: "111111" },
-    //       fgColor: { rgb: "111111" },
-    //     },
-    //   };
-    // }
 
     XLSX.write(excelFile, {
       bookType: fileType,
@@ -51,7 +36,8 @@ class ExcelModule {
       type: "base64",
       ignoreEC: false,
     });
-    XLSX.writeFile(excelFile, fileName + fileType);
+
+    XLSX.writeFileXLSX(excelFile, fileName + fileType);
   }
 }
 

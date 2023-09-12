@@ -1,9 +1,12 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import MachineDto from "../../dto/machine/machine.dto";
 import { AxiosError, AxiosResponse } from "axios";
 import { plainToInstance } from "class-transformer";
-import ProcessedQuantityDto from "../../dto/machine/processedQuantity.dto";
+import dayjs from "dayjs";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import Swal from "sweetalert2";
+
+import { IAlertState } from "components/alert/alert";
+import TableModel from "src/models/table/table.model";
 import {
   BinaryMessageType,
   ServerUrlType,
@@ -11,52 +14,72 @@ import {
   SocketResponseType,
   SortType,
 } from "../../../config/constants";
-import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
-import TransmitterDto from "../../dto/transmitters/transmitters.dto";
-import { ServerResponse } from "../../modules/api.module";
-import chartModule from "../../modules/chart.module";
-import mapperModule from "../../modules/mapper.module";
-import { ITableHeader } from "../../../components/table/defaultTable";
+import pageUrlConfig from "../../../config/pageUrlConfig";
+import MachineDto from "../../dto/machine/machine.dto";
 import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
 import NotificationDto from "../../dto/machine/notification.dto";
-import NotificationModel from "../../models/machine/notification.model";
-import NotificationListDto from "../../dto/machine/notificationList.dto";
-import dayjs from "dayjs";
-import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
-import { Alert } from "../../modules/alert.module";
-import Swal from "sweetalert2";
-import pageUrlConfig from "../../../config/pageUrlConfig";
-import MountedDto from "../../dto/monitor/mounted.dto";
+import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
 import MonitorListDto from "../../dto/monitor/monitorList.dto";
+import MountedDto from "../../dto/monitor/mounted.dto";
 import MonitorNoticeDto from "../../dto/monitor/notice.dto";
+import TransmitterDto from "../../dto/transmitters/transmitters.dto";
+import NotificationModel from "../../models/machine/notification.model";
+import { Alert } from "../../modules/alert.module";
+import { ServerResponse } from "../../modules/api.module";
+import mapperModule from "../../modules/mapper.module";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
   public realTimeData: RealTimeDataDto[] = [];
-  public processedQuantity: ProcessedQuantityDto[] = [];
   public processChart: any = false;
   public edgeData: TransmitterDto[] = [];
 
   public machineSummary: MachineSummaryDto[] = [];
-  public tableHeader: ITableHeader[] = [];
-  public notiList: NotificationListDto = new NotificationListDto();
+  public tableHeader: TableModel[] = [];
+  public notiList: NotificationDto[] = [];
   public notiModel: NotificationModel = new NotificationModel();
   public mountedList: MountedDto = new MountedDto();
 
   public notice: string = "";
   public unMount: boolean = false;
 
+  public alertState: IAlertState = {
+    isPositive: true,
+    isActive: false,
+    title: "string",
+  };
+
   constructor(props: IDefaultProps) {
     super(props);
     this.tableHeader = [
-      { title: "기계명", column: "mid", align: "center", size: "20vw" },
-      { title: "알람일자", column: "date", align: "left", size: "20vw" },
-      { title: "알람내용", column: "message", align: "left", size: "55vw" },
+      plainToInstance(TableModel, {
+        title: "기계명",
+        column: "mid",
+        align: "center",
+        size: "20vw",
+        isSort: true,
+        sortState: SortType.DEFAULT,
+      }),
+      plainToInstance(TableModel, {
+        title: "알람일자",
+        column: "date",
+        align: "left",
+        size: "20vw",
+        isSort: true,
+        sortState: SortType.DESCENDING,
+      }),
+      plainToInstance(TableModel, {
+        title: "알람내용",
+        column: "message",
+        align: "left",
+        size: "55vw",
+        isSort: false,
+      }),
     ];
     makeObservable(this, {
       machines: observable,
       realTimeData: observable,
-      processedQuantity: observable,
       processChart: observable,
       edgeData: observable,
       machineSummary: observable,
@@ -65,12 +88,12 @@ export default class MachineViewModel extends DefaultViewModel {
       notiModel: observable,
       mountedList: observable,
       notice: observable,
+      alertState: observable,
 
       onMessage: action,
       getMachineList: action,
-      getProcessedQuantity: action,
-      setChart: action,
       getMounted: action,
+      handleClickSort: action,
     });
   }
 
@@ -133,24 +156,6 @@ export default class MachineViewModel extends DefaultViewModel {
       });
   };
 
-  getProcessedQuantity = async () => {
-    await this.api
-      .get(ServerUrlType.BARO, "/baro")
-      .then((result: AxiosResponse<ProcessedQuantityDto[]>) => {
-        runInAction(() => {
-          const data = result.data.map((item: ProcessedQuantityDto) =>
-            plainToInstance(ProcessedQuantityDto, item)
-          );
-          this.setChart(data);
-          this.processedQuantity = data;
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
   getList = async () => {
     await this.api
       .get(ServerUrlType.BARO, "/machine")
@@ -178,7 +183,11 @@ export default class MachineViewModel extends DefaultViewModel {
       })
       .then((result: AxiosResponse<NotificationDto[]>) => {
         const data = result.data.map((item: NotificationDto) => {
-          return { date: item.date, message: item.message, mid: item.mid };
+          return plainToInstance(NotificationDto, {
+            date: item.date,
+            message: item.message,
+            mid: item.mid,
+          });
         });
 
         let filterData = this.searchKeywordFilter(
@@ -188,15 +197,16 @@ export default class MachineViewModel extends DefaultViewModel {
 
         if (filterData.length < 1) {
           filterData = [
-            { mid: "-", date: "-", message: "검색 된 데이터가 없습니다." },
+            plainToInstance(NotificationDto, {
+              mid: "-",
+              date: "-",
+              message: "검색 된 데이터가 없습니다.",
+            }),
           ];
         }
 
         runInAction(() => {
-          this.notiList = plainToInstance(NotificationListDto, {
-            sort: SortType.DESCENDING,
-            notifications: filterData,
-          });
+          this.notiList = filterData;
         });
       })
       .catch((error: AxiosError) => {
@@ -210,9 +220,41 @@ export default class MachineViewModel extends DefaultViewModel {
       .patch(ServerUrlType.BARO, "/machine", updateModel)
       .then((result: AxiosResponse) => {
         this.getList();
+        runInAction(() => {
+          this.alertState = {
+            title: "기기정보를 저장하였습니다.",
+            isActive: true,
+            isPositive: true,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
       })
       .catch((error: AxiosError) => {
         console.log("error : ", error);
+        runInAction(() => {
+          this.alertState = {
+            title: "실패했습니다.\n잠시 후 다시 시도해주세요.",
+            isActive: true,
+            isPositive: false,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertState = {
+              title: "",
+              isActive: false,
+              isPositive: true,
+            };
+          });
+        }, 3000);
         return false;
       });
   };
@@ -237,25 +279,59 @@ export default class MachineViewModel extends DefaultViewModel {
     });
   };
 
-  handleChangeSort = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (value === this.notiList.sort) return;
+  /**
+   * 테이블 내 헤더 별 정렬 변경 함수
+   * @id 헤더 index
+   */
+  handleClickSort = (event: MouseEvent<HTMLTableCellElement>) => {
+    const { id } = event.currentTarget.dataset;
+    let newHeader = this.tableHeader;
+    let targetHeader = newHeader[+id];
+    let newList = this.notiList;
+    newHeader[+id] = targetHeader;
+
+    if (targetHeader.sortState === SortType.DESCENDING) {
+      targetHeader.sortState = SortType.ASCENDING;
+      if (targetHeader.column === "date") {
+        newList.sort(
+          (a, b) =>
+            +new Date(a[targetHeader.column]) -
+            +new Date(b[targetHeader.column])
+        );
+        newHeader[0].sortState = SortType.DEFAULT;
+      } else if (targetHeader.column === "mid") {
+        newList.sort((a, b) => a.mid.localeCompare(b.mid));
+        newHeader[1].sortState = SortType.DEFAULT;
+      }
+    } else {
+      targetHeader.sortState = SortType.DESCENDING;
+      if (targetHeader.column === "date") {
+        newList.sort(
+          (a, b) =>
+            +new Date(b[targetHeader.column]) -
+            +new Date(a[targetHeader.column])
+        );
+        newHeader[0].sortState = SortType.DEFAULT;
+      } else if (targetHeader.column === "mid") {
+        newList.sort((a, b) =>
+          b.mid.toLowerCase().localeCompare(a.mid.toLowerCase())
+        );
+        newHeader[1].sortState = SortType.DEFAULT;
+      }
+    }
 
     runInAction(() => {
-      this.notiList = {
-        notifications: [...this.notiList.notifications.reverse()],
-        sort: value,
-      };
-      this.notiModel = { ...this.notiModel, mkey: 0 };
+      this.tableHeader = plainToInstance(TableModel, newHeader);
+      this.notiList = newList;
     });
   };
 
-  handleChangeMachineFilter = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (+value === this.notiModel.mkey) return;
+  handleClickFilter = (event: MouseEvent<HTMLDivElement>) => {
+    const { id } = event.currentTarget.dataset;
+    if (+id === this.notiModel.mkey) return;
 
     runInAction(() => {
-      this.notiModel = { ...this.notiModel, mkey: +value };
+      this.notiModel = { ...this.notiModel, mkey: +id };
       this.insertListNotification();
     });
   };
@@ -288,7 +364,7 @@ export default class MachineViewModel extends DefaultViewModel {
     Alert.freeFormat({
       title: "기계 정보 수정",
       html:
-        '<input type="number" id="numberInput" class="swal2-input" placeholder="기계 번호" value="' +
+        '<input type="number" id="numberInput" class="swal2-input" placeholder="기계 번호" min="1" value="' +
         target.machineNo +
         '" required>' +
         '<input type="text" id="textInput" class="swal2-input" placeholder="기계 이름" value="' +
@@ -307,6 +383,17 @@ export default class MachineViewModel extends DefaultViewModel {
         // 유효성 검사
         if (!numberInput.value && !textInput.value) {
           Swal.showValidationMessage("입력 된 정보가 없습니다.");
+        }
+        if (+numberInput.value < 1 || +numberInput.value > 999) {
+          Swal.showValidationMessage(
+            "기기번호는 1부터 999까지 입력 가능합니다."
+          );
+        }
+        if (/[^a-zA-Z0-9]/.test(textInput.value)) {
+          Swal.showValidationMessage("기계명은 영문, 숫자만 입력 가능합니다.");
+        }
+        if (textInput.value.length > 15) {
+          Swal.showValidationMessage("기계명은 15자 이내로 입력 가능합니다.");
         }
 
         return { numberInput: numberInput.value, textInput: textInput.value };
@@ -593,65 +680,6 @@ export default class MachineViewModel extends DefaultViewModel {
       result = false;
     }
     return result;
-  };
-
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-  // ********************차트******************** //
-
-  setChart = (data: ProcessedQuantityDto[]) => {
-    runInAction(() => {
-      this.processChart = {
-        options: chartModule.setChart({
-          tooltip: {
-            callbacks: {
-              title: () => "",
-              label: (context) => {
-                const target = data[context.dataIndex];
-                const label = `${target.mid} : ${target.count}`;
-
-                return label;
-              },
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-              tickLength: 8, // 눈금 길이를 지정합니다.
-            },
-            title: {
-              align: "end",
-              display: true,
-              text: "호기",
-            },
-            ticks: { padding: 0 },
-          },
-          y: {
-            title: {
-              align: "end",
-              display: true,
-              text: "총 가공 수량(개)",
-            },
-            ticks: {
-              padding: 0,
-              margin: 0,
-            },
-          },
-          thickness: 80,
-        }),
-        data: {
-          labels: data.map((item) => item.machineNo),
-          datasets: [
-            {
-              data: data.map((item) => item.count),
-              backgroundColor: "rgba(0, 143, 251, 0.4)",
-            },
-          ],
-        },
-      };
-    });
   };
 
   setMountByMonitor = () => {

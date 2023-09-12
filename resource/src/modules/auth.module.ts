@@ -1,3 +1,4 @@
+import pageUrlConfig from "config/pageUrlConfig";
 import AuthDto from "src/dto/auth/auth.dto";
 
 class AuthModule {
@@ -7,13 +8,11 @@ class AuthModule {
     window.localStorage.setItem("enterprise", user.enterprise);
     window.localStorage.setItem("enterprise_id", user.enterpriseId.toString());
     window.localStorage.setItem("name", user.name);
-
-    window.location.replace("/");
   }
 
   public destroyStorage() {
     window.localStorage.clear();
-    window.location.replace("/login");
+    window.location.replace(pageUrlConfig.login);
   }
 
   public isLogin() {

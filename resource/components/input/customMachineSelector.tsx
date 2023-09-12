@@ -73,7 +73,7 @@ const SelectWrap = styled.div`
   top: 0px;
   font-size: 16px;
   font-weight: 400;
-  border: 1px solid #000 !important;
+  border: 1px solid ${StyleColor.BORDER} !important;
   border-radius: 8px;
   color: #6e6e6e;
   cursor: pointer;
@@ -103,21 +103,21 @@ const OptionWrap = styled.div<{ isOpenOption: boolean }>`
   top: 48px;
   width: 100%;
   background: ${StyleColor.LIGHT};
-  border: 1px solid #000;
+  border: 1px solid ${StyleColor.BORDER};
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-itmes: center;
   overflow: hidden;
   opacity: ${({ isOpenOption }) => (isOpenOption ? "1" : "0")};
-
+  pointer-events: ${({ isOpenOption }) => (isOpenOption ? "auto" : "none")};
   transition: all 0.2s ease;
 `;
 
 const SelectorOption = styled.span`
   padding: 8px 16px;
   cursor: pointer;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid ${StyleColor.BORDER};
 
   &:hover {
     background: ${StyleColor.HOVER};
