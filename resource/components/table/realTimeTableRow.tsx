@@ -56,21 +56,44 @@ export default function RealTimeTableRow({ data }: IProps) {
       <td align={"left"}>{data.mid}</td>
       <td
         align={"left"}
-        className={data.program?.length > 20 ? "is_long_column" : ""}
+        className={data.program?.length > 35 ? "is_long_column" : ""}
       >
         <p>{data.program}</p>
       </td>
-      <td align={"center"}>{dayjs(data.startYmdt).format("MM/DD hh:mm")}</td>
-      <td align={"center"}>{dayjs(data.prdctEnd).format("MM/DD hh:mm")}</td>
+      <td align={"center"}>{dayjs(data.startYmdt).format("MM/DD HH:mm")}</td>
+      <td align={"center"}>{dayjs(data.prdctEnd).format("MM/DD HH:mm")}</td>
       <td align={"center"}>
         {data.planCount > 0 && timeInstance.msToHHMM(data.active)}
       </td>
       <td align={"center"}>
-        {data.planCount > 0 && `${data.partCount}/${data.planCount}`}
+        {data.planCount > 0 && (
+          <>
+            <span
+              style={{
+                color:
+                  data.partCount >= data.planCount
+                    ? StyleColor.FINISH
+                    : StyleColor.LIGHT,
+              }}
+            >
+              {data.partCount}
+            </span>
+            <span>/</span>
+            <span>{data.planCount}</span>
+          </>
+        )}
       </td>
       <td align={"center"}>
-        {data.planCount > 0 &&
-          `${Math.floor((data.partCount / data.planCount) * 100)}%`}
+        {data.planCount > 0 && (
+          <span
+            style={{
+              color:
+                data.partCount >= data.planCount
+                  ? StyleColor.FINISH
+                  : StyleColor.LIGHT,
+            }}
+          >{`${Math.floor((data.partCount / data.planCount) * 100)}%`}</span>
+        )}
       </td>
 
       <td align={"center"}>
@@ -101,7 +124,8 @@ const TableRow = styled.tr<{ disable: boolean }>`
   height: 66px;
 
   & td,
-  td p {
+  td p,
+  td span {
     overflow: hidden;
     white-space: nowrap;
     font-size: 32px;

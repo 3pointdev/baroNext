@@ -28,6 +28,7 @@ export const StyleColor = {
   BACKGROUND: "#F7F7F9",
   DARKBACKGROUND: "#282A42",
   POSITIVE: "#71E61A",
+  FINISH: "#F2994A",
   BORDER: "#D9D9D9",
 } as const;
 export type StyleColor = (typeof StyleColor)[keyof typeof StyleColor];

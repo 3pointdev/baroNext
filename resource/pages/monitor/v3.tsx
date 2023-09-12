@@ -58,12 +58,13 @@ function Monitoring3View(props: IProps) {
         </thead>
         <tbody>
           {machineViewModel.machines.map((data: MachineDto, key: number) => {
-            return (
-              <RealTimeTableRow
-                data={data}
-                key={`monitoring_table_row_${key}`}
-              />
-            );
+            if (key < 12)
+              return (
+                <RealTimeTableRow
+                  data={data}
+                  key={`monitoring_table_row_${key}`}
+                />
+              );
           })}
         </tbody>
       </MonitoringTable>
@@ -138,12 +139,12 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 18,
+    size: 14,
   },
   {
     title: "가공명",
     align: "left",
-    size: 22,
+    size: 26,
   },
   {
     title: "공정시작일",
