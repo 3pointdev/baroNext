@@ -1,10 +1,12 @@
-import MonitoringRow from "components/table/monitoringRow";
-import Timer from "components/timer/timer";
+import RealTimeTableRow from "components/table/realTimeTableRow";
+import Clock from "components/timer/clock";
+import { StyleColor } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import BarofactorySquare from "public/images/logo/barofactory-square";
 import { useEffect } from "react";
 import MachineDto from "src/dto/machine/machine.dto";
+import TableModel from "src/models/table/table.model";
 import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import styled from "styled-components";
 
@@ -17,60 +19,54 @@ function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
 
   useEffect(() => {
-    const initialize = async () => {
-      await machineViewModel.getMachineList();
-
-      machineViewModel.initializeSocket(
-        machineViewModel.onMessage,
-        machineViewModel.onOpen
-      );
-    };
-
-    initialize();
+    machineViewModel.getMachineList();
 
     setTimeout(() => {
       location.reload();
     }, 1200000);
 
     return () => {
-      if (machineViewModel.socket?.socket?.readyState === WebSocket.OPEN) {
-        machineViewModel.socket.disconnect();
-      }
+      machineViewModel.socketDisconnect();
     };
   }, []);
 
   return (
     <MonitoringContainer>
-      <Header.Wrap>
-        <Header.LeftSide>
+      <HeadLine>
+        <LeftSide>
           <BarofactorySquare color={"#ffffff"} />
-          <Timer style={{ width: "400px" }} size="midium" />
-        </Header.LeftSide>
-        <Header.Title>전체공정현황</Header.Title>
-        <Header.Enterprise>{machineViewModel.auth.name}</Header.Enterprise>
-      </Header.Wrap>
-      <Article.Wrap>
-        <Article.Head>
+          <h2>바로팩토리|공정현황</h2>
+        </LeftSide>
+        <Clock />
+      </HeadLine>
+      <MonitoringTable>
+        <thead>
           <tr>
-            <th>호기</th>
-            <th className="align_left mid">기계명</th>
-            <th className="align_left lot">공정</th>
-            <th>진행률</th>
-            <th>완료/목표</th>
-            <th>공정 시작일</th>
-            <th>완료 예정일</th>
-            <th>실CT</th>
-            <th>구분</th>
+            {tableHeader.map((head: TableModel, key: number) => {
+              return (
+                <TableHead
+                  key={`monitoring_table_header_${key}`}
+                  size={head.size}
+                  align={head.align}
+                  className={`${head.align}_align`}
+                >
+                  {head.title}
+                </TableHead>
+              );
+            })}
           </tr>
-        </Article.Head>
-        <Article.Body>
+        </thead>
+        <tbody>
           {machineViewModel.machines.map((data: MachineDto, key: number) => {
             return (
-              <MonitoringRow data={data} key={`monitoring_table_row_${key}`} />
+              <RealTimeTableRow
+                data={data}
+                key={`monitoring_table_row_${key}`}
+              />
             );
           })}
-        </Article.Body>
-      </Article.Wrap>
+        </tbody>
+      </MonitoringTable>
     </MonitoringContainer>
   );
 }
@@ -78,75 +74,105 @@ function Monitoring3View(props: IProps) {
 export default inject("machineViewModel")(observer(Monitoring3View));
 
 const MonitoringContainer = styled.div`
-  background: #2e3257;
+  background: ${StyleColor.DARKBACKGROUND};
+  width: 100vw;
   height: 100vh;
-  & * {
-    color: #fff;
+  overflow: hidden;
+`;
+
+const HeadLine = styled.header`
+  width: calc(100% - 32px);
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+`;
+
+const LeftSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  & svg {
+    width: 72px;
+    height: 64px;
+  }
+
+  & h2 {
+    font-size: 36px;
+    font-weight: 500;
+    color: ${StyleColor.LIGHT};
   }
 `;
 
-const Header = {
-  Wrap: styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    padding: 0 16px;
-  `,
-  LeftSide: styled.div`
-    display: flex;
-    align-items: center;
-    height: 100%;
-    gap: 24px;
-  `,
-  Title: styled.p`
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    font-size: 30px;
-    font-weight: 600;
-  `,
-  Enterprise: styled.p`
-    font-size: 28px;
-  `,
-};
+const MonitoringTable = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 
-const Article = {
-  Wrap: styled.table`
-    width: 100vw;
-    border-collapse: collapse;
-    & * {
-      white-space: nowrap;
-    }
-  `,
-  Head: styled.thead`
-    width: 100vw;
-    height: 36px;
-    text-align: center;
-    backgorund: #c4c4c4;
-    & th {
-      background: #c4c4c4;
-      min-width: 42px;
-    }
+  & thead {
+    background: ${StyleColor.DARKEMPHASIS};
+    height: 80px;
+  }
+`;
 
-    & .align_left {
-      padding-left: 8px;
-      text-align: left;
-    }
+const TableHead = styled.th<{ size: string | number }>`
+  font-size: 28px;
+  font-weight: 400;
+  color: ${StyleColor.LIGHT};
+  width: ${({ size }) => size}%;
 
-    & .mid {
-      max-width: 0px;
-    }
+  &.left_align {
+    text-align: left;
+    padding-left: 8px;
+  }
+`;
 
-    & .lot {
-      max-width: 0px;
-    }
-
-    & * {
-      font-size: 18px;
-      font-weight: 600;
-      color: #000;
-    }
-  `,
-  Body: styled.tbody``,
-};
+const tableHeader: TableModel[] = [
+  {
+    title: "호기",
+    align: "center",
+    size: 4,
+  },
+  {
+    title: "기계명",
+    align: "left",
+    size: 18,
+  },
+  {
+    title: "가공명",
+    align: "left",
+    size: 22,
+  },
+  {
+    title: "공정시작일",
+    align: "center",
+    size: 12,
+  },
+  {
+    title: "완료예정일",
+    align: "center",
+    size: 12,
+  },
+  {
+    title: "실C/T",
+    align: "center",
+    size: 8,
+  },
+  {
+    title: "완료/목표",
+    align: "center",
+    size: 8,
+  },
+  {
+    title: "진행률",
+    align: "center",
+    size: 6,
+  },
+  {
+    title: "현재상태",
+    align: "center",
+    size: 10,
+  },
+];

@@ -250,11 +250,15 @@ const Navi = {
     }
 
     & div {
-      padding: 12px;
       transition: all 0.2s ease;
 
       &:hover {
         background: ${StyleColor.HOVER};
+      }
+
+      & a {
+        padding: 12px;
+        display: block;
       }
     }
   `,

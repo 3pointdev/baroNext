@@ -1,5 +1,6 @@
 import PageContainer from "components/container/pageContainer";
 import CustomMachineSelector from "components/input/customMachineSelector";
+import CardLayout from "components/layout/cardLayout";
 import LayoutHeader from "components/layout/layoutHeader";
 import ColumnReportCard from "components/machine/columnReportCard";
 import { inject, observer } from "mobx-react";
@@ -24,7 +25,7 @@ function ReportView(props: IProps) {
       reportViewModel.dataReset();
     };
   }, []);
-
+  console.log(reportViewModel.lotList);
   return (
     <PageContainer style={{ gap: "16px", overflow: "auto" }}>
       <LayoutHeader
@@ -41,7 +42,7 @@ function ReportView(props: IProps) {
           value={reportViewModel.filterTarget}
         />
       </LayoutHeader>
-      {reportViewModel.lotList && (
+      {reportViewModel.lotList && reportViewModel.products.length > 0 ? (
         <ReportCardWrap>
           {reportViewModel.products.map((product: ProductDto, key: number) => {
             const isFiltered =
@@ -63,6 +64,10 @@ function ReportView(props: IProps) {
                 />
               );
           })}
+        </ReportCardWrap>
+      ) : (
+        <ReportCardWrap>
+          <CardLayout>해당 날짜에 기록된 생산이 없습니다.</CardLayout>
         </ReportCardWrap>
       )}
     </PageContainer>

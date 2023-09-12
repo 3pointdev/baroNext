@@ -18,6 +18,7 @@ export const StyleColor = {
   PRIMARY: "#3A79EC",
   EMPHASIS: "#E7EFFD",
   BRIGHTEMPHASIS: "#F5F8FE",
+  DARKEMPHASIS: "#4C4E64",
   INFOMATION: "#FFEAE9",
   HOVER: "#F0F0F0",
   DISABLE: "#9C9C9C",
@@ -25,6 +26,7 @@ export const StyleColor = {
   DARK: "#000000",
   WARNNING: "#FF4D49",
   BACKGROUND: "#F7F7F9",
+  DARKBACKGROUND: "#282A42",
   POSITIVE: "#71E61A",
   BORDER: "#D9D9D9",
 } as const;
