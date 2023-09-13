@@ -65,7 +65,7 @@ const Button = styled.button<{
   activeColor: string;
   disableColor: string;
 }>`
-  color: white;
+  color: ${StyleColor.LIGHT};
   font-weight: 600;
   line-height: 1;
   font-size: 18px;

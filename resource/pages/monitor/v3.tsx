@@ -56,7 +56,7 @@ function Monitoring3View(props: IProps) {
           <BarofactorySquare color={"#ffffff"} />
           <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
-        <Clock />
+        <Clock fontSize={36} />
       </HeadLine>
       <MonitoringTable>
         <thead>

@@ -4,7 +4,7 @@ import {
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SortType } from "config/constants";
+import { SortType, StyleColor } from "config/constants";
 import { MouseEventHandler, Ref, useEffect, useState } from "react";
 import TableModel from "src/models/table/table.model";
 import styled from "styled-components";
@@ -137,7 +137,7 @@ const Table = {
 
     & tr {
       height: 48px;
-      background: rgb(216, 228, 251);
+      background: ${StyleColor.EMPHASIS};
       font-size: 14px;
       color: black;
     }
@@ -153,12 +153,12 @@ const Table = {
   Body: styled.tbody`
     & tr {
       height: 38px;
-      border-bottom: thin solid rgba(0, 0, 0, 0.12);
+      border-bottom: thin solid ${StyleColor.HOVER};
       font-size: 14px;
       font-weight: 400;
 
       &:hover {
-        background: rgb(230, 230, 230);
+        background: ${StyleColor.BRIGHTEMPHASIS};
         font-weight: 600;
 
         & td.first_child {
@@ -176,7 +176,7 @@ const Table = {
     }
 
     & tr td.first_child {
-      background: rgb(235, 242, 253);
+      background: ${StyleColor.BRIGHTEMPHASIS};
     }
   `,
 };

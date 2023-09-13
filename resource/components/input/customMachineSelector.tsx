@@ -75,7 +75,6 @@ const SelectWrap = styled.div`
   font-weight: 400;
   border: 1px solid ${StyleColor.BORDER} !important;
   border-radius: 8px;
-  color: #6e6e6e;
   cursor: pointer;
   flex-shrink: 0;
   display: flex;

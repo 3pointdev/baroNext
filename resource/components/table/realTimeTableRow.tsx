@@ -61,7 +61,7 @@ export default function RealTimeTableRow({ data }: IProps) {
         <p>{data.program}</p>
       </td>
       <td align={"center"} className="tabular_nums">
-        {dayjs(data.startYmdt).format("MM/DD HH:mm")}
+        {data.startYmdt && dayjs(data.startYmdt).format("MM/DD HH:mm")}
       </td>
       <td align={"center"} className="tabular_nums">
         {data.prdctEnd && dayjs(data.prdctEnd).format("MM/DD HH:mm")}

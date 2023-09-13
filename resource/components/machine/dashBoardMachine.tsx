@@ -1,16 +1,15 @@
-import FactoryIcon from "public/images/icons/factoryIcon";
-import MachineDto from "src/dto/machine/machine.dto";
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import machineStatusModule from "src/modules/machineStatus.module";
-import timeInstance from "src/modules/time.module";
 import {
   MachineColorType,
   MachineExecutionType,
-  MachineStateType,
   MachineTextType,
   StyleColor,
 } from "config/constants";
+import FactoryIcon from "public/images/icons/factoryIcon";
+import { useEffect, useState } from "react";
+import MachineDto from "src/dto/machine/machine.dto";
+import machineStatusModule from "src/modules/machineStatus.module";
+import timeInstance from "src/modules/time.module";
+import styled from "styled-components";
 
 interface IProps {
   data: MachineDto;
@@ -162,7 +161,7 @@ const Item = {
     display: inline-block;
     font-size: 10px;
     width: 36px;
-    color: #666666;
+    color: ${StyleColor.DARKBACKGROUND};
     text-align: justify;
     text-align-last: justify;
     -moz-text-align-last: justify;
@@ -170,7 +169,7 @@ const Item = {
   `,
   Desc: styled.p`
     width: calc(100% - 40px);
-    color: rgba(0, 0, 0, 0.87);
+    color: ${StyleColor.DARK};
     font-size: 12px;
     font-weight: 400;
     word-break: break-all;

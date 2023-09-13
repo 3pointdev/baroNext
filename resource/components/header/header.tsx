@@ -155,7 +155,7 @@ const Head = {
     padding: 0 24px;
     height: 64px;
     align-items: center;
-    border-bottom: 1px solid #eaeaec;
+    border-bottom: 1px solid ${StyleColor.HOVER};
   `,
   Company: styled.div`
     display: flex;

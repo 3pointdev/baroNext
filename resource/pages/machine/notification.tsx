@@ -38,7 +38,7 @@ function MachineNotificationView(props: IProps) {
             return { title: machine.mid, id: machine.id };
           })}
           onClick={machineViewModel.handleClickFilter}
-          style={{ width: "200px" }}
+          style={{ width: "200px", height: "40px" }}
           defaultTitle="전체보기"
           defaultValue={0}
           value={machineViewModel.notiModel.mkey}

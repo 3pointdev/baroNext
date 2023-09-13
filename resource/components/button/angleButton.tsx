@@ -49,7 +49,7 @@ const Button = styled.button`
       background: none;
     }
     & * {
-      color: #d9d9d9;
+      color: ${StyleColor.BORDER};
     }
   }
 `;

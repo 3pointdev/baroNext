@@ -1,7 +1,6 @@
 import { StyleColor } from "config/constants";
 import { ChangeEventHandler } from "react";
-import { keyframes } from "styled-components";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface IProps {
   title: string;
@@ -60,7 +59,7 @@ const CheckboxWrapper = styled.div`
     border-radius: 50%;
     transform: scale(1);
     vertical-align: middle;
-    border: 1px solid #b9b8c3;
+    border: 1px solid ${StyleColor.DISABLE};
     transition: all 0.2s ease;
   }
 

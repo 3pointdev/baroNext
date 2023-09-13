@@ -1,3 +1,4 @@
+import { StyleColor } from "config/constants";
 import styled from "styled-components";
 
 interface IProps {
@@ -17,10 +18,10 @@ const Badge = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ff4d49;
+  border: 1px solid ${StyleColor.WARNNING};
   border-radius: 24px;
-  color: #ff4d49;
-  background: #fff1f0;
+  color: ${StyleColor.WARNNING};
+  background: ${StyleColor.INFOMATION};
   font-weight: 700;
   font-size: 20px;
   line-height: 26px;

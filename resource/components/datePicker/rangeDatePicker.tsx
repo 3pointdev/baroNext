@@ -1,11 +1,10 @@
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ko from "date-fns/locale/ko";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import ko from "date-fns/locale/ko";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { ChangeEventHandler } from "react";
 import { DatePickerRangeType, StyleColor } from "../../config/constants";
 
 interface IProps {
@@ -185,21 +184,20 @@ const Container = styled.div`
 
   //일자별 컬러지정
   & .react-datepicker__day-names * {
-    color: gray;
+    color: ${StyleColor.DISABLE};
   }
-
   & .react-datepicker__day {
     &.saturday {
-      color: blue;
+      color: ${StyleColor.PRIMARY};
     }
     &.sunday {
-      color: red;
+      color: ${StyleColor.WARNNING};
     }
     &[aria-disabled="true"] {
       opacity: 0.5;
     }
     &.react-datepicker__day--outside-month {
-      color: lightgray !important;
+      color: ${StyleColor.BORDER} !important;
     }
   }
 `;
@@ -260,8 +258,9 @@ const Calendar = {
     border: 0;
     font-size: 16px;
     cursor: pointer;
+    color: ${StyleColor.DARK};
     &:disabled * {
-      color: lightgray;
+      color: ${StyleColor.HOVER};
       cursor: default;
     }
   `,

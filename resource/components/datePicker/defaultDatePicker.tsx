@@ -119,20 +119,20 @@ const Container = styled.div`
     }
   }
   & .react-datepicker__day-names * {
-    color: gray;
+    color: ${StyleColor.DISABLE};
   }
   & .react-datepicker__day {
     &.saturday {
-      color: blue;
+      color: ${StyleColor.PRIMARY};
     }
     &.sunday {
-      color: red;
+      color: ${StyleColor.WARNNING};
     }
     &[aria-disabled="true"] {
       opacity: 0.5;
     }
     &.react-datepicker__day--outside-month {
-      color: lightgray !important;
+      color: ${StyleColor.BORDER} !important;
     }
   }
 `;
@@ -191,8 +191,9 @@ const Calendar = {
     border: 0;
     font-size: 16px;
     cursor: pointer;
+    color: ${StyleColor.DARK};
     &:disabled * {
-      color: lightgray;
+      color: ${StyleColor.BORDER};
       cursor: default;
     }
   `,

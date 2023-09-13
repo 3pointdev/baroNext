@@ -161,7 +161,7 @@ const Table = {
       height: 48px;
       background: ${StyleColor.EMPHASIS};
       font-size: 14px;
-      color: black;
+      color: ${StyleColor.DARK};
     }
 
     & tr th {
@@ -177,7 +177,6 @@ const Table = {
   Body: styled.tbody`
     & tr {
       height: 38px;
-      border-bottom: thin solid rgba(0, 0, 0, 0.12);
       font-size: 14px;
       font-weight: 400;
     }

@@ -157,7 +157,7 @@ const ActiveCode = styled.p`
 `;
 
 const ProgramButton = styled.button<{ highlight: boolean }>`
-  background: #fff;
+  background: ${StyleColor.LIGHT};
 
   font-weight: 400;
   line-height: 1.5;
@@ -174,12 +174,14 @@ const ProgramButton = styled.button<{ highlight: boolean }>`
   width: calc(100% + 32px);
 
   border: 0;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid ${StyleColor.BORDER};
 
-  background: ${({ highlight }) => (highlight ? "#3a79ec10" : "#fff")};
+  background: ${({ highlight }) =>
+    highlight ? StyleColor.BRIGHTEMPHASIS : StyleColor.LIGHT};
 
   & * {
-    color: ${({ highlight }) => (highlight ? "#000" : "#7f7f7f")} !important;
+    color: ${({ highlight }) =>
+      highlight ? StyleColor.DARK : StyleColor.DISABLE} !important;
     text-align: left;
     white-space: wrap;
   }
@@ -209,7 +211,7 @@ const ProgramButton = styled.button<{ highlight: boolean }>`
 
 const LayoutTitle = styled.div`
   z-index: 2 !important;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   font-weight: 500;
   line-height: 24px;
   font-size: 20px;
@@ -217,7 +219,7 @@ const LayoutTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid ${StyleColor.BORDER};
   position: sticky;
   top: 0px;
   height: 24px;
