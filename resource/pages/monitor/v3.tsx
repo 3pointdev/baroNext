@@ -4,7 +4,7 @@ import { StyleColor } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import BarofactorySquare from "public/images/logo/barofactory-square";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import MachineDto from "src/dto/machine/machine.dto";
 import TableModel from "src/models/table/table.model";
 import MachineViewModel from "src/viewModels/machine/machine.viewModel";
@@ -17,6 +17,8 @@ interface IProps {
 
 function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
+  const [viewMonitorNumber, setViewMonitorNumber] = useState<number>(0);
+  const monitorRef = useRef(0);
 
   useEffect(() => {
     machineViewModel.getMachineList();
@@ -25,8 +27,25 @@ function Monitoring3View(props: IProps) {
       location.reload();
     }, 1200000);
 
+    const changeMonitorInterval = setInterval(() => {
+      console.log("call interval");
+      const maxMonitor = machineViewModel.machines.length / 12 - 1;
+      if (maxMonitor > 0) {
+        console.log("action");
+        if (monitorRef.current < maxMonitor) {
+          setViewMonitorNumber((monitorRef.current += 1));
+        } else {
+          monitorRef.current = 0;
+          setViewMonitorNumber(0);
+        }
+      } else {
+        clearInterval(changeMonitorInterval);
+      }
+    }, 8000);
+
     return () => {
       machineViewModel.socketDisconnect();
+      clearInterval(changeMonitorInterval);
     };
   }, []);
 
@@ -35,7 +54,7 @@ function Monitoring3View(props: IProps) {
       <HeadLine>
         <LeftSide>
           <BarofactorySquare color={"#ffffff"} />
-          <h2>바로팩토리|공정현황</h2>
+          <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
         <Clock />
       </HeadLine>
@@ -58,7 +77,10 @@ function Monitoring3View(props: IProps) {
         </thead>
         <tbody>
           {machineViewModel.machines.map((data: MachineDto, key: number) => {
-            if (key < 12)
+            const startKey = viewMonitorNumber * 12;
+            const endKey = startKey + 12;
+
+            if (startKey <= key && endKey > key)
               return (
                 <RealTimeTableRow
                   data={data}
@@ -128,6 +150,10 @@ const TableHead = styled.th<{ size: string | number }>`
     text-align: left;
     padding-left: 8px;
   }
+
+  &.fit {
+    width: 182px !important;
+  }
 `;
 
 const tableHeader: TableModel[] = [
@@ -144,7 +170,7 @@ const tableHeader: TableModel[] = [
   {
     title: "가공명",
     align: "left",
-    size: 26,
+    size: 22,
   },
   {
     title: "공정시작일",
@@ -164,7 +190,7 @@ const tableHeader: TableModel[] = [
   {
     title: "완료/목표",
     align: "center",
-    size: 8,
+    size: 12,
   },
   {
     title: "진행률",

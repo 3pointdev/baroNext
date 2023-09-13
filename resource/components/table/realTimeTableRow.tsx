@@ -47,7 +47,7 @@ export default function RealTimeTableRow({ data }: IProps) {
     data.isReceivePartCount,
     data.isChangePalette,
   ]);
-
+  console.log(data.program?.length);
   return (
     <TableRow disable={isDisable}>
       <td align={"center"}>
@@ -56,13 +56,17 @@ export default function RealTimeTableRow({ data }: IProps) {
       <td align={"left"}>{data.mid}</td>
       <td
         align={"left"}
-        className={data.program?.length > 35 ? "is_long_column" : ""}
+        className={data.program?.length > 20 ? "is_long_column" : ""}
       >
         <p>{data.program}</p>
       </td>
-      <td align={"center"}>{dayjs(data.startYmdt).format("MM/DD HH:mm")}</td>
-      <td align={"center"}>{dayjs(data.prdctEnd).format("MM/DD HH:mm")}</td>
-      <td align={"center"}>
+      <td align={"center"} className="tabular_nums">
+        {dayjs(data.startYmdt).format("MM/DD HH:mm")}
+      </td>
+      <td align={"center"} className="tabular_nums">
+        {data.prdctEnd && dayjs(data.prdctEnd).format("MM/DD HH:mm")}
+      </td>
+      <td align={"center"} className="tabular_nums">
         {data.planCount > 0 && timeInstance.msToHHMM(data.active)}
       </td>
       <td align={"center"}>
@@ -83,7 +87,7 @@ export default function RealTimeTableRow({ data }: IProps) {
           </>
         )}
       </td>
-      <td align={"center"}>
+      <td align={"center"} className="tabular_nums">
         {data.planCount > 0 && (
           <span
             style={{
@@ -121,35 +125,48 @@ const textScroll = keyframes`
 `;
 
 const TableRow = styled.tr<{ disable: boolean }>`
-  height: 66px;
+  height: 74px;
+
+  & td {
+    overflow: hidden;
+  }
 
   & td,
   td p,
   td span {
-    overflow: hidden;
     white-space: nowrap;
-    font-size: 32px;
-    line-height: 56px;
+    font-size: 38px;
+    line-height: 60px;
     color: ${({ disable }) =>
       disable ? StyleColor.DISABLE : StyleColor.LIGHT};
 
+    &.is_long_column {
+      max-width: 422.4px !important;
+    }
     &.is_long_column p {
       animation: ${textScroll} 8s linear infinite;
     }
   }
+
+  & .tabular_nums {
+    font-variant-numeric: tabular-nums;
+    font-size: 36px;
+  }
 `;
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
-  width: 56px;
-  height: 56px;
+  line-height: 60px;
+  width: 60px;
+  height: 60px;
   border-radius: 8px;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
 `;
 
 const Execution = styled.div<{ color: string }>`
-  height: 56px;
+  height: 60px;
   border-radius: 8px;
+  line-height: 60px;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
   text-align: center;
