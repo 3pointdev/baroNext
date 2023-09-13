@@ -137,6 +137,7 @@ const TableRow = styled.tr<{ disable: boolean }>`
     white-space: nowrap;
     font-size: 38px;
     line-height: 60px;
+    font-weight: 600;
     color: ${({ disable }) =>
       disable ? StyleColor.DISABLE : StyleColor.LIGHT};
 
@@ -153,6 +154,7 @@ const TableRow = styled.tr<{ disable: boolean }>`
     font-size: 36px;
   }
 `;
+
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
   line-height: 60px;
