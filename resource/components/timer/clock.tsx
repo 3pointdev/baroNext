@@ -31,16 +31,10 @@ export default function Clock() {
 const Container = styled.div`
   display: flex;
   align-items: center;
-
+  font-variant-numeric: tabular-nums;
+  gap: 16px;
   & span {
     color: ${StyleColor.LIGHT};
     font-size: 36px;
-  }
-
-  & span:first-child {
-    width: 192px;
-  }
-  & span:last-child {
-    width: 150px;
   }
 `;
