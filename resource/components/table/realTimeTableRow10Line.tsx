@@ -11,7 +11,7 @@ interface IProps {
   data: MachineDto;
 }
 
-export default function RealTimeTableRow({ data }: IProps) {
+export default function RealTimeTableRow10Line({ data }: IProps) {
   const [isDisable, setIsDisable] = useState<boolean>(false);
   const [executionText, setExecutionText] = useState<string>(
     MachineTextType.MODIFY
@@ -56,7 +56,7 @@ export default function RealTimeTableRow({ data }: IProps) {
       <td
         align={"left"}
         className={
-          data.program?.length > 16 ? "is_long_column program" : "program"
+          data.program?.length > 14 ? "is_long_column program" : "program"
         }
       >
         <p>{data.program}</p>
@@ -127,7 +127,7 @@ const textScroll = keyframes`
 `;
 
 const TableRow = styled.tr<{ disable: boolean }>`
-  height: 6.85vh;
+  height: 8.4vh;
 
   & td {
     overflow: hidden;
@@ -142,14 +142,14 @@ const TableRow = styled.tr<{ disable: boolean }>`
   }
 
   & .counter {
-    max-width: 13vw !important;
+    max-width: 14vw !important;
   }
 
   & td,
   td p,
   td span {
     white-space: nowrap;
-    font-size: 2vw;
+    font-size: 2.1vw;
     line-height: 2vw;
     font-weight: 600;
     color: ${({ disable }) =>
@@ -163,27 +163,27 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
   & .tabular_nums {
     font-variant-numeric: tabular-nums;
-    font-size: 1.8vw;
+    font-size: 2vw;
   }
 `;
 
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
-  line-height: 3vw;
+  line-height: 3.6vw;
   width: 3vw;
-  height: 3vw;
+  height: 3.6vw;
   border-radius: 0.6vw;
+  font-size: 1.9vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
 `;
 
 const Execution = styled.div<{ color: string }>`
-  height: 3vw;
+  height: 3.8vw;
   border-radius: 0.6vw;
-  line-height: 3vw;
+  line-height: 3.8vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
   text-align: center;
-  font-size: 2vw;
-  line-height: 3vw;
+  font-size: 1.9vw;
 `;
