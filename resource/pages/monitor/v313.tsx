@@ -1,4 +1,4 @@
-import RealTimeTableRow10Line from "components/table/realTimeTableRow10Line";
+import RealTimeTableRow13Line from "components/table/realTimeTableRow13Line";
 import Clock from "components/timer/clock";
 import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
@@ -18,9 +18,7 @@ interface IProps {
 function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
   const [viewMonitorNumber, setViewMonitorNumber] = useState<number>(0);
-  const [toggleCount, setToggleCount] = useState<boolean>(false);
   const monitorRef = useRef(0);
-  const toggleRef = useRef(false);
 
   useEffect(() => {
     machineViewModel.getMachineList();
@@ -30,7 +28,7 @@ function Monitoring3View(props: IProps) {
     }, 1200000);
 
     const changeMonitorInterval = setInterval(() => {
-      const maxMonitor = machineViewModel.machines.length / 10 - 1;
+      const maxMonitor = machineViewModel.machines.length / 13 - 1;
       if (maxMonitor > 0) {
         if (monitorRef.current < maxMonitor) {
           setViewMonitorNumber((monitorRef.current += 1));
@@ -43,18 +41,12 @@ function Monitoring3View(props: IProps) {
       }
     }, 10000);
 
-    const toggleCount = setInterval(() => {
-      setToggleCount(!toggleRef.current);
-      toggleRef.current = !toggleRef.current;
-    }, 5000);
-
     return () => {
       machineViewModel.socketDisconnect();
       clearInterval(changeMonitorInterval);
-      clearInterval(toggleCount);
     };
   }, []);
-  console.log(toggleCount);
+
   return (
     <MonitoringContainer>
       <HeadLine>
@@ -62,49 +54,35 @@ function Monitoring3View(props: IProps) {
           <BarofactorySquare color={StyleColor.LIGHT} />
           <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
-        <Clock wideFont={2} fontweight={600} />
+        <Clock wideFont={1.8} fontweight={600} />
       </HeadLine>
       <MonitoringTable>
         <thead>
           <tr>
             {tableHeader.map((head: TableModel, key: number) => {
-              if (toggleCount && head.title !== "완료/목표") {
-                return (
-                  <TableHead
-                    key={`monitoring_table_header_${key}`}
-                    size={head.size}
-                    align={head.align}
-                    className={`${head.align}_align`}
-                  >
-                    {head.title}
-                  </TableHead>
-                );
-              } else if (!toggleCount && head.title !== "진행률") {
-                return (
-                  <TableHead
-                    key={`monitoring_table_header_${key}`}
-                    size={head.size}
-                    align={head.align}
-                    className={`${head.align}_align`}
-                  >
-                    {head.title}
-                  </TableHead>
-                );
-              }
+              return (
+                <TableHead
+                  key={`monitoring_table_header_${key}`}
+                  size={head.size}
+                  align={head.align}
+                  className={`${head.align}_align`}
+                >
+                  {head.title}
+                </TableHead>
+              );
             })}
           </tr>
         </thead>
         <tbody>
           {machineViewModel.machines.map((data: MachineDto, key: number) => {
-            const startKey = viewMonitorNumber * 10;
-            const endKey = startKey + 10;
+            const startKey = viewMonitorNumber * 13;
+            const endKey = startKey + 13;
 
             if (startKey <= key && endKey > key)
               return (
-                <RealTimeTableRow10Line
+                <RealTimeTableRow13Line
                   data={data}
                   key={`monitoring_table_row_${key}`}
-                  toggleCount={toggleCount}
                 />
               );
           })}
@@ -125,7 +103,7 @@ const MonitoringContainer = styled.div`
 
 const HeadLine = styled.header`
   width: calc(100vw - 1.6vw);
-  height: 8vh;
+  height: 6.6vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -138,13 +116,13 @@ const LeftSide = styled.div`
   gap: 0.8vw;
 
   & svg {
-    width: 4vw;
+    width: 3.6vw;
     max-width: 152px;
-    height: 4vh;
+    height: 3.6vh;
   }
 
   & h2 {
-    font-size: 2vw;
+    font-size: 1.8vw;
     font-weight: 500;
     color: ${StyleColor.LIGHT};
   }
@@ -157,12 +135,12 @@ const MonitoringTable = styled.table`
 
   & thead {
     background: ${StyleColor.DARKEMPHASIS};
-    height: 6.85vh;
+    height: 6vh;
   }
 `;
 
 const TableHead = styled.th<{ size: string | number }>`
-  font-size: 2vw;
+  font-size: 1.8vw;
   font-weight: 500;
   color: ${StyleColor.LIGHT};
   width: ${({ size }) => size}vw;
@@ -181,43 +159,43 @@ const tableHeader: TableModel[] = [
   {
     title: "No",
     align: "center",
-    size: 5,
+    size: 4,
   },
   {
     title: "기계명",
     align: "left",
-    size: 18,
+    size: 15,
   },
   {
     title: "가공명",
     align: "left",
-    size: 18,
+    size: 20,
   },
   {
     title: "공정시작일",
     align: "center",
-    size: 14,
+    size: 13,
   },
   {
     title: "완료예정일",
     align: "center",
-    size: 14,
+    size: 13,
   },
   {
     title: "실C/T",
     align: "center",
-    size: 6,
+    size: 5,
   },
   {
-    title: "완료/목표",
+    title: "완료/목표(%)",
     align: "center",
-    size: 15,
+    size: 20,
   },
-  {
-    title: "진행률",
-    align: "center",
-    size: 15,
-  },
+  // {
+  //   title: "진행률",
+  //   align: "center",
+  //   size: 7,
+  // },
   {
     title: "현재상태",
     align: "center",
