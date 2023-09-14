@@ -140,14 +140,18 @@ const MonitoringTable = styled.table`
 `;
 
 const TableHead = styled.th<{ size: string | number }>`
-  font-size: 1.8vw;
+  font-size: 2vw;
   font-weight: 600;
   color: ${StyleColor.LIGHT};
   width: ${({ size }) => size}vw;
 
+  &:first-child {
+    font-size: 1.6vw;
+  }
+
   &.left_align {
     text-align: left;
-    padding-left: 0.4vw;
+    padding-left: 0.6vw;
   }
 
   &.fit {
@@ -164,22 +168,22 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 22,
+    size: 15,
   },
   {
     title: "가공명",
     align: "left",
-    size: 18,
+    size: 15,
   },
   {
     title: "공정시작일",
     align: "center",
-    size: 13,
+    size: 14,
   },
   {
     title: "완료예정일",
     align: "center",
-    size: 13,
+    size: 14,
   },
   {
     title: "실C/T",
@@ -189,16 +193,16 @@ const tableHeader: TableModel[] = [
   {
     title: "완료/목표",
     align: "center",
-    size: 11.5,
+    size: 15,
   },
   {
     title: "진행률",
     align: "center",
-    size: 6.5,
+    size: 7,
   },
   {
     title: "현재상태",
     align: "center",
-    size: 8,
+    size: 10,
   },
 ];

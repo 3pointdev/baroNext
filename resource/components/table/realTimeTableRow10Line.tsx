@@ -56,7 +56,7 @@ export default function RealTimeTableRow10Line({ data }: IProps) {
       <td
         align={"left"}
         className={
-          data.program?.length > 14 ? "is_long_column program" : "program"
+          data.program?.length > 12 ? "is_long_column program" : "program"
         }
       >
         <p>{data.program}</p>
@@ -134,22 +134,23 @@ const TableRow = styled.tr<{ disable: boolean }>`
   }
 
   & .mid {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 2.1vw;
+  }
+
+  & .program,
+  .counter,
+  .mid {
     max-width: 15vw !important;
-  }
-
-  & .program {
-    max-width: 18vw !important;
-  }
-
-  & .counter {
-    max-width: 14vw !important;
   }
 
   & td,
   td p,
   td span {
     white-space: nowrap;
-    font-size: 2.1vw;
+    font-size: 2.2vw;
     line-height: 2vw;
     font-weight: 600;
     color: ${({ disable }) =>
@@ -163,7 +164,7 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
   & .tabular_nums {
     font-variant-numeric: tabular-nums;
-    font-size: 2vw;
+    font-size: 2.1vw;
   }
 `;
 
@@ -185,5 +186,6 @@ const Execution = styled.div<{ color: string }>`
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
   text-align: center;
-  font-size: 1.9vw;
+  font-size: 2.2vw;
+  font-weight: 700;
 `;
