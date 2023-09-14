@@ -7,10 +7,12 @@ export default function Clock({
   fontSize,
   color,
   style,
+  wideFont,
 }: {
-  fontSize: number;
+  fontSize?: number;
   color?: string;
   style?: CSSProperties;
+  wideFont?: number;
 }) {
   const [time, setTime] = useState<Dayjs>(null);
 
@@ -29,20 +31,30 @@ export default function Clock({
   }, []);
 
   return (
-    <Container fontSize={fontSize} color={color} style={style}>
+    <Container
+      fontSize={fontSize}
+      wideFont={wideFont}
+      color={color}
+      style={style}
+    >
       <span>{dayjs(time).format("YYYY.MM.DD")}</span>
       <span>{dayjs(time).format("HH:mm:ss")}</span>
     </Container>
   );
 }
 
-const Container = styled.div<{ fontSize: number; color: string }>`
+const Container = styled.div<{
+  fontSize: number;
+  color: string;
+  wideFont: number;
+}>`
   display: flex;
   align-items: center;
   font-variant-numeric: tabular-nums;
   gap: 16px;
   & span {
     color: ${({ color }) => (color ? color : StyleColor.LIGHT)};
-    font-size: ${({ fontSize }) => fontSize}px;
+    font-size: ${({ fontSize, wideFont }) =>
+      wideFont ? `${wideFont}vw` : `${fontSize}px`};
   }
 `;

@@ -1,5 +1,7 @@
 import Header from "components/header/header";
+import MobileHeader from "components/header/mobileHeader";
 import LoadingIndicator from "components/indicator/loadingIndicator";
+import { UserAgentType } from "config/constants";
 import pageUrlConfig from "config/pageUrlConfig";
 import { Provider } from "mobx-react";
 import App from "next/app";
@@ -13,6 +15,7 @@ import "styles/globals.css";
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
   public router: NextRouter;
+
   static async getInitialProps(appContext: any) {
     const appProps = await App.getInitialProps(appContext);
     const headers =
@@ -27,6 +30,7 @@ class MyApp extends App<any, any, any> {
 
   constructor(props: IDefaultProps) {
     super(props);
+
     this.router = props.router;
     this.mobxStore = initializeStore({
       headers: props.headers,
@@ -55,8 +59,13 @@ class MyApp extends App<any, any, any> {
     ];
     return (
       <Provider {...this.mobxStore}>
-        {!notUseHeader.includes(this.props.router.pathname) && (
+        {!notUseHeader.includes(this.props.router.pathname) &&
+        this.mobxStore.defaultViewModel.isApp === UserAgentType.DESKTOP ? (
           <Header mainViewModel={this.mobxStore.mainViewModel} />
+        ) : (
+          !notUseHeader.includes(this.props.router.pathname) && (
+            <MobileHeader mainViewModel={this.mobxStore.mainViewModel} />
+          )
         )}
         <LoadingIndicator
           indicatorViewModel={this.mobxStore.indicatorViewModel}
