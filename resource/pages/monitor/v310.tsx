@@ -1,4 +1,4 @@
-import RealTimeTableRow from "components/table/realTimeTableRow";
+import RealTimeTableRow10Line from "components/table/realTimeTableRow10Line";
 import Clock from "components/timer/clock";
 import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
@@ -75,12 +75,12 @@ function Monitoring3View(props: IProps) {
         </thead>
         <tbody>
           {machineViewModel.machines.map((data: MachineDto, key: number) => {
-            const startKey = viewMonitorNumber * 12;
-            const endKey = startKey + 12;
+            const startKey = viewMonitorNumber * 10;
+            const endKey = startKey + 10;
 
             if (startKey <= key && endKey > key)
               return (
-                <RealTimeTableRow
+                <RealTimeTableRow10Line
                   data={data}
                   key={`monitoring_table_row_${key}`}
                 />
@@ -103,7 +103,7 @@ const MonitoringContainer = styled.div`
 
 const HeadLine = styled.header`
   width: calc(100vw - 1.6vw);
-  height: 8.8vh;
+  height: 8vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,7 +135,7 @@ const MonitoringTable = styled.table`
 
   & thead {
     background: ${StyleColor.DARKEMPHASIS};
-    height: 7.4vh;
+    height: 8vh;
   }
 `;
 
@@ -169,22 +169,22 @@ const tableHeader: TableModel[] = [
   {
     title: "가공명",
     align: "left",
-    size: 20,
+    size: 18,
   },
   {
     title: "공정시작일",
     align: "center",
-    size: 12,
+    size: 13,
   },
   {
     title: "완료예정일",
     align: "center",
-    size: 12,
+    size: 13,
   },
   {
     title: "실C/T",
     align: "center",
-    size: 6,
+    size: 7,
   },
   {
     title: "완료/목표",
@@ -199,6 +199,6 @@ const tableHeader: TableModel[] = [
   {
     title: "현재상태",
     align: "center",
-    size: 10,
+    size: 9,
   },
 ];

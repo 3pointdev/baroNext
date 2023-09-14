@@ -56,6 +56,7 @@ class MyApp extends App<any, any, any> {
       pageUrlConfig.login,
       pageUrlConfig.monitor3,
       pageUrlConfig.monitor2,
+      `${pageUrlConfig.monitor3}10`,
     ];
     return (
       <Provider {...this.mobxStore}>
