@@ -135,18 +135,18 @@ const MonitoringTable = styled.table`
 
   & thead {
     background: ${StyleColor.DARKEMPHASIS};
-    height: 8vh;
+    height: 6.85vh;
   }
 `;
 
 const TableHead = styled.th<{ size: string | number }>`
   font-size: 2vw;
-  font-weight: 600;
+  font-weight: 500;
   color: ${StyleColor.LIGHT};
   width: ${({ size }) => size}vw;
 
   &:first-child {
-    font-size: 1.6vw;
+    // font-size: 2vw;
   }
 
   &.left_align {
@@ -161,7 +161,7 @@ const TableHead = styled.th<{ size: string | number }>`
 
 const tableHeader: TableModel[] = [
   {
-    title: "호기",
+    title: "No",
     align: "center",
     size: 4,
   },
