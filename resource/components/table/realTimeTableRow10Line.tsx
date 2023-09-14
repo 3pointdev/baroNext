@@ -57,7 +57,7 @@ export default function RealTimeTableRow10Line({ data, toggleCount }: IProps) {
       <td
         align={"left"}
         className={
-          data.program?.length > 12 ? "is_long_column program" : "program"
+          data.program?.length > 16 ? "is_long_column program" : "program"
         }
       >
         <p>{data.program}</p>
@@ -138,15 +138,17 @@ const TableRow = styled.tr<{ disable: boolean }>`
   }
 
   & .mid {
+    max-width: 15vw !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 2.1vw;
   }
 
-  & .program,
+  & .program {
+    max-width: 21vw !important;
+  }
   .mid {
-    max-width: 18vw !important;
   }
 
   & .counter {
@@ -177,9 +179,9 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
-  line-height: 3.6vw;
-  width: 3.6vw;
-  height: 3.6vw;
+  line-height: 3.4vw;
+  width: 3.4vw;
+  height: 3.4vw;
   border-radius: 0.6vw;
   font-size: 1.9vw;
   background: ${({ color }) => color};
