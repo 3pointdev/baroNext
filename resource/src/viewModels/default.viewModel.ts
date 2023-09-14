@@ -5,7 +5,8 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { NextRouter } from "next/router";
 import DefaultProfile from "public/images/profile/default-profile.jpg";
 import { Alert } from "src/modules/alert.module";
-import { ServerUrlType } from "../../config/constants";
+import UserAgentModule from "src/modules/userAgent.module";
+import { ServerUrlType, UserAgentType } from "../../config/constants";
 import AuthDto from "../dto/auth/auth.dto";
 import { ApiModule } from "../modules/api.module";
 import authModule from "../modules/auth.module";
@@ -31,7 +32,9 @@ export default class DefaultViewModel {
   public auth: AuthDto = new AuthDto();
   public socket: SocketModule;
   public router: NextRouter;
+  public isApp: string = UserAgentType.DESKTOP;
   constructor(props: IDefaultProps) {
+    this.isApp = UserAgentModule.getUserAgent(props.userAgent);
     this.api = ApiModule.getInstance(props.indicatorViewModel);
     this.router = props.router;
 

@@ -1,6 +1,17 @@
 export const NUMBERSEENMONITORING2 = 4;
 
 /**
+ * 유저접속기기 타입
+ */
+export const UserAgentType = {
+  IOS: "ios",
+  ANDROID: "android",
+  APP: "app",
+  DESKTOP: "desktop",
+} as const;
+export type UserAgentType = (typeof UserAgentType)[keyof typeof UserAgentType];
+
+/**
  * 서버주소 타입
  */
 export const ServerUrlType = {

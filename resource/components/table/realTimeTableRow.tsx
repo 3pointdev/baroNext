@@ -122,7 +122,7 @@ const textScroll = keyframes`
 `;
 
 const TableRow = styled.tr<{ disable: boolean }>`
-  height: 74px;
+  height: 6.85vh;
 
   & td {
     overflow: hidden;
@@ -132,14 +132,14 @@ const TableRow = styled.tr<{ disable: boolean }>`
   td p,
   td span {
     white-space: nowrap;
-    font-size: 38px;
-    line-height: 60px;
+    font-size: 1.8vw;
+    line-height: 2vw;
     font-weight: 600;
     color: ${({ disable }) =>
       disable ? StyleColor.DISABLE : StyleColor.LIGHT};
 
     &.is_long_column {
-      max-width: 422.4px !important;
+      // max-width: 422.4px !important;
     }
     &.is_long_column p {
       animation: ${textScroll} 8s linear infinite;
@@ -148,26 +148,27 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
   & .tabular_nums {
     font-variant-numeric: tabular-nums;
-    font-size: 36px;
+    font-size: 1.8vw;
   }
 `;
 
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
-  line-height: 60px;
-  width: 60px;
-  height: 60px;
+  line-height: 3vw;
+  width: 3vw;
+  height: 3vw;
   border-radius: 8px;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
 `;
 
 const Execution = styled.div<{ color: string }>`
-  height: 60px;
+  height: 3vw;
   border-radius: 8px;
-  line-height: 60px;
+  line-height: 3vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
   text-align: center;
-  font-size: 38px;
+  font-size: 2vw;
+  line-height: 3vw;
 `;

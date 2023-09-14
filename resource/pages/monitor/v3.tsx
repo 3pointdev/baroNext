@@ -56,7 +56,7 @@ function Monitoring3View(props: IProps) {
           <BarofactorySquare color={StyleColor.LIGHT} />
           <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
-        <Clock fontSize={36} />
+        <Clock wideFont={2} />
       </HeadLine>
       <MonitoringTable>
         <thead>
@@ -105,7 +105,7 @@ const MonitoringContainer = styled.div`
 
 const HeadLine = styled.header`
   width: calc(100% - 32px);
-  height: 96px;
+  height: 8.8vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -118,12 +118,12 @@ const LeftSide = styled.div`
   gap: 24px;
 
   & svg {
-    width: 72px;
-    height: 64px;
+    width: 4vw;
+    height: 4vw;
   }
 
   & h2 {
-    font-size: 36px;
+    font-size: 1.8vw;
     font-weight: 500;
     color: ${StyleColor.LIGHT};
   }
@@ -136,12 +136,12 @@ const MonitoringTable = styled.table`
 
   & thead {
     background: ${StyleColor.DARKEMPHASIS};
-    height: 80px;
+    height: 7.4vh;
   }
 `;
 
 const TableHead = styled.th<{ size: string | number }>`
-  font-size: 28px;
+  font-size: 1.5vw;
   font-weight: 400;
   color: ${StyleColor.LIGHT};
   width: ${({ size }) => size}%;
@@ -165,7 +165,7 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 14,
+    size: 16,
   },
   {
     title: "가공명",
@@ -190,7 +190,7 @@ const tableHeader: TableModel[] = [
   {
     title: "완료/목표",
     align: "center",
-    size: 12,
+    size: 10,
   },
   {
     title: "진행률",
