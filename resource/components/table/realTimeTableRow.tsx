@@ -139,7 +139,7 @@ const TableRow = styled.tr<{ disable: boolean }>`
       disable ? StyleColor.DISABLE : StyleColor.LIGHT};
 
     &.is_long_column {
-      // max-width: 422.4px !important;
+      max-width: 22vw !important;
     }
     &.is_long_column p {
       animation: ${textScroll} 8s linear infinite;
