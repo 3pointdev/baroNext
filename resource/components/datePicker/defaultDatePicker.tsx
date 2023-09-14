@@ -1,7 +1,7 @@
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import ko from "date-fns/locale/ko";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -103,7 +103,7 @@ export default function DefaultDatePicker({
 const Container = styled.div`
   position: relative;
   & .react-datepicker {
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     border: 0;
   }
   & .react-datepicker__header {

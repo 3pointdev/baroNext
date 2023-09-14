@@ -1,4 +1,5 @@
-import { StyleColor, TableFormatType } from "config/constants";
+import { StyleColor } from "config/color";
+import { TableFormatType } from "config/constants";
 import { Ref, useEffect, useState } from "react";
 import TableModel from "src/models/table/table.model";
 import styled from "styled-components";

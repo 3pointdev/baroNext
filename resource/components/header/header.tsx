@@ -1,6 +1,6 @@
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter, useRouter } from "next/router";
 import SquareLogo from "public/images/logo/barofactory-square.svg";
@@ -144,7 +144,7 @@ const HeaderContainer = styled.header`
   height: 128px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
 `;
 
 const Head = {
@@ -215,7 +215,7 @@ const Navi = {
     &.active {
       background: ${StyleColor.PRIMARY};
       border-radius: 8px;
-      box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
+      box-shadow: ${StyleColor.DEEPSHADOW};
 
       & p,
       path {
@@ -238,7 +238,7 @@ const Navi = {
     flex-direction: column;
     border-radius: 8px;
     background: ${StyleColor.LIGHT};
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     width: 100%;
     overflow: hidden;
     font-size: 16px;

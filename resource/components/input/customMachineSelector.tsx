@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import ProductDto from "src/dto/report/product.dto";
 import styled from "styled-components";

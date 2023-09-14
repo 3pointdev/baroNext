@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import {
   CSSProperties,
   MouseEvent,

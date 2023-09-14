@@ -1,8 +1,5 @@
-import {
-  MachineColorType,
-  MachineTextType,
-  StyleColor,
-} from "config/constants";
+import { StyleColor } from "config/color";
+import { MachineColorType, MachineTextType } from "config/constants";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import machineStatusInstance from "src/modules/machineStatus.module";

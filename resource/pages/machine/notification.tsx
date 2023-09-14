@@ -5,6 +5,7 @@ import CustomSelector from "components/input/customSelector";
 import DefaultInput from "components/input/defaultInput";
 import LayoutHeader from "components/layout/layoutHeader";
 import DefaultTable from "components/table/defaultTable";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect } from "react";
@@ -84,10 +85,10 @@ export default inject("machineViewModel")(observer(MachineNotificationView));
 
 const TableLayout = styled.section`
   overflow: hidden;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
 `;
 
 const TablePadding = styled.div`

@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";

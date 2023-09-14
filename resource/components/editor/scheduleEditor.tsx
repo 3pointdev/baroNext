@@ -6,7 +6,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DefaultButton from "components/button/defaultButton";
 import DefaultInput from "components/input/defaultInput";
-import { ScheduleType, StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
+import { ScheduleType } from "config/constants";
 import { ChangeEventHandler, MouseEventHandler } from "react";
 import ScheduleModel from "src/models/schedule/schedule.model";
 import styled from "styled-components";

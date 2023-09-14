@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { ChangeEventHandler } from "react";
 import styled, { keyframes } from "styled-components";
 
@@ -69,7 +69,7 @@ const CheckboxWrapper = styled.div`
     top: 4px;
     left: 2px;
     fill: none;
-    stroke: white;
+    stroke: ${StyleColor.LIGHT};
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;

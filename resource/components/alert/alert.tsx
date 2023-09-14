@@ -3,7 +3,7 @@ import {
   faXmarkCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import styled, { css, keyframes } from "styled-components";
 
 export interface IAlertState {

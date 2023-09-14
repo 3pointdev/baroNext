@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import styled, { keyframes } from "styled-components";
 import IndicatorViewModel from "../../src/viewModels/indicator/indicator.viewModel";

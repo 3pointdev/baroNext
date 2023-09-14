@@ -1,7 +1,6 @@
-import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 

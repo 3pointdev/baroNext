@@ -2,7 +2,7 @@ import PageContainer from "components/container/pageContainer";
 import CardLayout from "components/layout/cardLayout";
 import DashBoardMachine from "components/machine/dashBoardMachine";
 import Clock from "components/timer/clock";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect } from "react";

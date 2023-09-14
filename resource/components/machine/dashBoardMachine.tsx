@@ -1,8 +1,8 @@
+import { StyleColor } from "config/color";
 import {
   MachineColorType,
   MachineExecutionType,
   MachineTextType,
-  StyleColor,
 } from "config/constants";
 import FactoryIcon from "public/images/icons/factoryIcon";
 import { useEffect, useState } from "react";

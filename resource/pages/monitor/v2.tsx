@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Linker from "components/linker/linker";
 import Monitoring2Item from "components/machine/Monitoring2Item";
 import Timer from "components/timer/timer";
+import { StyleColor } from "config/color";
 import { NUMBERSEENMONITORING2 } from "config/constants";
 import pageUrlConfig from "config/pageUrlConfig";
 import { inject, observer } from "mobx-react";
@@ -76,8 +77,8 @@ function Monitoring2View(props: IProps) {
       confirm: "변경",
       cancel: "취소",
       deny: "전체변경",
-      denyColor: "#1976d2",
-      confirmColor: "#6ebd33",
+      denyColor: StyleColor.PRIMARY,
+      confirmColor: StyleColor.FINISH,
       callback: (result: SweetAlertResult) => {
         console.log(result);
         if (result.isConfirmed) {
@@ -113,7 +114,7 @@ function Monitoring2View(props: IProps) {
           })}
         </Article.Wrap>
         <Footer.Wrap>
-          <BarofactorySquare color="#000" />
+          <BarofactorySquare color={StyleColor.DARK} />
 
           <Footer.Notice
             isLongText={machineViewModel.notice.length > 16}
@@ -179,7 +180,7 @@ export default inject(
 )(observer(Monitoring2View));
 
 const MonitoringContainer = styled.div`
-  background: #f7f7f9;
+  background: ${StyleColor.BACKGROUND};
   height: 100vh;
   min-width: 460px;
 `;
@@ -192,8 +193,8 @@ const Header = {
     padding: 23px 20px;
     height: 50px;
     position: relative;
-    background: #f4f4f5;
-    border-bottom: 1px solid #333333;
+    background: ${StyleColor.BACKGROUND};
+    border-bottom: 1px solid ${StyleColor.DARKBACKGROUND};
   `,
 
   Menu: styled(FontAwesomeIcon)`
@@ -234,18 +235,19 @@ const Footer = {
   Wrap: styled.div`
     height: 100px;
     width: 100%;
-    margin: 0 16px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     gap: 32px;
-    background: #f4f4f5;
-    border-top: 1px solid #333333;
+    background: ${StyleColor.BACKGROUND};
+    border-top: 1px solid ${StyleColor.DARKBACKGROUND};
     overflow: hidden;
+
     & svg {
       flex-shrink: 0;
       height: 100px;
       width: 100px;
-      background: #f4f4f5;
+      background: ${StyleColor.BACKGROUND};
       z-index: 99;
     }
   `,
@@ -254,7 +256,7 @@ const Footer = {
     font-weight: 500;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
-    color: #666666;
+    color: ${StyleColor.DARK};
 
     animation: ${({ isLongText, length }) =>
       isLongText
@@ -271,7 +273,7 @@ const SlideMenu = {
     position: fixed;
     left: -100vw;
     top: 0px;
-    background: #fff;
+    background: ${StyleColor.LIGHT};
     width: 100vw;
     height: 100vh;
     transition: all 0.4s ease;
@@ -285,7 +287,7 @@ const SlideMenu = {
   Head: styled.div`
     width: calc(100% - 120px);
     height: 136px;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid ${StyleColor.DARKBACKGROUND};
     display: flex;
     padding: 32px 60px;
     align-items: center;
@@ -311,7 +313,7 @@ const SlideMenu = {
       cursor: pointer;
 
       &:hover {
-        background: #19b1d248;
+        background: ${StyleColor.BRIGHTEMPHASIS};
       }
     }
   `,
@@ -320,7 +322,7 @@ const SlideMenu = {
     height: 200px;
     font-size: 48px;
     font-weight: 700;
-    color: #00000087;
+    color: ${StyleColor.DARK}85;
     text-align: center;
   `,
   FolderMenu: styled.div<{ count: number }>`
@@ -339,7 +341,7 @@ const SlideMenu = {
   MonitorName: styled.p`
     font-weight: 400;
     &.active {
-      color: #3a79ec;
+      color: ${StyleColor.PRIMARY};
     }
   `,
   MonitorChangeLink: styled.div`
@@ -350,7 +352,7 @@ const SlideMenu = {
     cursor: pointer;
 
     &:hover {
-      background: #19b1d248;
+      background: ${StyleColor.BRIGHTEMPHASIS};
     }
   `,
 };

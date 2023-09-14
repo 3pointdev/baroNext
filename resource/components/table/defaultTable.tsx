@@ -4,11 +4,11 @@ import {
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SortType, StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
+import { SortType } from "config/constants";
 import { MouseEventHandler, Ref, useEffect, useState } from "react";
 import TableModel from "src/models/table/table.model";
 import styled from "styled-components";
-
 interface IProps {
   header: TableModel[];
   data: any[];
@@ -139,7 +139,7 @@ const Table = {
       height: 48px;
       background: ${StyleColor.EMPHASIS};
       font-size: 14px;
-      color: black;
+      color: ${StyleColor.DARK};
     }
 
     & tr th {

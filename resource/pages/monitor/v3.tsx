@@ -1,6 +1,6 @@
 import RealTimeTableRow from "components/table/realTimeTableRow";
 import Clock from "components/timer/clock";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import BarofactorySquare from "public/images/logo/barofactory-square";
@@ -53,7 +53,7 @@ function Monitoring3View(props: IProps) {
     <MonitoringContainer>
       <HeadLine>
         <LeftSide>
-          <BarofactorySquare color={"#ffffff"} />
+          <BarofactorySquare color={StyleColor.LIGHT} />
           <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
         <Clock fontSize={36} />

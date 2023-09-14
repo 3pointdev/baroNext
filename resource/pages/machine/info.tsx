@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Alert from "components/alert/alert";
 import PageContainer from "components/container/pageContainer";
 import CardLayout from "components/layout/cardLayout";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect } from "react";
@@ -78,8 +79,8 @@ const MachineWrap = styled.div`
 
 const MachineItem = styled.div`
   position: relative;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
-  background: #e1ebfc;
+  box-shadow: ${StyleColor.BOXSHADOW};
+  background: ${StyleColor.EMPHASIS};
   display: flex;
   align-items: center;
   width: calc(100% - 16px);
@@ -92,7 +93,7 @@ const MachineItem = styled.div`
 `;
 
 const MachineNumber = styled.p`
-  background: #f2f6fe;
+  background: ${StyleColor.BRIGHTEMPHASIS};
   width: 72px;
   height: 60px;
   display: flex;
@@ -114,7 +115,7 @@ const IconBox = styled.div`
   justify-content: center;
 
   &:hover {
-    background: rgba(200, 200, 200, 0.5);
+    background: ${StyleColor.DARK}20;
   }
 `;
 const EditIcon = styled(FontAwesomeIcon)`

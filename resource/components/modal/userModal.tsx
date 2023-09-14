@@ -1,6 +1,6 @@
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import pageUrlConfig from "../../config/pageUrlConfig";
@@ -57,7 +57,7 @@ const UserContainer = styled.div<{ isOpen: boolean }>`
   position: absolute;
   width: 230px;
   background: ${StyleColor.LIGHT};
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
   top: 64px;
   right: 16px;
   border-radius: 8px;
@@ -99,7 +99,7 @@ const Menu = {
     }
   `,
   Alarm: styled.p`
-    background: red;
+    background: ${StyleColor.WARNNING};
     border-radius: 50%;
     width: 18px;
     height: 18px;

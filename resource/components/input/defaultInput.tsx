@@ -1,3 +1,4 @@
+import { StyleColor } from "config/color";
 import {
   CSSProperties,
   ChangeEventHandler,
@@ -8,7 +9,7 @@ import {
   RefObject,
 } from "react";
 import styled from "styled-components";
-import { StyleColor, ValidType } from "../../config/constants";
+import { ValidType } from "../../config/constants";
 
 interface IProps {
   type: HTMLInputTypeAttribute;
@@ -200,7 +201,7 @@ const ValidLabel = styled.label<{ isViewAble: boolean }>`
   top: -8px;
   right: 4px;
   font-size: 12px;
-  color: #bfbfbf;
+  color: ${StyleColor.DISABLE};
   transition: all 0.4s ease;
   cursor: text;
   background: ${StyleColor.LIGHT};
@@ -209,11 +210,11 @@ const ValidLabel = styled.label<{ isViewAble: boolean }>`
   opacity: ${({ isViewAble }) => (isViewAble ? "1" : "0")};
 
   &.readonly {
-    background: ${StyleColor.DISABLE};
-    color: #a0a0a0;
+    background: ${StyleColor.DISABLE}60;
+    color: ${StyleColor.DISABLE};
   }
 
   &.fail {
-    color: red;
+    color: ${StyleColor.WARNNING};
   }
 `;

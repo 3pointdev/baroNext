@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
@@ -30,7 +30,7 @@ export default function CardLayout({
 const Layout = styled.div`
   background: ${StyleColor.LIGHT};
   position: relative;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
   border-radius: 8px;
   padding: 16px;
   display: flex;
