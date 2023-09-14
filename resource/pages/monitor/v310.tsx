@@ -164,7 +164,7 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 20,
+    size: 22,
   },
   {
     title: "가공명",
