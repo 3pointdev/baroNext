@@ -164,7 +164,7 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 15,
+    size: 20,
   },
   {
     title: "가공명",
@@ -184,21 +184,21 @@ const tableHeader: TableModel[] = [
   {
     title: "실C/T",
     align: "center",
-    size: 7,
+    size: 6,
   },
   {
     title: "완료/목표",
     align: "center",
-    size: 14,
+    size: 11.5,
   },
   {
     title: "진행률",
     align: "center",
-    size: 7,
+    size: 6.5,
   },
   {
     title: "현재상태",
     align: "center",
-    size: 9,
+    size: 8,
   },
 ];
