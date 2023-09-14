@@ -157,14 +157,14 @@ const MachineNumber = styled.div<{ color: string }>`
   line-height: 3vw;
   width: 3vw;
   height: 3vw;
-  border-radius: 8px;
+  border-radius: 0.6vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
 `;
 
 const Execution = styled.div<{ color: string }>`
   height: 3vw;
-  border-radius: 8px;
+  border-radius: 0.6vw;
   line-height: 3vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
