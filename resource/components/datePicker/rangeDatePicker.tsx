@@ -1,12 +1,12 @@
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/color";
+import ko from "date-fns/locale/ko";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
-import ko from "date-fns/locale/ko";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { ChangeEventHandler } from "react";
-import { DatePickerRangeType, StyleColor } from "../../config/constants";
+import { DatePickerRangeType } from "../../config/constants";
 
 interface IProps {
   start: string;
@@ -164,7 +164,7 @@ const Container = styled.div`
 
     & .react-datepicker {
       z-index: 101;
-      box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+      box-shadow: ${StyleColor.BOXSHADOW};
       border: 0;
     }
   }
@@ -185,21 +185,20 @@ const Container = styled.div`
 
   //일자별 컬러지정
   & .react-datepicker__day-names * {
-    color: gray;
+    color: ${StyleColor.DISABLE};
   }
-
   & .react-datepicker__day {
     &.saturday {
-      color: blue;
+      color: ${StyleColor.PRIMARY};
     }
     &.sunday {
-      color: red;
+      color: ${StyleColor.WARNNING};
     }
     &[aria-disabled="true"] {
       opacity: 0.5;
     }
     &.react-datepicker__day--outside-month {
-      color: lightgray !important;
+      color: ${StyleColor.BORDER} !important;
     }
   }
 `;
@@ -215,16 +214,16 @@ const IconSetting = styled(FontAwesomeIcon)`
 `;
 
 const StartCalendarIcon = styled(IconSetting)`
-  left: 8px;
+  left: 16px;
 `;
 
 const EndCalendarIcon = styled(IconSetting)`
-  right: 156px;
+  right: 148px;
 `;
 
 const Picker = styled(DatePicker)`
   z-index: 101;
-  border: 1px solid ${StyleColor.HOVER};
+  border: 1px solid ${StyleColor.BORDER};
   border-radius: 8px;
   padding: 6px 10px;
   height: 28px;
@@ -260,8 +259,9 @@ const Calendar = {
     border: 0;
     font-size: 16px;
     cursor: pointer;
+    color: ${StyleColor.DARK};
     &:disabled * {
-      color: lightgray;
+      color: ${StyleColor.HOVER};
       cursor: default;
     }
   `,

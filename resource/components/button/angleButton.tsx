@@ -1,6 +1,6 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 
@@ -49,7 +49,7 @@ const Button = styled.button`
       background: none;
     }
     & * {
-      color: #d9d9d9;
+      color: ${StyleColor.BORDER};
     }
   }
 `;

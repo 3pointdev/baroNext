@@ -1,8 +1,5 @@
-import {
-  MachineColorType,
-  MachineTextType,
-  StyleColor,
-} from "config/constants";
+import { StyleColor } from "config/color";
+import { MachineColorType, MachineTextType } from "config/constants";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import machineStatusInstance from "src/modules/machineStatus.module";
@@ -61,7 +58,7 @@ export default function RealTimeTableRow({ data }: IProps) {
         <p>{data.program}</p>
       </td>
       <td align={"center"} className="tabular_nums">
-        {dayjs(data.startYmdt).format("MM/DD HH:mm")}
+        {data.startYmdt && dayjs(data.startYmdt).format("MM/DD HH:mm")}
       </td>
       <td align={"center"} className="tabular_nums">
         {data.prdctEnd && dayjs(data.prdctEnd).format("MM/DD HH:mm")}

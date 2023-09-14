@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import {
   CSSProperties,
   MouseEvent,
@@ -105,8 +105,8 @@ const SelectWrap = styled.div<{ isOpenOption: boolean; isSelected: boolean }>`
   right: 0px;
   top: 0px;
   width: calc(100% - 2px);
-  height: 54px;
-  border: 1px solid #d8d8dd !important;
+  height: 100%;
+  border: 1px solid ${StyleColor.BORDER} !important;
   border-radius: 8px;
   cursor: pointer;
   flex-shrink: 0;
@@ -121,8 +121,8 @@ const SelectWrap = styled.div<{ isOpenOption: boolean; isSelected: boolean }>`
       : `linear-gradient(45deg, transparent 50%, gray 50%),
   linear-gradient(135deg, gray 50%, transparent 50%)`}};
 
-  background-position: calc(100% - 20px) calc(1.4em + 2px),
-    calc(100% - 12px) calc(1.4em + 2px), calc(100% - 2.5em) 0.5em;
+  background-position: calc(100% - 20px) 50%,
+    calc(100% - 12px) 50%, calc(100% - 2.5em) 0.5em;
 
   background-size: 8px 8px, 8px 8px, 1px 2.4em;
   background-repeat: no-repeat;
@@ -143,7 +143,7 @@ const OptionWrap = styled.div<{ isOpenOption: boolean }>`
   right: 0px;
   top: 54px;
   background: ${StyleColor.LIGHT};
-  border: 1px solid #d8d8dd !important;
+  border: 1px solid ${StyleColor.BORDER} !important;
   border-radius: 8px;
   display: flex;
   flex-direction: column;

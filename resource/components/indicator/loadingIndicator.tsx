@@ -1,7 +1,7 @@
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import styled, { keyframes } from "styled-components";
 import IndicatorViewModel from "../../src/viewModels/indicator/indicator.viewModel";
-import { StyleColor } from "config/constants";
 
 interface IProps {
   indicatorViewModel: IndicatorViewModel;
@@ -134,7 +134,7 @@ const Background = styled.div`
     font-family: "Lato";
     font-size: 20px;
     letter-spacing: 12px;
-    color: #fff;
+    color: ${StyleColor.LIGHT};
     left: 15%;
   }
 `;

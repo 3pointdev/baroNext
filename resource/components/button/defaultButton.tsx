@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
 
@@ -65,13 +65,13 @@ const Button = styled.button<{
   activeColor: string;
   disableColor: string;
 }>`
-  color: white;
+  color: ${StyleColor.LIGHT};
   font-weight: 600;
   line-height: 1;
   font-size: 18px;
   height: 42px;
   width: 100%;
-  box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
+  box-shadow: ${StyleColor.DEEPSHADOW};
   border-radius: 8px;
   cursor: pointer;
 
@@ -87,7 +87,7 @@ const Button = styled.button<{
       }
     } else {
       return `background: ${activeColor};
-      border: 1px solid #BFBFBF;
+      border: 1px solid ${StyleColor.BORDER};
       &:hover {
         background: ${StyleColor.PRIMARY};
         & * {

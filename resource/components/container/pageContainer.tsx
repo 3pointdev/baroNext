@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { ReactElement } from "react";
 import styled, { CSSProperties } from "styled-components";
 

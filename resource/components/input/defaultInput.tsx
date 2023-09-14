@@ -1,3 +1,4 @@
+import { StyleColor } from "config/color";
 import {
   CSSProperties,
   ChangeEventHandler,
@@ -8,7 +9,7 @@ import {
   RefObject,
 } from "react";
 import styled from "styled-components";
-import { StyleColor, ValidType } from "../../config/constants";
+import { ValidType } from "../../config/constants";
 
 interface IProps {
   type: HTMLInputTypeAttribute;
@@ -138,7 +139,7 @@ const ChildrenWrap = styled.p`
 
 const InputColumn = styled.input<{ isOnValue: boolean }>`
   background: ${StyleColor.LIGHT};
-  border: 1px solid #d8d8dd !important;
+  border: 1px solid ${StyleColor.BORDER} !important;
   border-radius: 8px;
   height: 38px;
   width: calc(100% - 22px);
@@ -150,7 +151,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
   &:focus + label {
     left: 8px;
     top: -8px;
-    color: #3a79ec !important;
+    color: ${StyleColor.PRIMARY} !important;
     font-size: 12px !important;
   }
 
@@ -159,7 +160,7 @@ const InputColumn = styled.input<{ isOnValue: boolean }>`
       isOnValue
         ? `left: 8px;
       top: -8px;
-      color: #3a79ec !important;
+      color: ${StyleColor.PRIMARY} !important;
       font-size:12px !important;`
         : ``}
   }
@@ -182,7 +183,7 @@ const Placeholder = styled.label`
   top: 12px;
   left: 12px;
   font-size: 12px;
-  color: #bfbfbf;
+  color: ${StyleColor.DISABLE};
   cursor: text;
   background: ${StyleColor.LIGHT};
   padding: 0 8px;
@@ -191,7 +192,7 @@ const Placeholder = styled.label`
   pointer-events: none;
   &.readonly {
     background: ${StyleColor.DISABLE};
-    color: #a0a0a0;
+    color: ${StyleColor.DISABLE};
   }
 `;
 
@@ -200,7 +201,7 @@ const ValidLabel = styled.label<{ isViewAble: boolean }>`
   top: -8px;
   right: 4px;
   font-size: 12px;
-  color: #bfbfbf;
+  color: ${StyleColor.DISABLE};
   transition: all 0.4s ease;
   cursor: text;
   background: ${StyleColor.LIGHT};
@@ -209,11 +210,11 @@ const ValidLabel = styled.label<{ isViewAble: boolean }>`
   opacity: ${({ isViewAble }) => (isViewAble ? "1" : "0")};
 
   &.readonly {
-    background: ${StyleColor.DISABLE};
-    color: #a0a0a0;
+    background: ${StyleColor.DISABLE}60;
+    color: ${StyleColor.DISABLE};
   }
 
   &.fail {
-    color: red;
+    color: ${StyleColor.WARNNING};
   }
 `;

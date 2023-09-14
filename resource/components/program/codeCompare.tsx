@@ -1,6 +1,7 @@
 import DefaultDatePicker from "components/datePicker/defaultDatePicker";
 import CustomSelector, { Options } from "components/input/customSelector";
-import { CompareType, StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
+import { CompareType } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import FunctionDto from "src/dto/program/function.dto";

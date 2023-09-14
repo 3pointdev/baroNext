@@ -1,3 +1,4 @@
+import { StyleColor } from "config/color";
 import { MachineColorType } from "config/constants";
 import styled from "styled-components";
 
@@ -16,5 +17,5 @@ const ActiveSign = styled.div<{ isActive: boolean; size: number }>`
   background: ${({ isActive }) =>
     isActive ? MachineColorType.GREEN : MachineColorType.RED};
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
 `;

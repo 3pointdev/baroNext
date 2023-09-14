@@ -1,7 +1,7 @@
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import ko from "date-fns/locale/ko";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -103,7 +103,7 @@ export default function DefaultDatePicker({
 const Container = styled.div`
   position: relative;
   & .react-datepicker {
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     border: 0;
   }
   & .react-datepicker__header {
@@ -119,20 +119,20 @@ const Container = styled.div`
     }
   }
   & .react-datepicker__day-names * {
-    color: gray;
+    color: ${StyleColor.DISABLE};
   }
   & .react-datepicker__day {
     &.saturday {
-      color: blue;
+      color: ${StyleColor.PRIMARY};
     }
     &.sunday {
-      color: red;
+      color: ${StyleColor.WARNNING};
     }
     &[aria-disabled="true"] {
       opacity: 0.5;
     }
     &.react-datepicker__day--outside-month {
-      color: lightgray !important;
+      color: ${StyleColor.BORDER} !important;
     }
   }
 `;
@@ -191,8 +191,9 @@ const Calendar = {
     border: 0;
     font-size: 16px;
     cursor: pointer;
+    color: ${StyleColor.DARK};
     &:disabled * {
-      color: lightgray;
+      color: ${StyleColor.BORDER};
       cursor: default;
     }
   `,

@@ -1,3 +1,4 @@
+import { StyleColor } from "config/color";
 import { ChangeEventHandler } from "react";
 import styled, { keyframes } from "styled-components";
 
@@ -73,8 +74,8 @@ const Radio = styled.input`
   height: 16px;
   border-radius: 8px;
   position: relative;
-  border: 1px solid #757575;
-  background: #a9a9a9;
+  border: 1px solid ${StyleColor.DISABLE};
+  background: ${StyleColor.DISABLE};
 
   &:checked::after {
     content: "";
@@ -88,7 +89,7 @@ const Radio = styled.input`
     height: 10px;
     border-radius: 6px;
 
-    background: #f9f9f9;
+    background: ${StyleColor.LIGHT};
     animation: ${checkAnimation} 0.4s;
   }
 `;

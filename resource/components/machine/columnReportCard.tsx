@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import ProductDto from "../../src/dto/report/product.dto";
@@ -255,7 +255,7 @@ const LotWrap = styled.div`
   & p {
     font-size: 18px;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     width: 50%;
     height: 88px;
     border-radius: 8px;
