@@ -1,3 +1,4 @@
+import { StyleColor } from "config/color";
 import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -57,7 +58,7 @@ const Date = styled.span`
   font-weight: 600;
   width: 260px;
   max-width: fit-content;
-  color: #666666;
+  color: ${StyleColor.DARK}95;
   font-size: 48px;
   font-weight: 400;
   white-space: nowrap;
@@ -94,7 +95,7 @@ const Time = styled.span`
   font-weight: 600;
   width: 210px;
   min-width: fit-content;
-  color: #666666;
+  color: ${StyleColor.DARK}95;
   font-size: 48px;
   font-weight: 600;
   white-space: nowrap;

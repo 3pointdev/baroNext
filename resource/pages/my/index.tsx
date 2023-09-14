@@ -5,7 +5,7 @@ import DefaultButton from "components/button/defaultButton";
 import PageContainer from "components/container/pageContainer";
 import DefaultInput from "components/input/defaultInput";
 import CardLayout from "components/layout/cardLayout";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect } from "react";

@@ -1,4 +1,4 @@
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { ChangeEventHandler } from "react";
 import styled from "styled-components";
 
@@ -79,7 +79,7 @@ const SwitchLabel = styled.label`
     width: 20px;
     height: 20px;
     background-color: ${StyleColor.LIGHT};
-    box-shadow: 0 3px 1px -2px ${StyleColor.DARK}60,
+    box-shadow: ${StyleColor.DARKSHADOW};
       0 2px 2px 0 ${StyleColor.DARK}30;, 0 1px 5px 0 ${StyleColor.DARK}40;
     transition: background-color 0.2s, transform 0.2s;
   }

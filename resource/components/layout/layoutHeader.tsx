@@ -1,5 +1,5 @@
 import RangeDatePicker from "components/datePicker/rangeDatePicker";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { CSSProperties, ReactElement } from "react";
 import styled from "styled-components";
 import DefaultDatePicker from "../datePicker/defaultDatePicker";
@@ -55,7 +55,7 @@ const Container = styled.div`
   flex-shrink: 0;
   width: calc(100% - 32px);
   background: ${StyleColor.LIGHT};
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
   border-radius: 8px;
   height: 70px;
   padding: 0 16px;

@@ -4,6 +4,7 @@ import CustomSelector from "components/input/customSelector";
 import DefaultRadio from "components/input/defaultRadio";
 import LayoutHeader from "components/layout/layoutHeader";
 import RecordTable from "components/table/recordTable";
+import { StyleColor } from "config/color";
 import { TableFormatType } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
@@ -94,10 +95,10 @@ function RecordView(props: IProps) {
             height: "56px",
             padding: "0 8px",
             border: "0",
-            color: "#000",
+            color: StyleColor.DARK,
             fontSize: "16px",
           }}
-          activeColor="#fff"
+          activeColor={StyleColor.LIGHT}
         />
       </FunctionWrap>
       <TableLayout>
@@ -128,10 +129,10 @@ const TableLayout = styled.section`
   z-index: 10;
   position: relative;
   overflow: hidden;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
 `;
 
 const TablePadding = styled.div`

@@ -1,10 +1,7 @@
+import { StyleColor } from "config/color";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  MachineExecutionType,
-  MachineTextType,
-  StyleColor,
-} from "../../config/constants";
+import { MachineExecutionType, MachineTextType } from "../../config/constants";
 import MachineDto from "../../src/dto/machine/machine.dto";
 import machineStatusInstance from "../../src/modules/machineStatus.module";
 import timeInstance from "../../src/modules/time.module";
@@ -83,8 +80,7 @@ export default function Monitoring2Item({ data }: IProps) {
     <Container>
       <Header.Wrap>
         <Header.Count>
-          {data.planCount > 0 &&
-            executionText !== MachineTextType.OFF &&
+          {executionText !== MachineTextType.OFF &&
             `${data.partCount} / ${data.planCount}`}
         </Header.Count>
         <Header.Lot>
@@ -146,14 +142,14 @@ const StopCover = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(141, 141, 141, 0.9);
+  background: ${StyleColor.DARKBACKGROUND}9;
   width: 100%;
   height: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: ${StyleColor.LIGHT};
   font-size: 9vh;
   font-family: "pretendard", monospace;
   font-weight: 700;
@@ -168,13 +164,13 @@ const Header = {
   Count: styled.p`
     font-size: 2.8vh;
     line-height: 1;
-    color: #727171;
+    color: ${StyleColor.DARKBACKGROUND}9;
     font-weight: 600;
   `,
   Lot: styled.p`
     font-size: 2.8vh;
     line-height: 1;
-    color: #231815;
+    color: ${StyleColor.DARK};
     font-weight: 600;
   `,
 };
@@ -199,7 +195,7 @@ const RealTimeInfo = {
     font-size: 7.2vh;
     font-weight: 600;
     line-height: 6.2vh;
-    color: #fff;
+    color: ${StyleColor.LIGHT};
     position: relative;
   `,
   CycleTime: styled.p`
@@ -209,9 +205,10 @@ const RealTimeInfo = {
     line-height: 6.2vh;
     width: 100%;
     text-align: right;
+    font-variant-numeric: tabular-nums;
 
     &.zero {
-      color: red;
+      color: ${StyleColor.WARNNING};
     }
   `,
 };
@@ -223,7 +220,7 @@ const Footer = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #d9d9d9;
+    background: ${StyleColor.BORDER};
     padding: 0 16px;
     position: relative;
   `,
@@ -233,21 +230,22 @@ const Footer = {
     left: 0px;
     top: 0px;
     height: 100%;
-    background: rgb(178, 178, 178);
+    background: ${StyleColor.DISABLE};
     width: ${({ progress }) => progress}%;
   `,
   Mid: styled.p`
     z-index: 1;
-    font-size: 40px;
-    color: #727171;
-    font-weight: 500;
+    font-size: 48px;
+    color: ${StyleColor.DARK}90;
+    font-weight: 600;
     line-height: 72px;
   `,
   EndTime: styled.p`
     z-index: 1;
-    font-size: 40px;
-    color: #231815;
-    font-weight: 500;
+    font-size: 44px;
+    color: ${StyleColor.DARK}90;
+    font-weight: 600;
     line-height: 72px;
+    font-variant-numeric: tabular-nums;
   `,
 };

@@ -1,6 +1,6 @@
+import { StyleColor } from "config/color";
 import { MouseEventHandler, ReactElement } from "react";
 import styled, { CSSProperties } from "styled-components";
-import { StyleColor } from "config/constants";
 
 interface IProps {
   title: string | number | string[] | number[] | ReactElement | ReactElement[];
@@ -44,13 +44,13 @@ const Button = styled.button<{
   isActive: boolean;
   highlight: boolean;
 }>`
-  color: #000;
+  color: ${StyleColor.DARK};
   font-weight: 600;
   line-height: 1;
   font-size: 18px;
   height: 42px;
   width: 100%;
-  box-shadow: 0px 2px 6px rgba(76, 78, 100, 0.42);
+  box-shadow: ${StyleColor.DEEPSHADOW};
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -63,7 +63,8 @@ const Button = styled.button<{
     flex-shrink: 0;
   }
 
-  border: ${({ highlight }) => (highlight ? "2px solid #3a79ec" : "0")};
+  border: ${({ highlight }) =>
+    highlight ? `2px solid ${StyleColor.PRIMARY}` : "0"};
 
   ${({ dynamic, isActive }) =>
     dynamic === true && isActive === false

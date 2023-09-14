@@ -7,7 +7,7 @@ import Logo from "components/image/logo";
 import Checkbox from "components/input/checkbox";
 import CustomSelector from "components/input/customSelector";
 import DefaultInput from "components/input/defaultInput";
-import { StyleColor } from "config/constants";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import Alert1 from "public/images/login/login-alert-1.svg";
@@ -202,7 +202,7 @@ const PageContainer = styled.section`
   height: 100%;
   overflow-y: hidden;
   position: relative;
-  background-color: #f7f7f9;
+  background: ${StyleColor.BACKGROUND};
 `;
 
 const Header = styled.header`
@@ -214,7 +214,7 @@ const Header = styled.header`
   align-items: center;
   padding: 0 32px;
   justify-content: space-between;
-  background: rgba(0, 0, 0, 0);
+  background: none;
   height: 88px;
 
   & img {
@@ -237,7 +237,7 @@ const Intro = {
     position: relative;
     overflow: hidden;
     box-sizing: inherit;
-    background: #f7f7f9;
+    background: ${StyleColor.BACKGROUND};
 
     @media screen and (max-width: 780px) {
       display: none;
@@ -329,7 +329,7 @@ const Login = {
     height: 100vh;
     padding: 0 56px;
     position: relative;
-    background-color: white;
+    background-color: ${StyleColor.LIGHT};
     word-break: keep-all;
     -webkit-box-sizing: inherit;
     box-sizing: inherit;
@@ -346,14 +346,14 @@ const Login = {
     font-size: 24px;
     line-height: 36px;
     font-weight: 700;
-    color: #636578;
+    color: ${StyleColor.DARK};
   `,
   SubTitle: styled.p`
     width: 100%;
     font-size: 14px;
     line-height: 21px;
     font-weight: 600;
-    color: #858796;
+    color: ${StyleColor.DESCRIPTION};
   `,
   ContactUs: styled.div`
     display: flex;
@@ -363,7 +363,7 @@ const Login = {
       line-height: 36px;
       text-align: center;
       font-weight: 600;
-      color: #858796;
+      color: ${StyleColor.DESCRIPTION};
     }
 
     & a {
@@ -371,7 +371,7 @@ const Login = {
       line-height: 36px;
       text-align: center;
       font-weight: 600;
-      color: #3a79ec;
+      color: ${StyleColor.PRIMARY};
     }
   `,
   Number: styled.div`
@@ -382,7 +382,7 @@ const Login = {
       line-height: 36px;
       text-align: center;
       font-weight: 600;
-      color: #858796;
+      color: ${StyleColor.DESCRIPTION};
     }
 
     & a {
@@ -390,7 +390,7 @@ const Login = {
       line-height: 36px;
       text-align: center;
       font-weight: 600;
-      color: #3a79ec;
+      color: ${StyleColor.PRIMARY};
     }
   `,
   BackWard: styled.button`

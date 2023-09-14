@@ -1,5 +1,6 @@
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StyleColor } from "config/color";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import pageUrlConfig from "../../config/pageUrlConfig";
@@ -7,7 +8,6 @@ import UserMenuModel from "../../src/models/menu/userMenu.model";
 import Linker from "../linker/linker";
 
 interface IProps {
-  // data: AuthDto;
   onClick: MouseEventHandler;
   onClickLogout: MouseEventHandler;
   isOpen: boolean;
@@ -16,7 +16,6 @@ interface IProps {
 }
 
 export default function UserModal({
-  // data,
   menus,
   isOpen,
   onClick,
@@ -26,13 +25,6 @@ export default function UserModal({
   return (
     <>
       <UserContainer isOpen={isOpen}>
-        {/* <HeadLine>
-          <img src={data.profileImage} alt="user_profile_image" />
-          <div>
-            <p>{data.name}</p>
-            <span>{data.account.toUpperCase()}</span>
-          </div>
-        </HeadLine> */}
         <Menu.Wrap>
           {menus.map((menu: UserMenuModel, key) => {
             return (
@@ -64,53 +56,19 @@ const UserContainer = styled.div<{ isOpen: boolean }>`
   z-index: 2;
   position: absolute;
   width: 230px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  background: ${StyleColor.LIGHT};
+  box-shadow: ${StyleColor.BOXSHADOW};
   top: 64px;
   right: 16px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: ${StyleColor.LIGHT};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
   transition: all 0.4s ease;
 
   overflow: hidden;
-`;
-
-const HeadLine = styled.div`
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  height: 70px;
-  border-bottom: 1px solid #eaeaec;
-  gap: 16px;
-
-  & img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  & div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  & p {
-    font-size: 14px;
-    font-weight: 700;
-    color: #4c4e64;
-  }
-
-  & span {
-    font-size: 12px;
-    font-weight: 400;
-    color: #bfbfbf;
-  }
 `;
 
 const Menu = {
@@ -136,20 +94,16 @@ const Menu = {
       gap: 16px;
     }
 
-    &:nth-child(3),
-    &:nth-child(6) {
-      border-bottom: 1px solid #eaeaec;
-    }
     &:hover {
-      background: #f5f5f5;
+      background: ${StyleColor.HOVER};
     }
   `,
   Alarm: styled.p`
-    background: red;
+    background: ${StyleColor.WARNNING};
     border-radius: 50%;
     width: 18px;
     height: 18px;
-    color: #fff;
+    color: ${StyleColor.LIGHT};
     font-size: 12px;
     font-weight: 500;
     line-height: 18px;

@@ -1,7 +1,8 @@
 import PageContainer from "components/container/pageContainer";
 import CardLayout from "components/layout/cardLayout";
 import DashBoardMachine from "components/machine/dashBoardMachine";
-import DashBoardTimer from "components/timer/dashBoardTimer";
+import Clock from "components/timer/clock";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect } from "react";
@@ -36,7 +37,7 @@ function MainView(props: IProps) {
       <Layout>
         <SectionTitle>
           <p>대시보드</p>
-          <DashBoardTimer />
+          <Clock fontSize={28} color={StyleColor.DARK} style={{ gap: "8px" }} />
         </SectionTitle>
         <MachineWrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {

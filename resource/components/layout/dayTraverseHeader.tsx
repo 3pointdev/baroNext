@@ -1,7 +1,8 @@
+import { StyleColor } from "config/color";
 import dayjs from "dayjs";
 import { CSSProperties, MouseEventHandler, ReactElement } from "react";
 import styled from "styled-components";
-import { DatePickerButtonType, StyleColor } from "../../config/constants";
+import { DatePickerButtonType } from "../../config/constants";
 import AngleButton from "../button/angleButton";
 
 interface IProps {
@@ -50,7 +51,7 @@ const Container = styled.div`
   flex-shrink: 0;
   width: calc(100% - 32px);
   background: ${StyleColor.LIGHT};
-  box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+  box-shadow: ${StyleColor.BOXSHADOW};
   border-radius: 8px;
   height: 70px;
   padding: 0 16px;
@@ -72,7 +73,7 @@ const LeftSide = {
       width: 110px;
       font-size: 20px;
       font-weight: 600;
-      color: #4c4e64;
+      color: ${StyleColor.DARK};
       white-space: nowrap;
     }
   `,

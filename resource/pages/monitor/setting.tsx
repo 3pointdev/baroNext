@@ -8,6 +8,7 @@ import Alert from "components/alert/alert";
 import CircleButton from "components/button/circleButton";
 import PageContainer from "components/container/pageContainer";
 import CardLayout from "components/layout/cardLayout";
+import { StyleColor } from "config/color";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -195,7 +196,7 @@ const DragMonitor = {
   Monitor: styled.div`
     position: relative;
     flex-shrink: 0;
-    background: #e1ebfc;
+    background: ${StyleColor.EMPHASIS};
     border-radius: 8px;
     padding: 16px;
     display: flex;
@@ -204,7 +205,7 @@ const DragMonitor = {
     width: 18vw;
     min-width: 180px;
     height: 324px;
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
 
     & span {
       font-weight: 600;
@@ -220,12 +221,12 @@ const DragMonitor = {
   Item: styled.div`
     position: relative;
     height: 64px;
-    background: #fff;
+    background: ${StyleColor.LIGHT};
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     z-index: 10;
 
     & p {
@@ -256,12 +257,11 @@ const DragMonitor = {
 
   AddMonitor: styled.div`
     flex-shrink: 0;
-    background: #e5e5e5;
-    background: #e5e5e5;
+    background: ${StyleColor.HOVER};
     border-radius: 8px;
     width: 18vw;
     min-width: 180px;
-    box-shadow: 0 2px 8px rgba(76, 78, 100, 0.22);
+    box-shadow: ${StyleColor.BOXSHADOW};
     height: 350px;
     display: flex;
     align-items: center;
@@ -270,7 +270,7 @@ const DragMonitor = {
     font-size: 32px;
 
     &:hover {
-      background: #d9d9d9;
+      background: ${StyleColor.BORDER};
     }
   `,
 };

@@ -1,6 +1,5 @@
+import { StyleColor } from "config/color";
 import styled, { keyframes } from "styled-components";
-import FactoryIcon from "../../public/images/icons/factoryIcon";
-import { StyleColor } from "config/constants";
 
 export default function DefaultLoading() {
   return (
