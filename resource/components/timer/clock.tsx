@@ -8,11 +8,13 @@ export default function Clock({
   color,
   style,
   wideFont,
+  fontweight,
 }: {
   fontSize?: number;
   color?: string;
   style?: CSSProperties;
   wideFont?: number;
+  fontweight?: number;
 }) {
   const [time, setTime] = useState<Dayjs>(null);
 
@@ -34,6 +36,7 @@ export default function Clock({
     <Container
       fontSize={fontSize}
       wideFont={wideFont}
+      fontweight={fontweight}
       color={color}
       style={style}
     >
@@ -47,14 +50,15 @@ const Container = styled.div<{
   fontSize: number;
   color: string;
   wideFont: number;
+  fontweight: number;
 }>`
   display: flex;
   align-items: center;
   font-variant-numeric: tabular-nums;
-  gap: 16px;
+  gap: 0.8vw;
   & span {
     color: ${({ color }) => (color ? color : StyleColor.LIGHT)};
     font-size: ${({ fontSize, wideFont }) =>
       wideFont ? `${wideFont}vw` : `${fontSize}px`};
-  }
+    font-weight: ${({ fontweight }) => fontweight};
 `;

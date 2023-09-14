@@ -56,7 +56,7 @@ function Monitoring3View(props: IProps) {
           <BarofactorySquare color={StyleColor.LIGHT} />
           <h2>바로팩토리 | 공정현황</h2>
         </LeftSide>
-        <Clock wideFont={2} />
+        <Clock wideFont={2} fontweight={600} />
       </HeadLine>
       <MonitoringTable>
         <thead>
@@ -104,26 +104,27 @@ const MonitoringContainer = styled.div`
 `;
 
 const HeadLine = styled.header`
-  width: calc(100% - 32px);
+  width: calc(100vw - 1.6vw);
   height: 8.8vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 0.8vw;
 `;
 
 const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 0.8vw;
 
   & svg {
     width: 4vw;
-    height: 4vw;
+    max-width: 152px;
+    height: 4vh;
   }
 
   & h2 {
-    font-size: 1.8vw;
+    font-size: 1.6vw;
     font-weight: 500;
     color: ${StyleColor.LIGHT};
   }
@@ -148,7 +149,7 @@ const TableHead = styled.th<{ size: string | number }>`
 
   &.left_align {
     text-align: left;
-    padding-left: 8px;
+    padding-left: 0.4vw;
   }
 
   &.fit {
