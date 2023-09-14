@@ -15,6 +15,9 @@ interface IProps {
   router: NextRouter;
 }
 
+/**
+ * 22줄 모니터링3
+ */
 function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
   const [viewMonitorNumber, setViewMonitorNumber] = useState<number>(0);
@@ -178,7 +181,7 @@ const tableHeader: TableModel[] = [
   {
     title: "기계명",
     align: "left",
-    size: 20,
+    size: 14,
   },
   {
     title: "가공명",
@@ -188,12 +191,12 @@ const tableHeader: TableModel[] = [
   {
     title: "공정시작일",
     align: "center",
-    size: 10,
+    size: 13,
   },
   {
     title: "완료예정일",
     align: "center",
-    size: 10,
+    size: 13,
   },
   {
     title: "실C/T",

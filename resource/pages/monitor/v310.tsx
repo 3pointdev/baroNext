@@ -15,6 +15,10 @@ interface IProps {
   router: NextRouter;
 }
 
+/**
+ * 12줄 모니터링3
+ * 진행률 <-> 완료/목표 토글
+ */
 function Monitoring3View(props: IProps) {
   const machineViewModel = props.machineViewModel;
   const [viewMonitorNumber, setViewMonitorNumber] = useState<number>(0);
