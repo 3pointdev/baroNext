@@ -185,9 +185,9 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
 const MachineNumber = styled.div<{ color: string }>`
   text-align: center;
-  line-height: 3vw;
-  width: 3vw;
-  height: 3vw;
+  width: 5vh;
+  line-height: 5.4vh;
+  height: 5.4vh;
   border-radius: 0.6vw;
   font-size: 1.9vw;
   background: ${({ color }) => color};
@@ -195,9 +195,9 @@ const MachineNumber = styled.div<{ color: string }>`
 `;
 
 const Execution = styled.div<{ color: string }>`
-  height: 3vw;
+  height: 5.4vh;
   border-radius: 0.6vw;
-  line-height: 3vw;
+  line-height: 5.4vh;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
   text-align: center;
