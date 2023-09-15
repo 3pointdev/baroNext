@@ -1,6 +1,7 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Alert from "components/alert/alert";
 import WorkEnvironmentBadge from "components/badge/workEnvironmentBadge";
 import DefaultButton from "components/button/defaultButton";
 import Logo from "components/image/logo";
@@ -170,6 +171,11 @@ function LoginView(props: IProps) {
           </>
         )}
       </Login.FormWrap>
+      <Alert
+        isPositive={authViewModel.alertModel.isPositive}
+        isActive={authViewModel.alertModel.isActive}
+        title={authViewModel.alertModel.title}
+      />
     </PageContainer>
   );
 }

@@ -3,6 +3,7 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StyleColor } from "config/color";
 import ko from "date-fns/locale/ko";
+import dayjs from "dayjs";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
@@ -12,6 +13,7 @@ interface IProps {
   onChange: ((date: string) => void) | ((date: string, type: string) => void);
   width?: string;
   height?: string;
+  useToday: boolean;
 }
 
 export default function DefaultDatePicker({
@@ -19,6 +21,7 @@ export default function DefaultDatePicker({
   onChange,
   width,
   height,
+  useToday,
 }: IProps) {
   const months = [
     "1월",
@@ -61,7 +64,7 @@ export default function DefaultDatePicker({
         fixedHeight
         selected={new Date(selected)}
         onChange={onChange}
-        maxDate={new Date()}
+        maxDate={useToday ? new Date() : dayjs().subtract(1, "day").toDate()}
         dayClassName={(date) => {
           const dayName = getDayName(createDate(date));
           return dayName === "토"

@@ -33,6 +33,7 @@ function MachineNotificationView(props: IProps) {
         onChange={machineViewModel.handleChangeDay}
         title="알람조회"
         datePickerType="range"
+        useToday
       >
         <CustomSelector
           options={machineViewModel.machineSummary.map((machine) => {

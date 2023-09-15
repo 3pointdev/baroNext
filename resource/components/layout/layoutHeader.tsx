@@ -19,6 +19,7 @@ interface IProps {
     | number
     | number[];
   style?: CSSProperties;
+  useToday?: boolean;
 }
 
 export default function LayoutHeader({
@@ -30,15 +31,25 @@ export default function LayoutHeader({
   style,
   start,
   end,
+  useToday = false,
 }: IProps) {
   return (
     <Container style={style}>
       <LeftSide.Wrap>
         <LeftSide.Title>{title}</LeftSide.Title>
         {datePickerType === "single" ? (
-          <DefaultDatePicker selected={value} onChange={onChange} />
+          <DefaultDatePicker
+            selected={value}
+            onChange={onChange}
+            useToday={useToday}
+          />
         ) : datePickerType === "range" ? (
-          <RangeDatePicker start={start} end={end} onChange={onChange} />
+          <RangeDatePicker
+            start={start}
+            end={end}
+            onChange={onChange}
+            useToday={useToday}
+          />
         ) : (
           <></>
         )}

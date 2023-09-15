@@ -1,10 +1,10 @@
+import { IAlertState } from "components/alert/alert";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import sha256 from "sha256";
 import { ServerUrlType } from "../../../config/constants";
 import AccountModel from "../../models/login/account.model";
 import FindAccountModel from "../../models/login/contact.model";
-import { Alert } from "../../modules/alert.module";
 import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class AuthViewModel extends DefaultViewModel {
@@ -12,6 +12,11 @@ export default class AuthViewModel extends DefaultViewModel {
   public findAccount: FindAccountModel = new FindAccountModel();
   public isContactReady: boolean = false;
   public isAutoLogin: boolean = true;
+  public alertModel: IAlertState = {
+    isPositive: true,
+    isActive: false,
+    title: "",
+  };
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -20,6 +25,7 @@ export default class AuthViewModel extends DefaultViewModel {
       findAccount: observable,
       isContactReady: observable,
       isAutoLogin: observable,
+      alertModel: observable,
 
       checkContactReady: action,
       handleChangeContact: action,
@@ -70,23 +76,85 @@ export default class AuthViewModel extends DefaultViewModel {
       })
       .then((result: any) => {
         if (result.data.code === 500) {
-          Alert.alert("요청하신 계정 또는 연락처를 찾을 수 없습니다.");
+          runInAction(() => {
+            this.alertModel = {
+              isPositive: false,
+              isActive: true,
+              title: "요청하신 계정 또는 연락처를 찾을 수 없습니다.",
+            };
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              this.alertModel = {
+                title: "",
+                isPositive: true,
+                isActive: false,
+              };
+            });
+          }, 3000);
+
           return false;
         } else {
-          return Alert.alert("계정을 문자메시지로 전송하였습니다.").then(() => {
-            return true;
+          runInAction(() => {
+            this.alertModel = {
+              isPositive: true,
+              isActive: true,
+              title: "계정을 문자메시지로 전송하였습니다.",
+            };
           });
+          setTimeout(() => {
+            runInAction(() => {
+              this.alertModel = {
+                title: "",
+                isPositive: true,
+                isActive: false,
+              };
+            });
+          }, 3000);
+          return true;
         }
       });
   };
 
   handleLogin = async (isRedirect: boolean) => {
     if (this.account.account.length < 4) {
-      return Alert.alert("아이디를 다시 확인해 주세요.");
+      runInAction(() => {
+        this.alertModel = {
+          isPositive: false,
+          isActive: true,
+          title: "아이디를 다시 확인해 주세요.",
+        };
+      });
+      setTimeout(() => {
+        runInAction(() => {
+          this.alertModel = {
+            title: "",
+            isPositive: true,
+            isActive: false,
+          };
+        });
+      }, 3000);
+      return false;
     }
 
     if (this.account.password.length < 4) {
-      return Alert.alert("암호를 다시 확인해 주세요.");
+      runInAction(() => {
+        this.alertModel = {
+          isPositive: false,
+          isActive: true,
+          title: "암호를 다시 확인해 주세요.",
+        };
+      });
+      setTimeout(() => {
+        runInAction(() => {
+          this.alertModel = {
+            title: "",
+            isPositive: true,
+            isActive: false,
+          };
+        });
+      }, 3000);
+      return false;
     }
 
     const params = {
@@ -96,7 +164,26 @@ export default class AuthViewModel extends DefaultViewModel {
       sender: window.localStorage.sender,
     };
 
-    this.insertLogin(params, isRedirect);
+    await this.insertLogin(params, isRedirect)
+      .then((data: any) => {})
+      .catch((error: any) => {
+        runInAction(() => {
+          this.alertModel = {
+            isPositive: false,
+            isActive: true,
+            title: error.msg,
+          };
+        });
+        setTimeout(() => {
+          runInAction(() => {
+            this.alertModel = {
+              title: "",
+              isPositive: true,
+              isActive: false,
+            };
+          });
+        }, 3000);
+      });
   };
 
   checkContactReady = () => {
