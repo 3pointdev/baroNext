@@ -80,6 +80,7 @@ function CodeCompare({ title, type, compareViewModel, machineList }: IProps) {
             onChange={handleChangeDate}
             height="42px"
             width="200px"
+            useToday
           />
         </MachineWrap>
         <CustomSelector

@@ -62,7 +62,7 @@ function RecordView(props: IProps) {
           list={[
             { title: "전체", id: TableFormatType.ALL },
             { title: "기계별", id: TableFormatType.MACHINE },
-            { title: "품번별", id: TableFormatType.PROGRAM },
+            // { title: "품번별", id: TableFormatType.PROGRAM },
           ]}
           onChange={recordViewModel.handleChangeTableFormat}
         />

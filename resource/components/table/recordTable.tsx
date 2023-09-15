@@ -103,22 +103,31 @@ export default function RecordTable({
               <tr key={`table_body_rows_${key}`}>
                 {header.map((head: TableModel, inkey: number) => {
                   const thisMergeCount = mergedCells[inkey][key];
-
                   const shoudSkip = head.rowSpan && thisMergeCount === 0;
                   if (shoudSkip || item[head.column] === -1) return;
-
+                  let target = item[head.column];
                   const shouldMerge = head.rowSpan && thisMergeCount > 0;
-                  const isAverage = item[head.column] === "전체" ? 3 : 1;
+                  const isAverage = target === "전체" ? 3 : 1;
+
+                  let className: string = "";
+                  if (target !== "" && typeof target === "string") {
+                    if (target.includes("isNotViewAble")) {
+                      className = "is_not_view_able";
+                      target = "";
+                    }
+                  }
+                  if (isAverage === 3) className = className + " is_average";
+
                   return (
                     <td
                       key={`table_body_row_data_${head.column}_${inkey}`}
                       align={head.align}
                       rowSpan={head.rowSpan && shouldMerge ? thisMergeCount : 1}
                       colSpan={isAverage}
-                      className={isAverage === 3 ? "is_average" : ""}
+                      className={className}
                       style={{ width: `${head.size}%` }}
                     >
-                      {`${item[head.column]}`}
+                      {`${target}`}
                     </td>
                   );
                 })}
@@ -194,6 +203,10 @@ const Table = {
 
     & tr:first-child td {
       border-top: 0;
+    }
+
+    & .is_not_view_able {
+      background: ${StyleColor.EMPHASIS};
     }
 
     & .is_average {

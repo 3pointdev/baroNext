@@ -3,6 +3,7 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StyleColor } from "config/color";
 import ko from "date-fns/locale/ko";
+import dayjs from "dayjs";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
@@ -12,9 +13,15 @@ interface IProps {
   start: string;
   end: string;
   onChange: (date: string, type: string) => void;
+  useToday: boolean;
 }
 
-export default function RangeDatePicker({ start, end, onChange }: IProps) {
+export default function RangeDatePicker({
+  start,
+  end,
+  onChange,
+  useToday = false,
+}: IProps) {
   const months = [
     "1월",
     "2월",
@@ -63,7 +70,7 @@ export default function RangeDatePicker({ start, end, onChange }: IProps) {
         fixedHeight
         selected={new Date(start)}
         onChange={handleStartDate}
-        maxDate={new Date()}
+        maxDate={useToday ? new Date() : dayjs().subtract(1, "day").toDate()}
         dayClassName={(date) => {
           const dayName = getDayName(createDate(date));
           return dayName === "토"
@@ -111,7 +118,7 @@ export default function RangeDatePicker({ start, end, onChange }: IProps) {
         fixedHeight
         selected={new Date(end)}
         onChange={handleEndDate}
-        maxDate={new Date()}
+        maxDate={useToday ? new Date() : dayjs().subtract(1, "day").toDate()}
         dayClassName={(date) => {
           const dayName = getDayName(createDate(date));
           return dayName === "토"

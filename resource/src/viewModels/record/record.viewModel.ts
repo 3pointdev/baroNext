@@ -124,7 +124,7 @@ export default class RecordViewModel extends DefaultViewModel {
             plan_count: item.plan_count,
             part_count: item.count,
             achieve: "100%",
-            uptime: "62%",
+            uptime: "62% isNotViewAble",
             tolerance: "2%",
           })
         );
@@ -334,7 +334,7 @@ export default class RecordViewModel extends DefaultViewModel {
             mid: newData[i].mid,
             partCount: -1,
             planCount: -1,
-            tolerance: "2%",
+            tolerance: "isNotViewAble",
             uptime: "62%",
             program: "전체",
           });
@@ -349,14 +349,14 @@ export default class RecordViewModel extends DefaultViewModel {
   setSort = (value: number) => {
     switch (value) {
       case TableFormatType.ALL:
-        this.sortProgram();
+        // this.sortProgram();
         this.sortMachine();
         this.sortDate();
         this.list = this.setAverage(this.list);
         break;
       case TableFormatType.MACHINE:
         this.list = this.setAverage(this.list);
-        this.sortProgram();
+        // this.sortProgram();
         this.sortDate();
         this.sortMachine();
         break;

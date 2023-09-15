@@ -4,7 +4,6 @@ import pageUrlConfig from "config/pageUrlConfig";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { NextRouter } from "next/router";
 import DefaultProfile from "public/images/profile/default-profile.jpg";
-import { Alert } from "src/modules/alert.module";
 import UserAgentModule from "src/modules/userAgent.module";
 import { ServerUrlType, UserAgentType } from "../../config/constants";
 import AuthDto from "../dto/auth/auth.dto";
@@ -60,7 +59,7 @@ export default class DefaultViewModel {
     });
   };
 
-  insertLogin = async (params: ILogin, isRedirect: boolean) => {
+  insertLogin = async (params: ILogin, isRedirect: boolean): Promise<any> => {
     await this.api
       .post(ServerUrlType.BARO, "/login/login", params)
       .then((result: AxiosResponse<any>) => {
@@ -81,8 +80,9 @@ export default class DefaultViewModel {
               this.router.replace(pageUrlConfig.main);
             }
           });
+          return true;
         } else {
-          Alert.alert(result.data.msg);
+          throw result.data;
         }
       });
   };

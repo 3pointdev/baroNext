@@ -31,10 +31,38 @@ function Monitoring2View(props: IProps) {
 
   useEffect(() => {
     const initialize = async () => {
-      await machineViewModel.getMounted(monitorViewModel.router.query.monitor);
-      await machineViewModel.getMachineList();
-      await monitorViewModel.getList();
-      machineViewModel.getNotice(monitorViewModel.list);
+      if (props.router.query.monitor) {
+        await machineViewModel.getMounted(
+          monitorViewModel.router.query.monitor
+        );
+        await machineViewModel.getMachineList();
+        await monitorViewModel.getList();
+        machineViewModel.getNotice(monitorViewModel.list);
+      } else {
+        await monitorViewModel.getList();
+        if (monitorViewModel.list.length > 0) {
+          Alert.selector({
+            title: "모니터를 선택해 주세요.",
+            input: "select",
+            options: monitorViewModel.list.map((monitor: MonitorListDto) => {
+              return `${monitor.name}`;
+            }),
+            callback: (value) => {
+              const target = monitorViewModel.list[value];
+              location.replace(
+                `${pageUrlConfig.monitor2}?monitor=${target.name}`
+              );
+            },
+          });
+        } else {
+          Alert.alert(
+            "설정 된 모니터가 없습니다.\n설정화면으로 이동합니다.",
+            () => {
+              location.replace(pageUrlConfig.monitorSetting);
+            }
+          );
+        }
+      }
     };
 
     initialize();

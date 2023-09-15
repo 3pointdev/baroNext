@@ -108,14 +108,30 @@ export default function RealTimeTableRow13Line({ data }: IProps) {
 
 const textScroll = keyframes`
 
-  from{
+  0%{
     transform:translateX(105%);
     -moz-transform:translateX(105%);
     -webkit-transform:translateX(105%);
     -o-transform:translateX(105%);
     -ms-transform:translateX(105%);
   }
-  to{
+
+  40% {
+    transform:translateX(0%);
+    -moz-transform:translateX(0%);
+    -webkit-transform:translateX(0%);
+    -o-transform:translateX(0%);
+    -ms-transform:translateX(0%);
+  }
+  60% {
+    transform:translateX(0%);
+    -moz-transform:translateX(0%);
+    -webkit-transform:translateX(0%);
+    -o-transform:translateX(0%);
+    -ms-transform:translateX(0%);
+  }
+  
+  100%{
     transform:translateX(-105%);
     -moz-transform:translateX(-105%);
     -webkit-transform:translateX(-105%);
@@ -158,7 +174,7 @@ const TableRow = styled.tr<{ disable: boolean }>`
 
     &.is_long_column p {
       width: fit-content;
-      animation: ${textScroll} 6s linear infinite;
+      animation: ${textScroll} 10s linear infinite;
     }
   }
 
