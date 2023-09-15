@@ -185,17 +185,17 @@ const tableHeader: TableModel[] = [
   {
     title: "No",
     align: "center",
-    size: 5,
+    size: 4,
   },
   {
     title: "기계명",
     align: "left",
-    size: 18,
+    size: 14,
   },
   {
     title: "가공명",
     align: "left",
-    size: 18,
+    size: 21,
   },
   {
     title: "공정시작일",
