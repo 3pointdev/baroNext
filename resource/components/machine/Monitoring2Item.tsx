@@ -10,6 +10,28 @@ interface IProps {
   data: MachineDto;
 }
 
+const getRealTIme = (data: MachineDto) => {
+  if (+data.workTime > 0) {
+    if (+data.tActiveTime > 0) {
+      // workTime과 tActiveTime 모두 있는 경우
+      // console.log(data.mid, 1);
+      return (
+        +data.activeTime -
+        +data.workTime -
+        (new Date().getTime() - +data.tActiveTime)
+      );
+    } else {
+      // workTime은 있으나 tActiveTime이 없는 경우
+      // console.log(data.mid, 2, data.workTime);
+      return +data.activeTime - +data.workTime;
+    }
+  } else {
+    // workTime과 tActiveTime 모두 없는 경우
+    // console.log(data.mid, 3);
+    return +data.activeTime - (new Date().getTime() - +data.activeStartTime);
+  }
+};
+
 export default function Monitoring2Item({ data }: IProps) {
   const [executionText, setExecutionText] = useState<MachineTextType>(
     MachineTextType.MODIFY
@@ -28,21 +50,7 @@ export default function Monitoring2Item({ data }: IProps) {
   useEffect(() => {
     if (data.execution === MachineExecutionType.ACTIVE) {
       const interval = setInterval(() => {
-        if (+data.workTime > 0) {
-          if (+data.tActiveTime > 0) {
-            setRealTime(
-              +data.activeTime -
-                +data.workTime -
-                (new Date().getTime() - +data.tActiveTime)
-            );
-          } else {
-            setRealTime(+data.activeTime - +data.workTime);
-          }
-        } else {
-          setRealTime(
-            +data.activeTime - (new Date().getTime() - +data.activeStartTime)
-          );
-        }
+        setRealTime(getRealTIme(data));
       }, 1000);
       setRealTimeInterval(interval);
     } else {
@@ -104,7 +112,9 @@ export default function Monitoring2Item({ data }: IProps) {
         <RealTimeInfo.Number>{data.machineNo}</RealTimeInfo.Number>
         <RealTimeInfo.CycleTime
           className={
-            realTime <= 0 && data.execution === MachineExecutionType.ACTIVE
+            realTime <= 0 &&
+            data.execution === MachineExecutionType.ACTIVE &&
+            !data.pause
               ? "zero"
               : ""
           }
