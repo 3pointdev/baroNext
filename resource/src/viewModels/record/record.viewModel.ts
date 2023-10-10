@@ -107,30 +107,27 @@ export default class RecordViewModel extends DefaultViewModel {
     await this.api
       .get(
         ServerUrlType.BARO,
-        `report/${this.recordModel.startDay}/${this.recordModel.endDay}`
+        `report/selectRecord/${this.recordModel.startDay}/${this.recordModel.endDay}`
       )
       .then((result: AxiosResponse) => {
         //임시데이터 포함
         const data = result.data.map((item) =>
           plainToInstance(RecordDto, {
-            mid: item.mid,
+            ...item,
+            started_at: dayjs(item.started_at).format("MM/DD"),
             program: item.program?.includes("(")
               ? item.program.split("(")[1].replace(")", "")
               : item.program === ""
               ? "Unknown Lot"
               : item.program,
-            count: `${item.count} / ${item.plan_count}`,
-            date: "07/01",
-            plan_count: item.plan_count,
-            part_count: item.count,
-            achieve: "100%",
-            uptime: "62% isNotViewAble",
-            tolerance: "2%",
+            rate: item.rate ? `${item.rate}%` : `-`,
+            oper_rate: `${item.oper_rate}% isNotViewAble`,
+            prdct_rate: item.prdct_rate ? `${item.prdct_rate}%` : `-`,
           })
         );
-
         runInAction(() => {
-          this.list = this.setAverage(data);
+          this.list = data;
+          this.setSort(TableFormatType.ALL);
         });
       })
       .catch((error: AxiosError) => {
@@ -323,24 +320,71 @@ export default class RecordViewModel extends DefaultViewModel {
     });
   };
 
+  /**
+   * 전체 평균 row 추가하는 함수
+   * @param data 전체 데이터
+   */
   setAverage = (data: RecordDto[]) => {
     let newData = data;
+
+    // row 추가함수 (포멧탭 전체인경우만)
     if (this.recordModel.format === TableFormatType.ALL) {
       for (let i = newData.length - 1; i >= 0; i--) {
         if (newData[i].mid !== newData[i + 1]?.mid) {
-          newData.splice(i + 1, 0, {
-            achieve: "100%",
-            date: newData[i].date,
-            mid: newData[i].mid,
-            partCount: -1,
-            planCount: -1,
-            tolerance: "isNotViewAble",
-            uptime: "62%",
-            program: "전체",
-          });
+          newData.splice(
+            i + 1,
+            0,
+            plainToInstance(RecordDto, {
+              started_at: newData[i].date,
+              mkey: newData[i].mkey,
+              mid: newData[i].mid,
+              program: "전체",
+              plan: -1,
+              count: -1,
+              rate: 0,
+              oper_rate: 0,
+              prdct_rate: "isNotViewAble",
+              lot: newData[i].lot,
+            })
+          );
+        }
+      }
+
+      // 평균값 계산 및 해당 평균을 나타내는 row에 적용하는 함수
+      let uptimeRecord = [];
+      let achieveRecord = [];
+      for (let j = 0; j < newData.length; j++) {
+        //전체row인 경우 recording된 값 평균계산 후 적용 recording 초기화
+        if (newData[j].program === "전체") {
+          const uptimeAverage =
+            uptimeRecord.reduce((acc, cur, idx) => {
+              return (acc += cur);
+            }, 0) / uptimeRecord.length;
+          const achieveAverage =
+            achieveRecord.reduce((acc, cur, idx) => {
+              return (acc += cur);
+            }, 0) / achieveRecord.length;
+          newData[j].uptime = uptimeAverage
+            ? `${(+uptimeAverage.toFixed(2) * 10000) / 10000}%`
+            : "-";
+          newData[j].achieve = achieveAverage
+            ? `${(+achieveAverage.toFixed(2) * 10000) / 10000}%`
+            : "-";
+
+          uptimeRecord = [];
+          achieveRecord = [];
+        } else {
+          //전체row가 아닌 경우 uptime과 achieve 값을 recording
+          newData[j].uptime !== "null% isNotViewAble" &&
+            uptimeRecord.push(
+              +newData[j].uptime.replace("% isNotViewAble", "")
+            );
+          newData[j].achieve !== "-" &&
+            achieveRecord.push(+newData[j].achieve.replace("%", ""));
         }
       }
     } else {
+      //포멧탭 전체가 아닌경우 전체row 삭제
       newData = newData.filter((data) => data.program !== "전체");
     }
     return newData;
@@ -352,16 +396,22 @@ export default class RecordViewModel extends DefaultViewModel {
         // this.sortProgram();
         this.sortMachine();
         this.sortDate();
-        this.list = this.setAverage(this.list);
+        runInAction(() => {
+          this.list = this.setAverage(this.list);
+        });
         break;
       case TableFormatType.MACHINE:
-        this.list = this.setAverage(this.list);
+        runInAction(() => {
+          this.list = this.setAverage(this.list);
+        });
         // this.sortProgram();
         this.sortDate();
         this.sortMachine();
         break;
       case TableFormatType.PROGRAM:
-        this.list = this.setAverage(this.list);
+        runInAction(() => {
+          this.list = this.setAverage(this.list);
+        });
         this.sortMachine();
         this.sortDate();
         this.sortProgram();
