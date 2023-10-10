@@ -41,6 +41,7 @@ interface ISelectorOptions {
   options: any;
   inputValue?: any;
   error?: string;
+  className?: string;
   callback: (value) => void;
 }
 
@@ -64,7 +65,8 @@ export const Alert = {
 function alert(
   message: string,
   callback?: any,
-  closeModalOption: boolean = true
+  closeModalOption: boolean = true,
+  className?: string
 ) {
   return Swal.fire({
     title: message,
@@ -72,6 +74,7 @@ function alert(
     allowOutsideClick: closeModalOption,
     allowEscapeKey: closeModalOption,
     allowEnterKey: closeModalOption,
+    customClass: className,
   }).then(callback);
 }
 
@@ -135,6 +138,7 @@ function selector(options: ISelectorOptions) {
     input: options.input,
     inputValue: options.inputValue,
     inputOptions: options.options,
+    customClass: options.className,
     inputValidator: (value) => {
       if (!value) {
         return options.error;

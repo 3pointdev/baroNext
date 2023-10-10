@@ -44,6 +44,7 @@ function Monitoring2View(props: IProps) {
           Alert.selector({
             title: "모니터를 선택해 주세요.",
             input: "select",
+            className: "monitoring_item",
             options: monitorViewModel.list.map((monitor: MonitorListDto) => {
               return `${monitor.name}`;
             }),
@@ -59,7 +60,9 @@ function Monitoring2View(props: IProps) {
             "설정 된 모니터가 없습니다.\n설정화면으로 이동합니다.",
             () => {
               location.replace(pageUrlConfig.monitorSetting);
-            }
+            },
+            true,
+            "monitoring_item"
           );
         }
       }
