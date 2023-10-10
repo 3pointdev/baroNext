@@ -97,7 +97,7 @@ export default function Monitoring2Item({ data }: IProps) {
   }, []);
 
   return (
-    <Container>
+    <Container className="monitoring_item">
       <Header.Wrap>
         <Header.Count>
           {executionText !== MachineTextType.OFF &&
