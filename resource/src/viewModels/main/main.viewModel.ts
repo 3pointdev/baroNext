@@ -1,16 +1,16 @@
-import { makeObservable, observable } from "mobx";
-import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
-import MenuModel from "../../models/menu/menu.model";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import AlarmListDto from "../../dto/alarm/alarmList.dto";
-import UserMenuModel from "../../models/menu/userMenu.model";
+import { makeObservable, observable } from "mobx";
+import ListIcon from "public/images/icons/listIcon";
 import pageUrlConfig from "../../../config/pageUrlConfig";
 import HomeIcon from "../../../public/images/icons/homeIcon";
+import MagnifyGlassIcon from "../../../public/images/icons/magnifyGlassIcon";
+import MonitorIcon from "../../../public/images/icons/monitorIcon";
 import ScheduleIcon from "../../../public/images/icons/scheduleIcon";
 import ToolsIcon from "../../../public/images/icons/toolsIcon";
-import MonitorIcon from "../../../public/images/icons/monitorIcon";
-import ListIcon from "public/images/icons/listIcon";
-import MagnifyGlassIcon from "../../../public/images/icons/magnifyGlassIcon";
+import AlarmListDto from "../../dto/alarm/alarmList.dto";
+import MenuModel from "../../models/menu/menu.model";
+import UserMenuModel from "../../models/menu/userMenu.model";
+import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MainViewModel extends DefaultViewModel {
   public menus: MenuModel[] = [];

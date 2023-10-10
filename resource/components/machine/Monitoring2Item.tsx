@@ -28,9 +28,21 @@ export default function Monitoring2Item({ data }: IProps) {
   useEffect(() => {
     if (data.execution === MachineExecutionType.ACTIVE) {
       const interval = setInterval(() => {
-        setRealTime(
-          +data.activeStartTime - (new Date().getTime() - +data.activeTime)
-        );
+        if (+data.workTime > 0) {
+          if (+data.tActiveTime > 0) {
+            setRealTime(
+              +data.activeTime -
+                +data.workTime -
+                (new Date().getTime() - +data.tActiveTime)
+            );
+          } else {
+            setRealTime(+data.activeTime - +data.workTime);
+          }
+        } else {
+          setRealTime(
+            +data.activeTime - (new Date().getTime() - +data.activeStartTime)
+          );
+        }
       }, 1000);
       setRealTimeInterval(interval);
     } else {

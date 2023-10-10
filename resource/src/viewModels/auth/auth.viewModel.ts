@@ -1,3 +1,4 @@
+import { plainToInstance } from "class-transformer";
 import { IAlertState } from "components/alert/alert";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
@@ -39,7 +40,10 @@ export default class AuthViewModel extends DefaultViewModel {
     const { name, value } = event.target;
 
     runInAction(() => {
-      this.account = { ...this.account, [name]: value };
+      this.account = plainToInstance(AccountModel, {
+        ...this.account,
+        [name]: value,
+      });
     });
   };
 

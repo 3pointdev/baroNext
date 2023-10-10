@@ -56,7 +56,7 @@ export default function RealTimeTableRow13Line({ data }: IProps) {
       <td
         align={"left"}
         className={
-          data.program?.length > 18 ? "is_long_column program" : "program"
+          data.program?.length > 17 ? "is_long_column program" : "program"
         }
       >
         <p>{data.program}</p>
@@ -189,7 +189,7 @@ const MachineNumber = styled.div<{ color: string }>`
   line-height: 5.4vh;
   height: 5.4vh;
   border-radius: 0.6vw;
-  font-size: 1.9vw;
+  font-size: 2vw;
   background: ${({ color }) => color};
   color: ${StyleColor.LIGHT};
 `;
@@ -202,5 +202,5 @@ const Execution = styled.div<{ color: string }>`
   color: ${StyleColor.LIGHT};
   text-align: center;
   font-size: 2vw;
-  font-weight: 600;
+  font-weight: 700;
 `;
