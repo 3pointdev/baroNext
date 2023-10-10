@@ -182,6 +182,7 @@ const Header = {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 27%;
   `,
   Count: styled.p`
     font-size: 2.8vh;

@@ -282,6 +282,7 @@ const Footer = {
   Notice: styled.p<{ isLongText: boolean; length: number }>`
     font-size: 3vh;
     font-weight: 500;
+    line-height: 1;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
     color: ${StyleColor.DARK};
