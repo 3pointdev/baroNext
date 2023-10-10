@@ -276,7 +276,7 @@ const Footer = {
       height: 100px;
       width: 100px;
       background: ${StyleColor.BACKGROUND};
-      z-index: 99;
+      z-index: 2;
     }
   `,
   Notice: styled.p<{ isLongText: boolean; length: number }>`

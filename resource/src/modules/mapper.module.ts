@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
+import { ExceptionBlockType, MachineExecutionType } from "config/constants";
 import MachineDto from "src/dto/machine/machine.dto";
 import RealTimeDataDto from "src/dto/machine/realTimeData.dto";
-import { ExceptionBlockType, MachineExecutionType } from "config/constants";
 
 class MapperModule {
   public currentListMapper(plainData) {
@@ -67,7 +67,9 @@ class MapperModule {
       machine_no: matchData.machineNo,
       prdct_end: matchData.prdctEnd,
       start_ymdt: matchData.startYmdt,
-      pause: ExceptionBlockType.PAUSE.includes(plainData.Block),
+      pause:
+        ExceptionBlockType.PAUSE.includes(plainData.Mcode) ||
+        ExceptionBlockType.PAUSE.includes(plainData.Block),
       doneTime:
         (matchData.active + matchData.wait) *
         (plainData.PlanCount - plainData.PartCount),
@@ -174,7 +176,6 @@ class MapperModule {
   }
 
   public partCountMapper(dataArray: string[], matchData: MachineDto) {
-    // matchData.tActiveTime = +dataArray[11];
     // matchData.active = +dataArray[11];
     matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];
