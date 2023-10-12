@@ -27,12 +27,12 @@ class MapperModule {
   }
 
   public machineStatMapper(plainData, matchData: MachineDto) {
-    let programName = plainData.Program;
+    let programName = plainData.Program ? plainData.Program : plainData.Block;
     let execution = plainData.Execution;
     let remainTime = 0;
 
-    if (plainData.Program.includes("(")) {
-      programName = plainData.Program.split("(")[1].replace(")", "");
+    if (programName.includes("(")) {
+      programName = programName.split("(")[1].replace(")", "");
     }
 
     if (programName.includes("%")) {
