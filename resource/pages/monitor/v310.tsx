@@ -58,7 +58,7 @@ function Monitoring3View(props: IProps) {
       clearInterval(toggleCount);
     };
   }, []);
-  console.log(toggleCount);
+
   return (
     <MonitoringContainer>
       <HeadLine>

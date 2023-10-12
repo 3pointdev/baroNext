@@ -25,7 +25,7 @@ function ReportView(props: IProps) {
       reportViewModel.dataReset();
     };
   }, []);
-  console.log(reportViewModel.lotList);
+
   return (
     <PageContainer style={{ gap: "16px", overflow: "auto" }}>
       <LayoutHeader

@@ -111,7 +111,6 @@ function Monitoring2View(props: IProps) {
       denyColor: StyleColor.PRIMARY,
       confirmColor: StyleColor.FINISH,
       callback: (result: SweetAlertResult) => {
-        console.log(result);
         if (result.isConfirmed) {
           machineViewModel.insertNotice(result.value);
           return setIsOpenMenu(false);
@@ -151,7 +150,7 @@ function Monitoring2View(props: IProps) {
             isLongText={machineViewModel.notice.length > 16}
             length={machineViewModel.notice.length}
           >
-            {machineViewModel.notice}
+            <p>{machineViewModel.notice}</p>
           </Footer.Notice>
         </Footer.Wrap>
         <SlideMenu.Wrap className={isOpenMenu ? "is_open" : ""}>
@@ -279,29 +278,33 @@ const Footer = {
       height: 100px;
       width: 100px;
       background: ${StyleColor.BACKGROUND};
-      z-index: 2;
+      z-index: 99;
     }
   `,
-  Notice: styled.p<{ isLongText: boolean; length: number }>`
+  Notice: styled.div<{ isLongText: boolean; length: number }>`
     font-size: 3vh;
     font-weight: 500;
     line-height: 1;
     font-family: "pretendard", sans-serif;
     white-space: nowrap;
     color: ${StyleColor.DARK};
+    overflow: hidden;
 
-    animation: ${({ isLongText, length }) =>
-      isLongText
-        ? css`
-            ${textScroll} ${length * 0.2}s linear infinite
-          `
-        : ""};
+    & p {
+      width: max-content;
+      animation: ${({ isLongText, length }) =>
+        isLongText
+          ? css`
+              ${textScroll} ${length * 0.2}s linear infinite
+            `
+          : ""};
+    }
   `,
 };
 
 const SlideMenu = {
   Wrap: styled.div`
-    z-index: 3;
+    z-index: 100;
     position: fixed;
     left: -100vw;
     top: 0px;

@@ -69,7 +69,8 @@ export default function RealTimeTableRow10Line({ data, toggleCount }: IProps) {
         {data.prdctEnd && dayjs(data.prdctEnd).format("MM/DD HH:mm")}
       </td>
       <td align={"center"} className="tabular_nums">
-        {data.planCount > 0 && timeInstance.msToHHMM(data.active)}
+        {data.planCount > 0 &&
+          timeInstance.msToHHMM(+data.activeTime + data.wait)}
       </td>
       {!toggleCount ? (
         <td align={"center"} className="counter">

@@ -6,8 +6,9 @@ import RealTimeDataDto from "src/dto/machine/realTimeData.dto";
 class MapperModule {
   public currentListMapper(plainData) {
     const mapping = {
-      active: plainData.active,
+      WorkTime: plainData.active,
       ActiveTime: plainData.active_time,
+      wait: plainData.wait,
       machine_no: plainData.machine_no,
       Mid: plainData.mid,
       Id: plainData.mkey,
@@ -19,7 +20,6 @@ class MapperModule {
       Program: plainData.process?.includes("(")
         ? plainData.process.split("(")[1].replace(")", "")
         : plainData.process,
-      wait: plainData.wait,
       pause: false,
     };
 
@@ -29,6 +29,7 @@ class MapperModule {
   public machineStatMapper(plainData, matchData: MachineDto) {
     let programName = plainData.Program;
     let execution = plainData.Execution;
+    let remainTime = 0;
 
     if (plainData.Program.includes("(")) {
       programName = plainData.Program.split("(")[1].replace(")", "");
@@ -42,11 +43,29 @@ class MapperModule {
       execution = MachineExecutionType.OFF;
     }
 
+    // 현재시각
+    const now = new Date().getTime();
+
+    // workTime, tActiveTime 모두 있는 경우
+    if (+plainData.WorkTime > 0 && +plainData.TActiveTime > 0) {
+      remainTime =
+        +matchData.activeTime -
+        +plainData.WorkTime -
+        (now - +plainData.TActiveTime);
+    }
+
+    // workTime은 있으나 tActiveTime이 없는 경우
+    if (+plainData.WorkTime > 0) {
+      remainTime = +matchData.activeTime - +plainData.WorkTime;
+    }
+
+    // workTime과 tActiveTime 모두 없는 경우
+    remainTime = +matchData.activeTime - (now - +plainData.ActiveTime);
+
     const plainMachineData = {
       Alarm: plainData.Alarm,
-      active: matchData.active,
       ActiveTime: matchData.activeTime,
-      ActiveStartTime: plainData.ActiveTime,
+      remainTime: remainTime,
       wait: matchData.wait,
       Block: plainData.Block,
       CycleTime: plainData.CycleTime,
@@ -71,10 +90,10 @@ class MapperModule {
         ExceptionBlockType.PAUSE.includes(plainData.Mcode) ||
         ExceptionBlockType.PAUSE.includes(plainData.Block),
       doneTime:
-        (matchData.active + matchData.wait) *
+        (+matchData.activeTime + matchData.wait) *
         (plainData.PlanCount - plainData.PartCount),
       WorkTime: plainData.WorkTime,
-      TActiveTime: plainData.TActiveTime,
+
       isChangePalette: ExceptionBlockType.PALETTE.includes(plainData.Block),
       isReceivePartCount:
         plainData.CountTime < plainData.ActiveTime &&
@@ -87,30 +106,33 @@ class MapperModule {
     const plainRealTimeData = {
       Id: plainData.Id,
       machineNo: matchData.machineNo,
-      S1load: plainData.Data.S1load,
-      S1speed: plainData.Data.S1speed,
+      line: plainData.Data.line,
+      f_command: plainData.Data.f_command,
+      path_position: plainData.Data.path_position,
+      path_position2: plainData.Data.path_position2,
+      path_feedrate: plainData.Data.path_feedrate,
+      path_feedrate2: plainData.Data.path_feedrate2,
       Xact: plainData.Data.Xact,
       Xload: plainData.Data.Xload,
+      Yact: plainData.Data.Yact,
+      Yload: plainData.Data.Yload,
       Zact: plainData.Data.Zact,
       Zload: plainData.Data.Zload,
-      f_command: plainData.Data.f_command,
-      line: plainData.Data.line,
-      path_feedrate: plainData.Data.path_feedrate,
-      path_position: plainData.Data.path_position,
-      program_comment: plainData.Data.program_comment,
-      tool_id: plainData.Data.tool_id,
+      Aact: plainData.Data.Aact,
+      Aload: plainData.Data.Aload,
       Bact: plainData.Data.Bact,
       Bload: plainData.Data.Bload,
       Cact: plainData.Data.Cact,
       Cload: plainData.Data.Cload,
+      S1load: plainData.Data.S1load,
+      S1speed: plainData.Data.S1speed,
       S2load: plainData.Data.S2load,
       S2speed: plainData.Data.S2speed,
       S320load: plainData.Data.S320load,
       S320speed: plainData.Data.S320speed,
-      Yact: plainData.Data.Yact,
-      Yload: plainData.Data.Yload,
-      path_position2: plainData.Data.path_position2,
+      program_comment: plainData.Data.program_comment,
       program_comment2: plainData.Data.program_comment2,
+      tool_id: plainData.Data.tool_id,
       tool_id2: plainData.Data.tool_id2,
     };
 
@@ -161,7 +183,7 @@ class MapperModule {
     if (dataArray.includes("execution")) {
       matchData.isReceiveMessage = false;
       if (matchData.execution === MachineExecutionType.ACTIVE) {
-        matchData.activeStartTime = new Date(dataArray[5]).getTime().toString();
+        matchData.remainTime = +matchData.activeTime;
       }
     }
 
@@ -176,7 +198,7 @@ class MapperModule {
   }
 
   public partCountMapper(dataArray: string[], matchData: MachineDto) {
-    // matchData.active = +dataArray[11];
+    matchData.activeTime = dataArray[11];
     matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];
     matchData.wait = +dataArray[10];
@@ -184,6 +206,8 @@ class MapperModule {
     matchData.isReceiveMessage = false;
     matchData.pause = false;
     matchData.execution = MachineExecutionType.STOPPED;
+    matchData.doneTime =
+      (+dataArray[11] + +dataArray[10]) * (+dataArray[6] - +dataArray[5]);
 
     return matchData;
   }

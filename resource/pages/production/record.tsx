@@ -48,8 +48,6 @@ function RecordView(props: IProps) {
     });
   };
 
-  console.log(recordViewModel.list);
-
   return (
     <PageContainer style={{ gap: "16px" }}>
       <LayoutHeader
