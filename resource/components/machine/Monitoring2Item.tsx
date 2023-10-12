@@ -1,5 +1,5 @@
 import { StyleColor } from "config/color";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MachineExecutionType, MachineTextType } from "../../config/constants";
 import MachineDto from "../../src/dto/machine/machine.dto";
@@ -10,28 +10,6 @@ interface IProps {
   data: MachineDto;
 }
 
-const getRealTIme = (data: MachineDto) => {
-  if (+data.workTime > 0) {
-    if (+data.tActiveTime > 0) {
-      // workTime과 tActiveTime 모두 있는 경우
-      // console.log(data.mid, 1);
-      return (
-        +data.activeTime -
-        +data.workTime -
-        (new Date().getTime() - +data.tActiveTime)
-      );
-    } else {
-      // workTime은 있으나 tActiveTime이 없는 경우
-      // console.log(data.mid, 2, data.workTime);
-      return +data.activeTime - +data.workTime;
-    }
-  } else {
-    // workTime과 tActiveTime 모두 없는 경우
-    // console.log(data.mid, 3);
-    return +data.activeTime - (new Date().getTime() - +data.activeStartTime);
-  }
-};
-
 export default function Monitoring2Item({ data }: IProps) {
   const [executionText, setExecutionText] = useState<MachineTextType>(
     MachineTextType.MODIFY
@@ -41,16 +19,19 @@ export default function Monitoring2Item({ data }: IProps) {
     MachineTextType.OFF,
     MachineTextType.MODIFY,
   ];
-  const [realTime, setRealTime] = useState<number>();
+  const [realTime, setRealTime] = useState<number>(data.remainTime);
+  const realTimeRef = useRef<number>(null);
   const [realTimeInterval, setRealTimeInterval] = useState<any>();
 
   /**
    * execution이 active일때 타이머 작동함수
    */
   useEffect(() => {
+    realTimeRef.current = data.remainTime;
     if (data.execution === MachineExecutionType.ACTIVE) {
       const interval = setInterval(() => {
-        setRealTime(getRealTIme(data));
+        realTimeRef.current = realTimeRef.current - 1000;
+        setRealTime(realTimeRef.current);
       }, 1000);
       setRealTimeInterval(interval);
     } else {
@@ -131,9 +112,12 @@ export default function Monitoring2Item({ data }: IProps) {
         <Footer.Mid>{data.mid}</Footer.Mid>
         <Footer.EndTime>
           {executionText !== MachineTextType.OFF &&
-            timeInstance.msToString(
-              (data.active + data.wait) * (data.planCount - data.partCount)
-            )}
+            (data.partCount > 1
+              ? timeInstance.msToString(
+                  (+data.activeTime + data.wait) *
+                    (data.planCount - data.partCount)
+                )
+              : "계산 대기 중")}
         </Footer.EndTime>
       </Footer.Wrap>
       {onCoverStatus.includes(executionText) && (
@@ -195,6 +179,9 @@ const Header = {
     line-height: 1;
     color: ${StyleColor.DARK};
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
 };
 

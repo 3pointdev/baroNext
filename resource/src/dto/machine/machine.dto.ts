@@ -1,5 +1,4 @@
-import { Expose, Type } from "class-transformer";
-import RealTimeDataDto from "./realTimeData.dto";
+import { Expose } from "class-transformer";
 
 export default class MachineDto {
   @Expose({ name: "Alarm" })
@@ -8,11 +7,8 @@ export default class MachineDto {
   @Expose({ name: "ActiveTime" })
   public activeTime: string = "";
 
-  @Expose({ name: "ActiveStartTime" })
-  public activeStartTime: string = "";
-
-  @Expose({ name: "active" })
-  public active: number = 0;
+  @Expose({ name: "remainTime" })
+  public remainTime: number = 0;
 
   @Expose({ name: "wait" })
   public wait: number = 0;
@@ -85,9 +81,6 @@ export default class MachineDto {
 
   @Expose({ name: "WorkTime" })
   public workTime?: number = 0;
-
-  @Expose({ name: "TActiveTime" })
-  public tActiveTime?: number = 0;
 
   @Expose({ name: "isReceivePartCount" })
   public isReceivePartCount?: boolean = false;

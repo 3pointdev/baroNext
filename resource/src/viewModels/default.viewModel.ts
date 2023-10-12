@@ -102,6 +102,7 @@ export default class DefaultViewModel {
     this.socket = new SocketModule({
       onMessage: onMessage,
       company: this.auth.enterprise,
+      // isAll: true,
       isAll: false,
     });
     this.socket.connect(onOpen);

@@ -145,7 +145,6 @@ function selector(options: ISelectorOptions) {
       }
     },
   }).then((result) => {
-    console.log(result);
     if (options.callback && result.isConfirmed) {
       options.callback(result.value);
     }

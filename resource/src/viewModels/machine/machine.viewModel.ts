@@ -548,6 +548,32 @@ export default class MachineViewModel extends DefaultViewModel {
             this.handleMessage(matchDataForMessage);
           }
           break;
+        default:
+          // let realTimeData = this.realTimeData;
+          // let updateData: { [key: string]: string } | RealTimeDataDto = {
+          //   Id: dataArray[2],
+          // };
+          // for (let i = 4; i < dataArray.length; i = i + 2) {
+          //   if (["Xact", "Yact", "Zact"].includes(dataArray[i]))
+          //     updateData[dataArray[i]] = dataArray[i + 1];
+          // }
+          // updateData = plainToInstance(RealTimeDataDto, updateData, {
+          //   exposeUnsetFields: false,
+          // });
+
+          // for (let i = 0; i < realTimeData.length; i++) {
+          //   if (realTimeData[i].id === updateData.id) {
+
+          //   }
+          // }
+
+          // if (dataArray[1] === "VC430-2") {
+          //   let dataObject: { [key: string]: string } = {
+          //     company: dataArray[0],
+          //     mid: dataArray[1],
+          //   };
+
+          break;
       }
     } else {
       //오브젝트 메시지

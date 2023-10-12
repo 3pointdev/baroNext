@@ -68,7 +68,8 @@ export default function RealTimeTableRow({ data }: IProps) {
         {data.prdctEnd && dayjs(data.prdctEnd).format("MM/DD HH:mm")}
       </td>
       <td align={"center"} className="tabular_nums">
-        {data.planCount > 0 && timeInstance.msToHHMM(data.active)}
+        {data.planCount > 0 &&
+          timeInstance.msToHHMM(+data.activeTime + data.wait)}
       </td>
       <td align={"center"} className="counter">
         {data.planCount > 0 && (

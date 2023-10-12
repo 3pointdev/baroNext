@@ -77,9 +77,7 @@ export default class UserViewModel extends DefaultViewModel {
     };
     await this.api
       .patch(ServerUrlType.BARO, "/mypage/modiManager", params)
-      .then((result: AxiosResponse<any>) => {
-        console.log(result);
-      })
+      .then((result: AxiosResponse<any>) => {})
       .catch((error: AxiosError) => {
         console.log("error : ", error);
         return false;
@@ -92,9 +90,7 @@ export default class UserViewModel extends DefaultViewModel {
     };
     await this.api
       .patch(ServerUrlType.BARO, "/mypage/modiId", params)
-      .then((result: AxiosResponse<any>) => {
-        console.log(result);
-      })
+      .then((result: AxiosResponse<any>) => {})
       .catch((error: AxiosError) => {
         console.log("error : ", error);
         return false;
@@ -107,9 +103,7 @@ export default class UserViewModel extends DefaultViewModel {
     };
     await this.api
       .patch(ServerUrlType.BARO, "/mypage/modiPass", params)
-      .then((result: AxiosResponse<any>) => {
-        console.log(result);
-      })
+      .then((result: AxiosResponse<any>) => {})
       .catch((error: AxiosError) => {
         console.log("error : ", error);
         return false;

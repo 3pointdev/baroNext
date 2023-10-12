@@ -15,16 +15,14 @@ interface IProps {
   data: MachineDto;
 }
 
-export default function DashBoardMachine(props: IProps) {
-  const { data } = props;
+export default function DashBoardMachine({ data }: IProps) {
   const [color, setColor] = useState<string>(MachineColorType.GRAY);
   const [status, setStatus] = useState<string>(MachineTextType.MODIFY);
   const [endTime, setEndTime] = useState<string>("-");
 
   useEffect(() => {
-    const time = (data.active + data.wait) * (data.planCount - data.partCount);
-    setEndTime(timeInstance.msToHHMM(time));
-    if (data.execution === MachineExecutionType.OFF || time <= 0) {
+    setEndTime(timeInstance.msToHHMM(data.doneTime));
+    if (data.execution === MachineExecutionType.OFF || data.doneTime <= 0) {
       setEndTime("-");
     }
 
@@ -48,7 +46,7 @@ export default function DashBoardMachine(props: IProps) {
       )
     );
   }, [
-    data.active,
+    data.activeTime,
     data.wait,
     data.planCount,
     data.partCount,
