@@ -22,6 +22,7 @@ export default function Monitoring2Item({ data }: IProps) {
   const [realTime, setRealTime] = useState<number>(data.remainTime);
   const realTimeRef = useRef<number>(null);
   const [realTimeInterval, setRealTimeInterval] = useState<any>();
+  const [isOnCover, setIsOnCover] = useState(false);
 
   /**
    * execution이 active일때 타이머 작동함수
@@ -72,6 +73,10 @@ export default function Monitoring2Item({ data }: IProps) {
   ]);
 
   useEffect(() => {
+    setIsOnCover(onCoverStatus.includes(executionText));
+  }, [executionText]);
+
+  useEffect(() => {
     return () => {
       clearInterval(realTimeInterval);
     };
@@ -102,7 +107,7 @@ export default function Monitoring2Item({ data }: IProps) {
         >
           {executionText === MachineTextType.ACTIVE
             ? timeInstance.msToHHMM(realTime > 0 ? realTime : 0)
-            : executionText === MachineTextType.OFF
+            : isOnCover
             ? ""
             : executionText}
         </RealTimeInfo.CycleTime>
@@ -112,17 +117,13 @@ export default function Monitoring2Item({ data }: IProps) {
         <Footer.Mid>{data.mid}</Footer.Mid>
         <Footer.EndTime>
           {executionText !== MachineTextType.OFF &&
+            !isOnCover &&
             (data.partCount > 1
-              ? timeInstance.msToString(
-                  (+data.activeTime + data.wait) *
-                    (data.planCount - data.partCount)
-                )
+              ? timeInstance.msToString(data.doneTime)
               : "계산 대기 중")}
         </Footer.EndTime>
       </Footer.Wrap>
-      {onCoverStatus.includes(executionText) && (
-        <StopCover>{executionText}</StopCover>
-      )}
+      {isOnCover && <StopCover>{executionText}</StopCover>}
     </Container>
   );
 }
@@ -166,7 +167,7 @@ const Header = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 27%;
+    height: 28%;
   `,
   Count: styled.p`
     font-size: 2.8vh;
@@ -175,6 +176,7 @@ const Header = {
     font-weight: 600;
   `,
   Lot: styled.p`
+    max-width: 80%;
     font-size: 2.8vh;
     line-height: 1;
     color: ${StyleColor.DARK};
