@@ -21,10 +21,8 @@ export default function CustomMachineSelector({
   const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<string>(defaultTitle);
   useEffect(() => {
-    const target = options.find(
-      (option: ProductDto) => +option.machineNo === value
-    );
-    setSelectedValue(target?.name ? target.name : defaultTitle);
+    const target = options.find((option: ProductDto) => +option.mkey === value);
+    setSelectedValue(target?.mid ? target.mid : defaultTitle);
   }, [value]);
 
   const onClickSelector = () => {
@@ -48,11 +46,11 @@ export default function CustomMachineSelector({
         {options.map((option: ProductDto, key: number) => {
           return (
             <SelectorOption
-              key={`filter_options_${option.name}_${key}`}
-              data-id={option.machineNo}
+              key={`filter_options_${option.mid}_${key}`}
+              data-id={option.mkey}
               onClick={onClickOption}
             >
-              {option.name}
+              {option.mid}
             </SelectorOption>
           );
         })}

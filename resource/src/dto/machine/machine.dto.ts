@@ -90,4 +90,7 @@ export default class MachineDto {
 
   @Expose({ name: "isReceiveMessage" })
   public isReceiveMessage?: boolean = false;
+
+  @Expose({ name: "beforePartCountTime" })
+  public beforePartCountTime?: number = 0;
 }

@@ -3,20 +3,6 @@ import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const checkData = () => {
-  if (document.querySelectorAll(".monitoring_item").length < 1) {
-    console.log("화면에 데이터 없음 감지!!! 유예시간 5초!!!");
-    setTimeout(() => {
-      if (document.querySelectorAll(".monitoring_item").length < 1) {
-        console.log("화면에 데이터 없음 감지!!! 리로드 시도!!!");
-        location.reload();
-      } else {
-        console.log("화면에 데이터 감지! 리로드 취소!");
-      }
-    }, 5000);
-  }
-};
-
 export default function Timer({
   size,
   style,
@@ -34,7 +20,6 @@ export default function Timer({
     setTime(getTime());
     const interval = setInterval(() => {
       setTime(getTime());
-      checkData();
     }, 1000);
     return () => {
       clearInterval(interval);

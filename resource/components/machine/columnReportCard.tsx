@@ -1,47 +1,90 @@
 import { StyleColor } from "config/color";
-import { MouseEventHandler } from "react";
+import dayjs from "dayjs";
+import { MouseEvent, useEffect, useState } from "react";
+import timeInstance from "src/modules/time.module";
 import styled from "styled-components";
 import ProductDto from "../../src/dto/report/product.dto";
 import ProductDataDto from "../../src/dto/report/productData.dto";
-import { ILotData } from "../../src/viewModels/report/report.viewModel";
 import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   data: ProductDto;
-  lot: ILotData;
-  active: number;
-  onClickLotToggle: MouseEventHandler;
   dataIndex: number;
 }
 
-export default function ColumnReportCard({
-  data,
-  lot,
-  active,
-  onClickLotToggle,
-  dataIndex,
-}: IProps) {
+interface ITime {
+  setting: string;
+  total: string;
+  averageActive: string;
+  averageIdle: string;
+  averageCycle: string;
+  standardActive: string;
+}
+
+export default function ColumnReportCard({ data, dataIndex }: IProps) {
+  const [activeLot, setActiveLot] = useState<number>(0);
+  const [timeData, setTimeData] = useState<ITime[]>([]);
+
+  useEffect(() => {
+    let timeData: ITime[] = [];
+
+    for (let i = 0; i < data.data.length; i++) {
+      timeData.push({
+        setting: timeInstance.msToTime(
+          dayjs(data.data[i].settingEnd)["$d"].getTime() -
+            dayjs(data.data[i].settingStart)["$d"].getTime()
+        ),
+        total: timeInstance.msToTime(
+          dayjs(data.data[i].lotEnd)["$d"].getTime() -
+            dayjs(data.data[i].lotStart)["$d"].getTime()
+        ),
+        averageActive: timeInstance.secToTime(data.data[i].averageActive),
+        averageIdle: timeInstance.secToTime(data.data[i].averageIdle),
+        averageCycle: timeInstance.secToTime(
+          data.data[i].averageActive + data.data[i].averageIdle
+        ),
+        standardActive: timeInstance.secToTime(data.data[i].standardActive),
+      });
+    }
+
+    setTimeData(timeData);
+  }, []);
+
+  const handleClickLotToggle = (element: MouseEvent<HTMLTableCellElement>) => {
+    const { id } = element.currentTarget.dataset;
+    setActiveLot(+id);
+  };
+
   return (
     <Container style={{ flexDirection: "row" }}>
       <SectionWrap>
-        <SectionTitle>{data.name}</SectionTitle>
+        <SectionTitle>{data.mid}</SectionTitle>
         <WorkTimeTable>
           <tbody>
             <tr>
               <th>조업시간</th>
-              <td>00:00 ~ 00:00(점심 0시간, 휴식 00분)</td>
+              <td>{`${data.startTime.slice(0, 5)} ~ ${data.endTime.slice(
+                0,
+                5
+              )} (점심 ${timeInstance.secToString(
+                data.eatTime
+              )}, 휴식 ${timeInstance.secToString(data.breakTime)})`}</td>
             </tr>
             <tr>
               <th>조업시간 내 가동률</th>
-              <td>100%</td>
+              <td>{`${Math.round(
+                (data.workTime / data.totalTime) * 100
+              )}%`}</td>
             </tr>
             <tr>
               <th>조업시간 내 가동시간</th>
-              <td>00시간 00분 00초</td>
+              <td>{timeInstance.secToString(data.workTime)}</td>
             </tr>
             <tr>
               <th>조업시간 내 비가동시간</th>
-              <td>00시간 00분 00초</td>
+              <td>
+                {timeInstance.secToString(data.totalTime - data.workTime)}
+              </td>
             </tr>
           </tbody>
         </WorkTimeTable>
@@ -58,32 +101,27 @@ export default function ColumnReportCard({
             {data.data.map((settingData: ProductDataDto, key: number) => {
               return (
                 <tr key={`lot_item_${key}`}>
-                  <td
-                    onClick={onClickLotToggle}
-                    data-id={data.machineNo}
-                    data-index={dataIndex}
-                    data-key={key}
-                  >
+                  <td onClick={handleClickLotToggle} data-id={key}>
                     {settingData.program ? settingData.program : "Unknown Lot"}
                   </td>
                   <td>
                     <div>
                       <p>시작</p>
-                      <p>{settingData.start}</p>
+                      <p>{settingData.lotStart}</p>
                     </div>
                     <div>
                       <p>종료</p>
-                      <p>{settingData.end}</p>
+                      <p>{settingData.lotEnd}</p>
                     </div>
                   </td>
                   <td>
                     <div>
                       <p>전체가공</p>
-                      <p>00:00:00</p>
+                      <p>{timeData[key]?.total}</p>
                     </div>
                     <div>
                       <p>셋팅</p>
-                      <p>00:00:00</p>
+                      <p>{timeData[key]?.setting}</p>
                     </div>
                   </td>
                 </tr>
@@ -95,8 +133,8 @@ export default function ColumnReportCard({
       <SectionWrap>
         <LotWrap>
           <p>
-            {data.data[active].program
-              ? data.data[active].program
+            {data.data[activeLot].program
+              ? data.data[activeLot].program
               : "Unknown Lot"}
           </p>
           <CountTable>
@@ -109,11 +147,12 @@ export default function ColumnReportCard({
             </thead>
             <tbody>
               <tr>
-                <td>{data.data[active].plan}</td>
-                <td>{data.data[active].count}</td>
+                <td>{data.data[activeLot].plan}</td>
+                <td>{data.data[activeLot].count}</td>
                 <td>
-                  {`${Math.floor(
-                    (data.data[active].count / data.data[active].plan) * 100
+                  {`${Math.round(
+                    (data.data[activeLot].count / data.data[activeLot].plan) *
+                      100
                   )}%`}
                 </td>
               </tr>
@@ -123,11 +162,11 @@ export default function ColumnReportCard({
         <TimeWrap>
           <div>
             <p>시작</p>
-            <p>{data.data[active].start}</p>
+            <p>{data.data[activeLot].lotStart}</p>
           </div>
           <div>
             <p>종료</p>
-            <p>{data.data[active].end}</p>
+            <p>{data.data[activeLot].lotEnd}</p>
           </div>
         </TimeWrap>
         <DataTable>
@@ -142,11 +181,11 @@ export default function ColumnReportCard({
           </thead>
           <tbody>
             <tr>
-              <td>00:00:00</td>
-              <td>00:00:00</td>
-              <td>00:00:00</td>
-              <td>00:00:00</td>
-              <td>00:00:00</td>
+              <td>{timeData[activeLot]?.setting}</td>
+              <td>{timeData[activeLot]?.averageActive}</td>
+              <td>{timeData[activeLot]?.averageIdle}</td>
+              <td>{timeData[activeLot]?.averageCycle}</td>
+              <td>{timeData[activeLot]?.standardActive}</td>
             </tr>
           </tbody>
         </DataTable>

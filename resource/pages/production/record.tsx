@@ -24,6 +24,7 @@ function RecordView(props: IProps) {
   const tableRef = useRef(null);
 
   useEffect(() => {
+    recordViewModel.setDate();
     recordViewModel.getList();
     return () => {};
   }, []);

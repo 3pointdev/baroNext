@@ -171,8 +171,6 @@ class MapperModule {
         // 저장된 key가 있으면서 activeTime이 아닌 경우 값 업데이트
         if (machineKey && machineKey !== "activeTime") {
           matchData[machineKey] = dataArray[i + 1];
-        } else if (machineKey === "activeTime") {
-          console.log("noti activeTime : ", dataArray[i + 1], dataArray);
         }
 
         // 일치하는 key가 block인 경우 정지신호인지 투팔레트 변경신호인지 확인하여 저장
@@ -185,6 +183,37 @@ class MapperModule {
       }
     }
 
+    if (matchData.isChangePalette && matchData.isReceivePartCount) {
+      // 파트카운트가 변경되었는데 테이블 멈춤중이었다가 해제되었을 경우
+      // console.log('b ',this.MIDS[mkey].mctTable);
+      var tbltime = matchData.beforePartCountTime; // 가공이 시작된 테이블코드
+      // console.log('bt ',tbltime);
+      if (tbltime !== undefined) {
+        // 이전에 해당 테이블 코드로 가공시간이 있다면
+        matchData.remainTime = tbltime;
+      } else {
+        // 없으면 이전 가공시간
+        matchData.remainTime = +matchData.activeTime;
+      }
+      matchData.isReceivePartCount = false;
+      matchData.pause = false;
+      matchData.isChangePalette = false;
+      console.log(matchData.mid, "isChangePalette", matchData.remainTime);
+    } else if (dataArray.includes("execution")) {
+      // 업데이트 후 execution이 변경된 경우 다음 조치
+      // 1. execution이 active이면서 직전에 partCount가 입력된 경우 남은 작업시간 업데이트
+      // 2. 메시지와 파트카운트 리시브상태 초기화
+      if (
+        matchData.execution === MachineExecutionType.ACTIVE &&
+        matchData.isReceivePartCount
+      ) {
+        matchData.remainTime = +matchData.activeTime;
+        matchData.isReceivePartCount = false;
+        console.log("remainTime : ", matchData.mid, matchData.activeTime);
+      }
+      matchData.isReceiveMessage = false;
+    }
+
     // 업데이트 후 estop이 트리거 이거나 power가 false인 경우 전원OFF 업데이트
     if (
       matchData.estop === MachineExecutionType.TRIGGERED ||
@@ -193,45 +222,26 @@ class MapperModule {
       matchData.execution = MachineExecutionType.OFF;
     }
 
-    // 업데이트 후 execution이 변경된 경우 다음 조치
-    // 1. execution이 active이면서 직전에 partCount가 입력된 경우 남은 작업시간 업데이트
-    // 2. 메시지와 파트카운트 리시브상태 초기화
-    if (dataArray.includes("execution")) {
-      if (matchData.mid === "Puma280") {
-        console.log(
-          matchData.execution === MachineExecutionType.ACTIVE &&
-            matchData.isReceivePartCount,
-          matchData.isReceivePartCount
-        );
-      }
-
-      if (
-        matchData.execution === MachineExecutionType.ACTIVE &&
-        matchData.isReceivePartCount
-      ) {
-        matchData.remainTime = +matchData.activeTime;
-        matchData.isReceivePartCount = false;
-      }
-      matchData.isReceiveMessage = false;
-    }
-
     return { machine: matchData, rtd: matchRTData };
   }
 
   public partCountMapper(dataArray: string[], matchData: MachineDto) {
+    if (matchData.partCount !== +dataArray[5]) {
+      matchData.beforePartCountTime = new Date().getTime();
+      matchData.partCount = +dataArray[5];
+      matchData.isReceivePartCount = true;
+    }
     matchData.activeTime = dataArray[11];
-    matchData.partCount = +dataArray[5];
     matchData.planCount = +dataArray[6];
     matchData.wait = +dataArray[10];
-    matchData.isReceivePartCount = true;
     matchData.isReceiveMessage = false;
     matchData.pause = false;
     matchData.execution = MachineExecutionType.STOPPED;
     matchData.doneTime =
       (+dataArray[11] + +dataArray[10]) * (+dataArray[6] - +dataArray[5]);
-    if (matchData.mid === "Puma280") {
-      console.log("partCount : ", matchData.mid, dataArray[11]);
-    }
+
+    console.log("activeTime : ", matchData.mid, dataArray[11]);
+
     return matchData;
   }
 }
