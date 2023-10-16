@@ -1,34 +1,36 @@
 import dayjs from "dayjs";
 
 class TimeModule {
-  public toString(time: string) {
-    const date = dayjs(time);
-    const now = dayjs();
-
-    if (now.diff(date, "minutes") <= 10) {
-      return "방금 전";
+  public secToString(time: number) {
+    if (typeof time !== "number" || isNaN(time) || time < 0) {
+      return "0시간 0분 0초";
     }
 
-    if (now.isSame(date, "day")) {
-      return "오늘";
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+
+    let result = "";
+
+    if (hours > 0) {
+      result += `${hours}시간`;
     }
 
-    if (now.subtract(1, "days").isSame(date, "day")) {
-      return "어제";
+    if (minutes > 0) {
+      if (result.length > 0) {
+        result += " ";
+      }
+      result += `${minutes}분`;
     }
 
-    if (now.diff(date, "days") >= 10 && now.diff(date, "days") < 365) {
-      const monthsDiff = now.diff(date, "months");
-      return `${monthsDiff}개월 전`;
+    if (seconds > 0) {
+      if (result.length > 0) {
+        result += " ";
+      }
+      result += `${seconds}초`;
     }
 
-    if (now.diff(date, "days") >= 365) {
-      const yearsDiff = now.diff(date, "years");
-      return `${yearsDiff}년 전`;
-    }
-
-    const daysDiff = now.diff(date, "days");
-    return `${daysDiff}일 전`;
+    return result;
   }
 
   public getRemainingTime(targetDateTime: string) {
@@ -45,6 +47,11 @@ class TimeModule {
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
 
+  /**
+   * ms를 입력받아 시간형태로 리턴
+   * ex) 1시간 미만 21:31
+   * ex) 1시간 이상 02:21:31
+   */
   public msToHHMM(ms: number): string {
     const hours = Math.floor(ms / 3600000);
     const minutes = Math.floor((ms / 60000) % 60);
@@ -61,21 +68,38 @@ class TimeModule {
     }
   }
 
-  public secToMMSS(seconds: number) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
+  /**
+   * ms를 입력받아 시간형태로 리턴
+   * ex) 1시간 미만 00:21:31
+   * ex) 1시간 이상 02:21:31
+   */
+  public msToTime(ms: number): string {
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms / 60000) % 60);
+    const seconds = Math.floor((ms / 1000) % 60);
 
-    const hh = hours < 10 ? `0${hours}` : `${hours}`;
-    const mm = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const ss =
-      remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = seconds.toString().padStart(2, "0");
 
-    if (hours > 0) {
-      return `${hh}:${mm}:${ss}`;
-    } else {
-      return `${mm}:${ss}`;
-    }
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
+
+  /**
+   * seconds를 입력받아 시간형태로 리턴
+   * ex) 1시간 미만 00:21:31
+   * ex) 1시간 이상 02:21:31
+   */
+  public secToTime(sec: number): string {
+    const hours = Math.floor(sec / 3600);
+    const minutes = Math.floor((sec / 60) % 60);
+    const seconds = sec % 60;
+
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = seconds.toString().padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   }
 
   public getTimeDifferenceInMs(time1: string, time2: string) {

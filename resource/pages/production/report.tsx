@@ -19,6 +19,7 @@ function ReportView(props: IProps) {
   const reportViewModel = props.reportViewModel;
 
   useEffect(() => {
+    reportViewModel.setDate();
     reportViewModel.InsertProductList();
 
     return () => {
@@ -42,25 +43,18 @@ function ReportView(props: IProps) {
           value={reportViewModel.filterTarget}
         />
       </LayoutHeader>
-      {reportViewModel.lotList && reportViewModel.products.length > 0 ? (
+      {reportViewModel.products.length > 0 ? (
         <ReportCardWrap>
           {reportViewModel.products.map((product: ProductDto, key: number) => {
-            const isFiltered =
-              reportViewModel.filterTarget === 0
-                ? false
-                : reportViewModel.filterTarget !== +product.machineNo
-                ? true
-                : false;
-
-            if (!isFiltered)
+            if (
+              reportViewModel.filterTarget === 0 ||
+              reportViewModel.filterTarget === +product.mkey
+            )
               return (
                 <ColumnReportCard
                   data={product}
                   dataIndex={key}
-                  lot={reportViewModel.lotList[product.machineNo]}
-                  onClickLotToggle={reportViewModel.handleClickLotToggle}
-                  active={product.toggle}
-                  key={`report_card_${product.name}_${key}`}
+                  key={`report_card_${product.mid}_${key}`}
                 />
               );
           })}
