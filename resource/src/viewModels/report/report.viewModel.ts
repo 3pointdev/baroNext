@@ -41,7 +41,7 @@ export default class ReportViewModel extends DefaultViewModel {
 
   InsertProductList = async () => {
     await this.api
-      .get(ServerUrlType.BARO, `/report/getReport/${this.productModel.day}`)
+      .get(ServerUrlType.BARO, `/report/${this.productModel.day}`)
       .then((result: AxiosResponse<ProductDto[]>) => {
         if (result.data.length <= 0) {
           runInAction(() => {
