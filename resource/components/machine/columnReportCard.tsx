@@ -30,10 +30,7 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
 
     for (let i = 0; i < data.data.length; i++) {
       timeData.push({
-        setting: timeInstance.msToTime(
-          dayjs(data.data[i].settingEnd)["$d"].getTime() -
-            dayjs(data.data[i].settingStart)["$d"].getTime()
-        ),
+        setting: timeInstance.secToTime(+data.data[i].settingTime),
         total: timeInstance.msToTime(
           dayjs(data.data[i].lotEnd)["$d"].getTime() -
             dayjs(data.data[i].lotStart)["$d"].getTime()
@@ -48,7 +45,7 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
     }
 
     setTimeData(timeData);
-  }, []);
+  }, [data]);
 
   const handleClickLotToggle = (element: MouseEvent<HTMLTableCellElement>) => {
     const { id } = element.currentTarget.dataset;
