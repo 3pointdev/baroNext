@@ -117,7 +117,7 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
                       <p>{timeData[key]?.total}</p>
                     </div>
                     <div>
-                      <p>셋팅</p>
+                      <p>세팅</p>
                       <p>{timeData[key]?.setting}</p>
                     </div>
                   </td>
@@ -169,7 +169,7 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
         <DataTable>
           <thead>
             <tr>
-              <th>셋팅시간</th>
+              <th>세팅시간</th>
               <th>{`평균\n단품 실가공 시간`}</th>
               <th>{`평균\n준비교체시간`}</th>
               <th>{`평균\n실 Cycle time`}</th>
