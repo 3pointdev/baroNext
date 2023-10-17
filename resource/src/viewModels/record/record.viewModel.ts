@@ -66,7 +66,7 @@ export default class RecordViewModel extends DefaultViewModel {
         column: "uptime",
         align: "center",
         size: "8",
-        rowSpan: false,
+        rowSpan: true,
       },
       {
         title: "LOT완료\n예측시간 오차율",
@@ -226,7 +226,7 @@ export default class RecordViewModel extends DefaultViewModel {
         column: "uptime",
         align: "center",
         size: "8",
-        rowSpan: false,
+        rowSpan: true,
       },
       {
         title: "LOT완료\n예측시간 오차율",

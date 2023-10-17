@@ -24,6 +24,7 @@ export default function RecordTable({
 
   const findMergeCell = () => {
     if (tableData.length < 1) return false;
+
     const merged = header.map((column) => {
       const merginsArray: number[] = [];
       let count = 1;
@@ -103,19 +104,31 @@ export default function RecordTable({
               <tr key={`table_body_rows_${key}`}>
                 {header.map((head: TableModel, inkey: number) => {
                   const thisMergeCount = mergedCells[inkey][key];
+
                   const shoudSkip = head.rowSpan && thisMergeCount === 0;
+                  if (head.title === "설비가동률(%)") {
+                    console.log(item[head.column]);
+                    console.log(thisMergeCount, shoudSkip, head.rowSpan);
+                  }
                   if (shoudSkip || item[head.column] === -1) return;
+
                   let target = item[head.column];
-                  const shouldMerge = head.rowSpan && thisMergeCount > 0;
+                  const shouldMerge = head.rowSpan && thisMergeCount > 1;
                   const isAverage = target === "전체" ? 3 : 1;
 
                   let className: string = "";
                   if (target !== "" && typeof target === "string") {
-                    if (target.includes("isNotViewAble")) {
+                    if (
+                      target.includes("isNotViewAble") &&
+                      format === TableFormatType.ALL
+                    ) {
                       className = "is_not_view_able";
                       target = "";
+                    } else if (target.includes("isNotViewAble")) {
+                      target = target.replace(" isNotViewAble", "");
                     }
                   }
+
                   if (isAverage === 3) className = className + " is_average";
 
                   return (
@@ -127,7 +140,7 @@ export default function RecordTable({
                       className={className}
                       style={{ width: `${head.size}%` }}
                     >
-                      {`${target}`}
+                      {target}
                     </td>
                   );
                 })}
