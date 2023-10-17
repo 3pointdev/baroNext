@@ -19,7 +19,6 @@ function ReportView(props: IProps) {
   const reportViewModel = props.reportViewModel;
 
   useEffect(() => {
-    reportViewModel.setDate();
     reportViewModel.InsertProductList();
 
     return () => {

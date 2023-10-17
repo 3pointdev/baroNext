@@ -28,7 +28,6 @@ export default class ReportViewModel extends DefaultViewModel {
       InsertProductList: action,
       handleChangeDay: action,
       dataReset: action,
-      setDate: action,
     });
   }
 
@@ -40,38 +39,22 @@ export default class ReportViewModel extends DefaultViewModel {
     });
   };
 
-  setDate = () => {
-    const yesterday = new Date();
-
-    // 어제의 날짜를 가져옵니다.
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    // 어제의 날짜가 주말인지 확인합니다.
-    const day = yesterday.getDay();
-
-    // 일요일일 경우
-    if (day === 0) {
-      runInAction(() => {
-        this.productModel.day = dayjs(new Date())
-          .subtract(3, "day")
-          .format("YYYY-MM-DD");
-      });
-    }
-
-    // 토요일일 경우
-    if (day === 6) {
-      runInAction(() => {
-        this.productModel.day = dayjs(new Date())
-          .subtract(2, "day")
-          .format("YYYY-MM-DD");
-      });
-    }
-  };
-
   InsertProductList = async () => {
     await this.api
       .get(ServerUrlType.BARO, `/report/getReport/${this.productModel.day}`)
       .then((result: AxiosResponse<ProductDto[]>) => {
+        if (result.data.length <= 0) {
+          runInAction(() => {
+            this.productModel = {
+              ...this.productModel,
+              day: dayjs(this.productModel.day)
+                .subtract(1, "day")
+                .format("YYYY-MM-DD"),
+            };
+          });
+          this.InsertProductList();
+        }
+
         const data = result.data.map((item) =>
           plainToInstance(ProductDto, item)
         );

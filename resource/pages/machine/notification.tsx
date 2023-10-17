@@ -21,7 +21,6 @@ function MachineNotificationView(props: IProps) {
   const machineViewModel = props.machineViewModel;
 
   useEffect(() => {
-    machineViewModel.setDate();
     machineViewModel.getList();
     machineViewModel.insertListNotification();
   }, []);

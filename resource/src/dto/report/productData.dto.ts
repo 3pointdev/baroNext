@@ -31,6 +31,9 @@ export default class ProductDataDto {
   @Expose({ name: "setting_start" })
   public readonly settingStart: string = "2023-10-11 15:46:07";
 
+  @Expose({ name: "setting_time" })
+  public readonly settingTime: number = 0;
+
   @Expose({ name: "std_active" })
   public readonly standardActive: number = 0;
 }
