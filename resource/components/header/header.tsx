@@ -10,7 +10,6 @@ import styled from "styled-components";
 import pageUrlConfig from "../../config/pageUrlConfig";
 import MenuModel from "../../src/models/menu/menu.model";
 import SubMenuModel from "../../src/models/menu/subMenu.model";
-import authModule from "../../src/modules/auth.module";
 import MainViewModel from "../../src/viewModels/main/main.viewModel";
 import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
 import Logo from "../image/logo";
@@ -29,9 +28,6 @@ function Header(props: IProps) {
   const router: NextRouter = useRouter();
 
   useEffect(() => {
-    if (!authModule.isLogin()) {
-      router.push(pageUrlConfig.login);
-    }
     mainViewModel.popAuth();
     setIsLocal(window.location.protocol === "http:");
   }, []);

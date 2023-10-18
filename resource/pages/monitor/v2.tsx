@@ -7,12 +7,13 @@ import { StyleColor } from "config/color";
 import { NUMBERSEENMONITORING2 } from "config/constants";
 import pageUrlConfig from "config/pageUrlConfig";
 import { inject, observer } from "mobx-react";
-import { NextRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import BarofactorySquare from "public/images/logo/barofactory-square";
 import { MouseEvent, useEffect, useState } from "react";
 import MachineDto from "src/dto/machine/machine.dto";
 import MonitorListDto from "src/dto/monitor/monitorList.dto";
 import { Alert } from "src/modules/alert.module";
+import authInstance from "src/modules/auth.module";
 import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
 import styled, { css, keyframes } from "styled-components";
@@ -25,6 +26,7 @@ interface IProps {
 }
 
 function Monitoring2View(props: IProps) {
+  const router = useRouter();
   const { machineViewModel, monitorViewModel } = props;
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [isOpenMonitorMenu, setIsOpenMonitorMenu] = useState<boolean>(false);
@@ -50,7 +52,7 @@ function Monitoring2View(props: IProps) {
             }),
             callback: (value) => {
               const target = monitorViewModel.list[value];
-              location.replace(
+              router.replace(
                 `${pageUrlConfig.monitor2}?monitor=${target.name}`
               );
             },
@@ -59,7 +61,7 @@ function Monitoring2View(props: IProps) {
           Alert.alert(
             "설정 된 모니터가 없습니다.\n설정화면으로 이동합니다.",
             () => {
-              location.replace(pageUrlConfig.monitorSetting);
+              router.push(pageUrlConfig.monitorSetting);
             },
             true,
             "monitoring_item"
@@ -68,7 +70,9 @@ function Monitoring2View(props: IProps) {
       }
     };
 
-    initialize();
+    if (authInstance.isLogin()) {
+      initialize();
+    }
 
     setTimeout(() => {
       location.reload();

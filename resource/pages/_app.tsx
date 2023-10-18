@@ -8,7 +8,7 @@ import App from "next/app";
 import { NextRouter, withRouter } from "next/router";
 import "reflect-metadata";
 import initializeStore, { RootStore } from "src/mobx/store";
-import authModule from "src/modules/auth.module";
+import authInstance from "src/modules/auth.module";
 import { IDefaultProps } from "src/viewModels/default.viewModel";
 import "styles/globals.css";
 
@@ -45,7 +45,7 @@ class MyApp extends App<any, any, any> {
     window.localStorage.sender = `/admin/id:${new Date().getTime()}`;
     this.mobxStore.mainViewModel.popAuth();
 
-    if (!authModule.isLogin() && this.props.router.pathname !== "/login") {
+    if (!authInstance.isLogin() && this.props.router.pathname !== "/login") {
       this.props.router.push(`${pageUrlConfig.login}?redirect=1`);
     }
   }
