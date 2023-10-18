@@ -20,10 +20,24 @@ interface ITime {
   averageCycle: string;
   standardActive: string;
 }
+interface IDescription {
+  setting: boolean;
+  averageActive: boolean;
+  averageIdle: boolean;
+  averageCycle: boolean;
+  standardActive: boolean;
+}
 
 export default function ColumnReportCard({ data, dataIndex }: IProps) {
   const [activeLot, setActiveLot] = useState<number>(0);
   const [timeData, setTimeData] = useState<ITime[]>([]);
+  const [isOpenDescription, setIsOpenDescription] = useState<IDescription>({
+    setting: false,
+    averageActive: false,
+    averageIdle: false,
+    averageCycle: false,
+    standardActive: false,
+  });
 
   useEffect(() => {
     let timeData: ITime[] = [];
@@ -50,6 +64,14 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
   const handleClickLotToggle = (element: MouseEvent<HTMLTableCellElement>) => {
     const { id } = element.currentTarget.dataset;
     setActiveLot(+id);
+  };
+
+  const handleClickDescription = (element: MouseEvent<HTMLButtonElement>) => {
+    const { id } = element.currentTarget.dataset;
+    setIsOpenDescription({
+      ...isOpenDescription,
+      [id]: !isOpenDescription[id],
+    });
   };
 
   return (
@@ -169,11 +191,64 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
         <DataTable>
           <thead>
             <tr>
-              <th>세팅시간</th>
-              <th>{`평균\n단품 실가공 시간`}</th>
-              <th>{`평균\n준비교체시간`}</th>
-              <th>{`평균\n실 Cycle time`}</th>
-              <th>표준 가공 시간</th>
+              <th>
+                <p>세팅시간</p>
+                <DescriptionButton
+                  onClick={handleClickDescription}
+                  data-id={"setting"}
+                >
+                  ?
+                </DescriptionButton>
+                <Description isOpen={isOpenDescription.setting}></Description>
+              </th>
+              <th>
+                <p>{`평균\n단품 실가공 시간`}</p>
+                <DescriptionButton
+                  onClick={handleClickDescription}
+                  data-id={"averageActive"}
+                >
+                  ?
+                </DescriptionButton>
+                <Description
+                  isOpen={isOpenDescription.averageActive}
+                ></Description>
+              </th>
+              <th>
+                <p>{`평균\n준비교체시간`}</p>
+                <DescriptionButton
+                  onClick={handleClickDescription}
+                  data-id={"averageIdle"}
+                >
+                  ?
+                </DescriptionButton>
+                <Description
+                  isOpen={isOpenDescription.averageIdle}
+                ></Description>
+              </th>
+              <th>
+                <p>{`평균\n실 Cycle time`}</p>
+                <DescriptionButton
+                  onClick={handleClickDescription}
+                  data-id={"averageCycle"}
+                >
+                  ?
+                </DescriptionButton>
+                <Description
+                  isOpen={isOpenDescription.averageCycle}
+                ></Description>
+              </th>
+              <th>
+                <p>표준 가공 시간</p>
+                <DescriptionButton
+                  onClick={handleClickDescription}
+                  data-id={"standardActive"}
+                >
+                  ?
+                </DescriptionButton>
+                <Description
+                  isOpen={isOpenDescription.standardActive}
+                ></Description>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -357,6 +432,7 @@ const DataTable = styled.table`
   border-spacing: 0;
 
   & th {
+    position: relative;
     padding-left: 8px;
     border: 1px solid ${StyleColor.HOVER};
     border-right: 1px solid ${StyleColor.LIGHT};
@@ -379,4 +455,30 @@ const DataTable = styled.table`
       border-left: 1px solid ${StyleColor.HOVER};
     }
   }
+`;
+
+const DescriptionButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: 0.5px solid ${StyleColor.DISABLE};
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: ${StyleColor.DISABLE};
+  cursor: pointer;
+`;
+
+const Description = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+  background: ${({ isOpen }) => (isOpen ? `${StyleColor.BORDER}90` : "none")};
+  pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  width: 88px;
+  height: 48px;
+  top: -48px;
+  right: 0px;
+  border-radius: 8px;
+  transition: all 0.4s ease;
 `;

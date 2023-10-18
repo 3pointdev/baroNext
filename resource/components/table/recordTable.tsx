@@ -80,6 +80,51 @@ export default function RecordTable({
     findMergeCell();
   }, [tableData, format]);
 
+  // 이상데이터 감지
+  const getDetectingAnomalousData = (data) => {
+    if (data.partCount > data.plainCount * 2) {
+      console.log(
+        `%c이상데이터 감지 : partCount가 planCount에 비해 너무 높습니다.
+${data.mid}
+${data.date}
+${data.program}
+${data.partCount}`,
+        "color: #ff0000"
+      );
+    }
+    if (+data.achieve.replace("%", "") > 100) {
+      console.log(
+        `%c이상데이터 감지 : 달성률이 너무 높습니다.
+${data.mid}
+${data.date}
+${data.program}
+${data.achieve}`,
+        "color: #ff0000"
+      );
+    }
+
+    if (+data.uptime.replace("% isNotViewAble", "") >= 100) {
+      console.log(
+        `%c이상데이터 감지 : 설비가동률이 너무 높습니다.
+${data.mid}
+${data.date}
+${data.program}
+${data.uptime.replace(" isNotViewAble", "")}`,
+        "color: #ff0000"
+      );
+    }
+    if (+data.tolerance.replace("%", "") > 150) {
+      console.log(
+        `%c이상데이터 감지 : 예측시간 오차율이 너무 높습니다.
+${data.mid}
+${data.date}
+${data.program}
+${data.tolerance}`,
+        "color: #ff0000"
+      );
+    }
+  };
+
   return (
     <Table.Container ref={recordRef}>
       <Table.Head>
@@ -100,16 +145,14 @@ export default function RecordTable({
       <Table.Body>
         {mergedCells.length >= 1 ? (
           tableData.map((item: any, key: number) => {
+            getDetectingAnomalousData(item);
             return (
               <tr key={`table_body_rows_${key}`}>
                 {header.map((head: TableModel, inkey: number) => {
                   const thisMergeCount = mergedCells[inkey][key];
 
                   const shoudSkip = head.rowSpan && thisMergeCount === 0;
-                  if (head.title === "설비가동률(%)") {
-                    console.log(item[head.column]);
-                    console.log(thisMergeCount, shoudSkip, head.rowSpan);
-                  }
+
                   if (shoudSkip || item[head.column] === -1) return;
 
                   let target = item[head.column];

@@ -45,6 +45,10 @@ function LoginView(props: IProps) {
 
   useEffect(() => {
     setIsMount(true);
+
+    // if(authInstance.isLogin){
+
+    // }
   }, []);
 
   return (
