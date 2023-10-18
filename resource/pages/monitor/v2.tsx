@@ -52,7 +52,7 @@ function Monitoring2View(props: IProps) {
             }),
             callback: (value) => {
               const target = monitorViewModel.list[value];
-              router.replace(
+              location.replace(
                 `${pageUrlConfig.monitor2}?monitor=${target.name}`
               );
             },
