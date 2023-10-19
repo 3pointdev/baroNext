@@ -28,6 +28,10 @@
   src: url("/font/pretendard/800.woff2") format("woff2");
   font-weight: 800;
 }
+@font-face {
+  font-family: "digital";
+  src: url("/font/digital/digital-7.mono.ttf");
+}
 
 * {
   color: black;

@@ -3,19 +3,23 @@ import dayjs, { Dayjs } from "dayjs";
 import { CSSProperties, useEffect, useState } from "react";
 import styled from "styled-components";
 
+interface IProps {
+  fontSize?: number;
+  color?: string;
+  style?: CSSProperties;
+  wideFont?: number;
+  fontweight?: number;
+  fontFamily?: string;
+}
+
 export default function Clock({
   fontSize,
   color,
   style,
   wideFont,
   fontweight,
-}: {
-  fontSize?: number;
-  color?: string;
-  style?: CSSProperties;
-  wideFont?: number;
-  fontweight?: number;
-}) {
+  fontFamily,
+}: IProps) {
   const [time, setTime] = useState<Dayjs>(null);
 
   const getTime = () => {
@@ -37,6 +41,7 @@ export default function Clock({
       fontSize={fontSize}
       wideFont={wideFont}
       fontweight={fontweight}
+      fontFamily={fontFamily ? fontFamily : "pretendard"}
       color={color}
       style={style}
     >
@@ -51,7 +56,9 @@ const Container = styled.div<{
   color: string;
   wideFont: number;
   fontweight: number;
+  fontFamily: string;
 }>`
+  font-family: "${({ fontFamily }) => fontFamily}", monospace;
   display: flex;
   align-items: center;
   font-variant-numeric: tabular-nums;

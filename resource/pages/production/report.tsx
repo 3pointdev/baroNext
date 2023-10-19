@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import ProductDto from "src/dto/report/product.dto";
 import ReportViewModel from "src/viewModels/report/report.viewModel";
 import styled from "styled-components";
-
 interface IProps {
   reportViewModel: ReportViewModel;
   router: NextRouter;
@@ -52,7 +51,6 @@ function ReportView(props: IProps) {
               return (
                 <ColumnReportCard
                   data={product}
-                  dataIndex={key}
                   key={`report_card_${product.mid}_${key}`}
                 />
               );
