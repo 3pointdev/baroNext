@@ -36,8 +36,14 @@ function MainView(props: IProps) {
     <PageContainer style={{ overflow: "hidden" }}>
       <Layout>
         <SectionTitle>
-          <p>대시보드</p>
-          <Clock fontSize={28} color={StyleColor.DARK} style={{ gap: "8px" }} />
+          {/* <p>대시보드</p> */}
+          <Clock
+            fontSize={48}
+            fontweight={500}
+            fontFamily="digital"
+            color={StyleColor.DARK}
+            style={{ gap: "8px" }}
+          />
         </SectionTitle>
         <MachineWrap>
           {machineViewModel.machines.map((machine: MachineDto, key: number) => {
@@ -77,7 +83,8 @@ const SectionTitle = styled.div`
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  // justify-content: space-between;
 `;
 
 const MachineWrap = styled.div`

@@ -9,7 +9,6 @@ import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   data: ProductDto;
-  dataIndex: number;
 }
 
 interface ITime {
@@ -28,7 +27,7 @@ interface IDescription {
   standardActive: boolean;
 }
 
-export default function ColumnReportCard({ data, dataIndex }: IProps) {
+export default function ColumnReportCard({ data }: IProps) {
   const [activeLot, setActiveLot] = useState<number>(0);
   const [timeData, setTimeData] = useState<ITime[]>([]);
   const [isOpenDescription, setIsOpenDescription] = useState<IDescription>({
@@ -64,14 +63,6 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
   const handleClickLotToggle = (element: MouseEvent<HTMLTableCellElement>) => {
     const { id } = element.currentTarget.dataset;
     setActiveLot(+id);
-  };
-
-  const handleClickDescription = (element: MouseEvent<HTMLButtonElement>) => {
-    const { id } = element.currentTarget.dataset;
-    setIsOpenDescription({
-      ...isOpenDescription,
-      [id]: !isOpenDescription[id],
-    });
   };
 
   return (
@@ -194,8 +185,18 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
               <th>
                 <p>세팅시간</p>
                 <DescriptionButton
-                  onClick={handleClickDescription}
-                  data-id={"setting"}
+                  onMouseEnter={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      setting: true,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      setting: false,
+                    })
+                  }
                 >
                   ?
                 </DescriptionButton>
@@ -204,8 +205,18 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
               <th>
                 <p>{`평균\n단품 실가공 시간`}</p>
                 <DescriptionButton
-                  onClick={handleClickDescription}
-                  data-id={"averageActive"}
+                  onMouseEnter={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageActive: true,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageActive: false,
+                    })
+                  }
                 >
                   ?
                 </DescriptionButton>
@@ -216,8 +227,18 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
               <th>
                 <p>{`평균\n준비교체시간`}</p>
                 <DescriptionButton
-                  onClick={handleClickDescription}
-                  data-id={"averageIdle"}
+                  onMouseEnter={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageIdle: true,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageIdle: false,
+                    })
+                  }
                 >
                   ?
                 </DescriptionButton>
@@ -228,8 +249,18 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
               <th>
                 <p>{`평균\n실 Cycle time`}</p>
                 <DescriptionButton
-                  onClick={handleClickDescription}
-                  data-id={"averageCycle"}
+                  onMouseEnter={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageCycle: true,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      averageCycle: false,
+                    })
+                  }
                 >
                   ?
                 </DescriptionButton>
@@ -240,8 +271,18 @@ export default function ColumnReportCard({ data, dataIndex }: IProps) {
               <th>
                 <p>표준 가공 시간</p>
                 <DescriptionButton
-                  onClick={handleClickDescription}
-                  data-id={"standardActive"}
+                  onMouseEnter={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      standardActive: true,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setIsOpenDescription({
+                      ...isOpenDescription,
+                      standardActive: false,
+                    })
+                  }
                 >
                   ?
                 </DescriptionButton>
