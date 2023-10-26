@@ -161,23 +161,32 @@ export default class ProgramViewModel extends DefaultViewModel {
         );
 
         const active = data.find((item: ProgramDto) => item.status === "on");
-        const targetInformation = {
-          ...active,
-          autostartORG: active.autostart,
-          ipORG: active.ip,
-          nameORG: active.name,
-          portORG: active.port,
-          func: "prgdir",
-        };
+        if (active) {
+          const targetInformation = {
+            ...active,
+            autostartORG: active?.autostart ?? true,
+            ipORG: active?.ip ?? "",
+            nameORG: active?.name ?? "",
+            portORG: active?.port ?? "",
+            func: "prgdir",
+          };
 
-        runInAction(() => {
-          this.activeMachineList = data.sort(
-            (a, b) => +a.machineNo - +b.machineNo
-          );
-          this.activeTarget = { machine: +active.machineNo, code: 0 };
-          this.callCount++;
-          this.insertCallfunc(targetInformation);
-        });
+          runInAction(() => {
+            this.activeMachineList = data.sort(
+              (a, b) => +a.machineNo - +b.machineNo
+            );
+            this.activeTarget = { machine: +active.machineNo, code: 0 };
+            this.callCount++;
+            this.insertCallfunc(targetInformation);
+          });
+        } else {
+          runInAction(() => {
+            this.activeMachineList = data.sort(
+              (a, b) => +a.machineNo - +b.machineNo
+            );
+            this.isLoading = { machine: false, code: false };
+          });
+        }
       })
       .catch((error) => {
         console.log("error : ", error);

@@ -42,7 +42,7 @@ function MainView(props: IProps) {
             fontweight={500}
             fontFamily="digital"
             color={StyleColor.DARK}
-            style={{ gap: "8px" }}
+            style={{ gap: "24px" }}
           />
         </SectionTitle>
         <MachineWrap>
@@ -61,6 +61,12 @@ function MainView(props: IProps) {
 }
 
 export default inject("machineViewModel")(observer(MainView));
+
+// SSR
+// export async function getServerSideProps(props) {
+// const data = "test";
+//   return { props: { data } };
+// }
 
 const Layout = styled(CardLayout)`
   margin: 0 auto;

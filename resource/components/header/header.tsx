@@ -53,10 +53,8 @@ function Header(props: IProps) {
               }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
             />
             <MonitoringWrap>
-              <Linker href={`${pageUrlConfig.monitor2}?monitor=mon1`}>
-                V2 모티터링
-              </Linker>
-              <Linker href={pageUrlConfig.monitor3}>V3 모티터링</Linker>
+              <Linker href={`${pageUrlConfig.monitor2}`}>V2 모티터링</Linker>
+              <Linker href={`${pageUrlConfig.monitor3}13`}>V3 모티터링</Linker>
             </MonitoringWrap>
           </>
         )}
