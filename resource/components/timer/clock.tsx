@@ -68,4 +68,5 @@ const Container = styled.div<{
     font-size: ${({ fontSize, wideFont }) =>
       wideFont ? `${wideFont}vw` : `${fontSize}px`};
     font-weight: ${({ fontweight }) => fontweight};
+  }
 `;

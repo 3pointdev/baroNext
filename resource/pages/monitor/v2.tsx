@@ -75,7 +75,7 @@ function Monitoring2View(props: IProps) {
     }
 
     setTimeout(() => {
-      location.reload();
+      location.replace(router.asPath);
     }, 1200000);
 
     /**
@@ -99,7 +99,7 @@ function Monitoring2View(props: IProps) {
               "%c화면에 데이터 없음 감지\n 5초간 데이터가 없습니다.\n새로고침을 작동합니다.",
               "color:#ff0000"
             );
-            location.reload();
+            location.replace(router.asPath);
           } else {
             console.log("%c화면에 데이터가 감지되었습니다.", "color:#00ff00");
           }
