@@ -217,3 +217,16 @@ export const ScheduleType = {
   BRK: "BRK",
 } as const;
 export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType];
+
+/**
+ * 생산이력 설명서
+ */
+export const RecordDescription = {
+  planCount: "기능설명\n기계에 입력 한 생산 목표량",
+  partCount: "기능설명\n당일 생산량",
+  achieve: "기능설명\n목표량 대비 생산 비율",
+  uptime:
+    "기능설명\n조업시간대비 절삭에 소요된 시간 비율\n- 조업시간 : 관리자페이지 내 스케줄관리에서 입력한 조업시간에서 식사 및 휴게시간을 제외한 시간\n- 절삭시간 : 조업시간 외, 식사/휴게시간 중에 발생한 절삭 시간은 제외함",
+} as const;
+export type RecordDescription =
+  (typeof RecordDescription)[keyof typeof RecordDescription];

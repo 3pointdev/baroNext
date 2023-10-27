@@ -1,6 +1,6 @@
 import { StyleColor } from "config/color";
 import { TableFormatType } from "config/constants";
-import { Ref, useEffect, useState } from "react";
+import { MouseEventHandler, Ref, useEffect, useState } from "react";
 import TableModel from "src/models/table/table.model";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ interface IProps {
   recordRef?: Ref<HTMLTableElement>;
   filter?: string | number;
   format?: number;
+  handleClickOpenDescription: MouseEventHandler;
 }
 
 export default function RecordTable({
@@ -18,6 +19,7 @@ export default function RecordTable({
   recordRef,
   filter,
   format,
+  handleClickOpenDescription,
 }: IProps) {
   const [mergedCells, setMergedCells] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -137,6 +139,14 @@ ${data.tolerance}`,
                 style={{ width: `${head.size}%` }}
               >
                 {head.title}
+                {head.isDescription && (
+                  <DescriptionButton
+                    onClick={handleClickOpenDescription}
+                    value={head.column}
+                  >
+                    ?
+                  </DescriptionButton>
+                )}
               </th>
             );
           })}
@@ -221,7 +231,6 @@ const Table = {
     position: sticky;
     white-space: pre-line;
     top: 0;
-    z-index: 10;
 
     & tr {
       height: 48px;
@@ -231,6 +240,7 @@ const Table = {
     }
 
     & tr th {
+      position: relative;
       border: 1px solid ${StyleColor.DARK};
       border-right: 0;
       padding: 0 16px;
@@ -270,3 +280,17 @@ const Table = {
     }
   `,
 };
+
+const DescriptionButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: 0.5px solid ${StyleColor.DISABLE};
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: ${StyleColor.DISABLE};
+  cursor: pointer;
+`;

@@ -9,4 +9,5 @@ export default class TableModel {
   public rowSpan?: boolean = false;
   public isSort?: boolean = false;
   public sortState?: SortType = SortType.DEFAULT;
+  public isDescription?: boolean = false;
 }

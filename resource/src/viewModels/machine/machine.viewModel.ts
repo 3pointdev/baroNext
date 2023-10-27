@@ -123,10 +123,11 @@ export default class MachineViewModel extends DefaultViewModel {
         runInAction(() => {
           this.edgeData = data;
         });
-
-        data.forEach((item: TransmitterDto) => {
-          this.insertMachineStat(item);
-        });
+        setTimeout(() => {
+          data.forEach((item: TransmitterDto) => {
+            this.insertMachineStat(item);
+          });
+        }, 100);
       });
   };
 
@@ -431,9 +432,9 @@ export default class MachineViewModel extends DefaultViewModel {
     );
   };
 
-  getNotice = async (monitorList: MonitorListDto[]) => {
+  getNotice = async (monitorList: MonitorListDto[], monitorName: string) => {
     const monitorId = monitorList.find(
-      (monitor: MonitorListDto) => monitor.name === this.router.query.monitor
+      (monitor: MonitorListDto) => monitor.name === monitorName
     ).id;
     await this.api
       .get(ServerUrlType.APIS, `/api/noti/id/${monitorId}`)

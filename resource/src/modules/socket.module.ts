@@ -1,6 +1,6 @@
+import { EdgeMachineSocketDataType } from "config/constants";
 import { runInAction } from "mobx";
 import { ApiModule } from "./api.module";
-import { EdgeMachineSocketDataType } from "config/constants";
 
 interface IProps {
   onMessage: (response: MessageEvent) => void;

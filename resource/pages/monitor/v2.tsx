@@ -33,13 +33,18 @@ function Monitoring2View(props: IProps) {
 
   useEffect(() => {
     const initialize = async () => {
-      if (props.router.query.monitor) {
-        await machineViewModel.getMounted(
-          monitorViewModel.router.query.monitor
-        );
+      const monitor: string =
+        props.router.query.monitor?.toString() ??
+        window.localStorage.getItem("monitor");
+
+      console.log(monitor);
+
+      if (monitor) {
+        window.localStorage.setItem("monitor", monitor);
+        await machineViewModel.getMounted(monitor);
         await machineViewModel.getMachineList();
         await monitorViewModel.getList();
-        machineViewModel.getNotice(monitorViewModel.list);
+        machineViewModel.getNotice(monitorViewModel.list, monitor);
       } else {
         await monitorViewModel.getList();
         if (monitorViewModel.list.length > 0) {
@@ -122,14 +127,16 @@ function Monitoring2View(props: IProps) {
 
   const handleClickOtherMonitor = async (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
-
     const { id } = event.currentTarget.dataset;
+    const monitor: string =
+      props.router.query.monitor?.toString() ??
+      window.localStorage.getItem("monitor");
     monitorViewModel.router.replace(`${pageUrlConfig.monitor2}?monitor=${id}`);
     setIsOpenMenu(false);
     await machineViewModel.getMounted(id);
     await machineViewModel.getMachineList();
     await monitorViewModel.getList();
-    machineViewModel.getNotice(monitorViewModel.list);
+    machineViewModel.getNotice(monitorViewModel.list, monitor);
   };
 
   const handleClickNoticeEdit = (event: MouseEvent<HTMLAnchorElement>) => {

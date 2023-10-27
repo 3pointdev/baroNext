@@ -5,11 +5,11 @@ import DefaultRadio from "components/input/defaultRadio";
 import LayoutHeader from "components/layout/layoutHeader";
 import RecordTable from "components/table/recordTable";
 import { StyleColor } from "config/color";
-import { TableFormatType } from "config/constants";
+import { RecordDescription, TableFormatType } from "config/constants";
 import { inject, observer } from "mobx-react";
 import { NextRouter } from "next/router";
 import ExcelIcon from "public/images/icons/excel";
-import { useEffect, useRef } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import excelModule from "src/modules/excel.module";
 import RecordViewModel from "src/viewModels/record/record.viewModel";
 import styled from "styled-components";
@@ -22,6 +22,7 @@ interface IProps {
 function RecordView(props: IProps) {
   const recordViewModel = props.recordViewModel;
   const tableRef = useRef(null);
+  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     recordViewModel.getList();
@@ -48,8 +49,24 @@ function RecordView(props: IProps) {
     });
   };
 
+  const handleClickOpenDescription = (event: MouseEvent<HTMLButtonElement>) => {
+    const { value } = event.currentTarget;
+    let newValue = "";
+    Object.keys(RecordDescription).forEach((key) => {
+      if (key === value) {
+        newValue = RecordDescription[key];
+      }
+    });
+
+    setDescription(newValue);
+
+    setTimeout(() => {
+      setDescription("");
+    }, 10000);
+  };
+
   return (
-    <PageContainer style={{ gap: "16px" }}>
+    <PageContainer style={{ gap: "16px", position: "relative" }}>
       <LayoutHeader
         start={recordViewModel.recordModel.startDay}
         end={recordViewModel.recordModel.endDay}
@@ -82,24 +99,27 @@ function RecordView(props: IProps) {
         ) : (
           <div></div>
         )}
-        <DefaultButton
-          title={
-            <ButtonText>
-              <ExcelIcon size={18} />
-              다운로드
-            </ButtonText>
-          }
-          onClick={handleDownloadExcel}
-          style={{
-            width: "120px",
-            height: "56px",
-            padding: "0 8px",
-            border: "0",
-            color: StyleColor.DARK,
-            fontSize: "16px",
-          }}
-          activeColor={StyleColor.LIGHT}
-        />
+        <RightSideFunction>
+          <Description isOpen={description !== ""}>{description}</Description>
+          <DefaultButton
+            title={
+              <ButtonText>
+                <ExcelIcon size={18} />
+                다운로드
+              </ButtonText>
+            }
+            onClick={handleDownloadExcel}
+            style={{
+              width: "120px",
+              height: "56px",
+              padding: "0 8px",
+              border: "0",
+              color: StyleColor.DARK,
+              fontSize: "16px",
+            }}
+            activeColor={StyleColor.LIGHT}
+          />
+        </RightSideFunction>
       </FunctionWrap>
       <TableLayout>
         <TablePadding>
@@ -109,9 +129,30 @@ function RecordView(props: IProps) {
             recordRef={tableRef}
             filter={recordViewModel.recordModel.filter}
             format={recordViewModel.recordModel.format}
+            handleClickOpenDescription={handleClickOpenDescription}
           />
         </TablePadding>
       </TableLayout>
+      {/* <>
+        {Object.keys(isOpenDescription).map((key: string, index: number) => {
+          return (
+            <div key={`${key}_${index}`}>
+              <DescriptionBackground
+                isOpen={isOpenDescription[key]}
+                onClick={() =>
+                  setIsOpenDescription({
+                    ...isOpenDescription,
+                    [key]: !isOpenDescription[key],
+                  })
+                }
+              />
+              <Description isOpen={isOpenDescription[key]}>
+                {RecordDescription[key]}
+              </Description>
+            </div>
+          );
+        })}
+      </> */}
     </PageContainer>
   );
 }
@@ -126,7 +167,6 @@ const ButtonText = styled.p`
 `;
 
 const TableLayout = styled.section`
-  z-index: 10;
   position: relative;
   overflow: hidden;
   background: ${StyleColor.LIGHT};
@@ -147,4 +187,54 @@ const FunctionWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+// const Description = styled.div<{ isOpen: boolean }>`
+//   z-index: 1000;
+//   position: fixed;
+//   background: ${StyleColor.LIGHT};
+//   opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
+//   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+//   padding: 8px;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   border-radius: 8px;
+//   transition: all 0.4s ease;
+//   white-space: pre-wrap;
+// `;
+
+// const DescriptionBackground = styled.div<{ isOpen: boolean }>`
+//   z-index: 999;
+//   position: fixed;
+//   background: ${StyleColor.DARK}90;
+//   opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
+//   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+//   width: 100vw;
+//   height: 100vh;
+//   top: 0px;
+//   left: 0px;
+//   cursor: pointer;
+//   transition: all 0.4s ease;
+// `;
+
+const RightSideFunction = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const Description = styled.div<{ isOpen: boolean }>`
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  font-size: 12px;
+  background: ${StyleColor.LIGHT};
+  opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
+  pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.4s ease;
+  white-space: pre-wrap;
 `;
