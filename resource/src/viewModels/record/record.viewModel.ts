@@ -25,6 +25,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "4",
         rowSpan: true,
+        isDescription: false,
       },
       {
         title: "기계명",
@@ -32,6 +33,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "left",
         size: "16",
         rowSpan: true,
+        isDescription: false,
       },
       {
         title: "가공명",
@@ -39,6 +41,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "left",
         size: "40",
         rowSpan: false,
+        isDescription: false,
       },
       {
         title: "목표량",
@@ -46,6 +49,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "8",
         rowSpan: false,
+        isDescription: true,
       },
       {
         title: "생산량",
@@ -53,6 +57,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "8",
         rowSpan: false,
+        isDescription: true,
       },
       {
         title: "달성률(%)",
@@ -60,6 +65,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "8",
         rowSpan: false,
+        isDescription: true,
       },
       {
         title: "설비가동률(%)",
@@ -67,6 +73,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "8",
         rowSpan: true,
+        isDescription: true,
       },
       {
         title: "LOT완료\n예측시간 오차율",
@@ -74,6 +81,7 @@ export default class RecordViewModel extends DefaultViewModel {
         align: "center",
         size: "8",
         rowSpan: false,
+        isDescription: false,
       },
     ];
     makeObservable(this, {
