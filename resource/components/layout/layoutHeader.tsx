@@ -84,6 +84,7 @@ const LeftSide = {
     gap: 24px;
   `,
   Title: styled.h3`
+    white-space: nowrap;
     font-size: 24px;
     line-height: 1.5;
     font-weight: 600;

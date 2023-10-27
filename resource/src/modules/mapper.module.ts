@@ -214,6 +214,10 @@ class MapperModule {
       matchData.isReceiveMessage = false;
     }
 
+    if (matchData.isReceiveMessage === true && dataArray.includes("RESET")) {
+      matchData.isReceiveMessage = false;
+    }
+
     // 업데이트 후 estop이 트리거 이거나 power가 false인 경우 전원OFF 업데이트
     if (
       matchData.estop === MachineExecutionType.TRIGGERED ||
