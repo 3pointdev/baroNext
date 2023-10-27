@@ -1,3 +1,4 @@
+import Alert from "components/alert/alert";
 import DefaultButton from "components/button/defaultButton";
 import PageContainer from "components/container/pageContainer";
 import CustomSelector from "components/input/customSelector";
@@ -52,17 +53,25 @@ function RecordView(props: IProps) {
   const handleClickOpenDescription = (event: MouseEvent<HTMLButtonElement>) => {
     const { value } = event.currentTarget;
     let newValue = "";
+    let highestTimeoutId = setTimeout(";");
+    for (let i = 0; i < highestTimeoutId; i++) {
+      clearTimeout(i);
+    }
     Object.keys(RecordDescription).forEach((key) => {
       if (key === value) {
         newValue = RecordDescription[key];
       }
     });
 
-    setDescription(newValue);
+    setDescription("");
+
+    setTimeout(() => {
+      setDescription(newValue);
+    }, 10);
 
     setTimeout(() => {
       setDescription("");
-    }, 10000);
+    }, (newValue.length / 5) * 1000);
   };
 
   return (
@@ -99,8 +108,8 @@ function RecordView(props: IProps) {
         ) : (
           <div></div>
         )}
-        <RightSideFunction>
-          <Description isOpen={description !== ""}>{description}</Description>
+        <div>
+          {/* <Description isOpen={description !== ""}>{description}</Description> */}
           <DefaultButton
             title={
               <ButtonText>
@@ -119,7 +128,7 @@ function RecordView(props: IProps) {
             }}
             activeColor={StyleColor.LIGHT}
           />
-        </RightSideFunction>
+        </div>
       </FunctionWrap>
       <TableLayout>
         <TablePadding>
@@ -133,26 +142,15 @@ function RecordView(props: IProps) {
           />
         </TablePadding>
       </TableLayout>
-      {/* <>
-        {Object.keys(isOpenDescription).map((key: string, index: number) => {
-          return (
-            <div key={`${key}_${index}`}>
-              <DescriptionBackground
-                isOpen={isOpenDescription[key]}
-                onClick={() =>
-                  setIsOpenDescription({
-                    ...isOpenDescription,
-                    [key]: !isOpenDescription[key],
-                  })
-                }
-              />
-              <Description isOpen={isOpenDescription[key]}>
-                {RecordDescription[key]}
-              </Description>
-            </div>
-          );
-        })}
-      </> */}
+      <Alert
+        isPositive={true}
+        isActive={description !== ""}
+        title={description}
+        sec={description.length / 5}
+        fontColor={StyleColor.DARK}
+        background={StyleColor.LIGHT}
+        style={{ border: `2px solid ${StyleColor.DARK}` }}
+      />
     </PageContainer>
   );
 }
@@ -169,6 +167,7 @@ const ButtonText = styled.p`
 const TableLayout = styled.section`
   position: relative;
   overflow: hidden;
+  overflow-x: auto;
   background: ${StyleColor.LIGHT};
   padding: 16px;
   border-radius: 8px;
@@ -180,6 +179,7 @@ const TablePadding = styled.div`
   height: 100%;
   position: relative;
   overflow: auto;
+  min-width: 1592px;
 `;
 
 const FunctionWrap = styled.div`
@@ -218,10 +218,10 @@ const FunctionWrap = styled.div`
 //   transition: all 0.4s ease;
 // `;
 
-const RightSideFunction = styled.div`
-  display: flex;
-  gap: 16px;
-`;
+// const RightSideFunction = styled.div`
+//   display: flex;
+//   gap: 16px;
+// `;
 
 const Description = styled.div<{ isOpen: boolean }>`
   z-index: 1000;

@@ -1,6 +1,6 @@
 import { StyleColor } from "config/color";
 import dayjs from "dayjs";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import timeInstance from "src/modules/time.module";
 import styled from "styled-components";
 import ProductDto from "../../src/dto/report/product.dto";
@@ -9,34 +9,24 @@ import CardLayout from "../layout/cardLayout";
 
 interface IProps {
   data: ProductDto;
+  handleClickOpenDescription: MouseEventHandler;
 }
 
 interface ITime {
-  setting: string;
   total: string;
+  setting: string;
   averageActive: string;
   averageIdle: string;
   averageCycle: string;
   standardActive: string;
 }
-interface IDescription {
-  setting: boolean;
-  averageActive: boolean;
-  averageIdle: boolean;
-  averageCycle: boolean;
-  standardActive: boolean;
-}
 
-export default function ColumnReportCard({ data }: IProps) {
+export default function ColumnReportCard({
+  data,
+  handleClickOpenDescription,
+}: IProps) {
   const [activeLot, setActiveLot] = useState<number>(0);
   const [timeData, setTimeData] = useState<ITime[]>([]);
-  const [isOpenDescription, setIsOpenDescription] = useState<IDescription>({
-    setting: false,
-    averageActive: false,
-    averageIdle: false,
-    averageCycle: false,
-    standardActive: false,
-  });
 
   useEffect(() => {
     let timeData: ITime[] = [];
@@ -185,110 +175,47 @@ export default function ColumnReportCard({ data }: IProps) {
               <th>
                 <p>세팅시간</p>
                 <DescriptionButton
-                  onMouseEnter={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      setting: true,
-                    })
-                  }
-                  onMouseLeave={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      setting: false,
-                    })
-                  }
+                  onClick={handleClickOpenDescription}
+                  value={"setting"}
                 >
                   ?
                 </DescriptionButton>
-                <Description isOpen={isOpenDescription.setting}></Description>
               </th>
               <th>
                 <p>{`평균\n단품 실가공 시간`}</p>
                 <DescriptionButton
-                  onMouseEnter={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageActive: true,
-                    })
-                  }
-                  onMouseLeave={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageActive: false,
-                    })
-                  }
+                  onClick={handleClickOpenDescription}
+                  value={"averageActive"}
                 >
                   ?
                 </DescriptionButton>
-                <Description
-                  isOpen={isOpenDescription.averageActive}
-                ></Description>
               </th>
               <th>
                 <p>{`평균\n준비교체시간`}</p>
                 <DescriptionButton
-                  onMouseEnter={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageIdle: true,
-                    })
-                  }
-                  onMouseLeave={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageIdle: false,
-                    })
-                  }
+                  onClick={handleClickOpenDescription}
+                  value={"averageIdle"}
                 >
                   ?
                 </DescriptionButton>
-                <Description
-                  isOpen={isOpenDescription.averageIdle}
-                ></Description>
               </th>
               <th>
                 <p>{`평균\n실 Cycle time`}</p>
                 <DescriptionButton
-                  onMouseEnter={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageCycle: true,
-                    })
-                  }
-                  onMouseLeave={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      averageCycle: false,
-                    })
-                  }
+                  onClick={handleClickOpenDescription}
+                  value={"averageCycle"}
                 >
                   ?
                 </DescriptionButton>
-                <Description
-                  isOpen={isOpenDescription.averageCycle}
-                ></Description>
               </th>
               <th>
                 <p>표준 가공 시간</p>
                 <DescriptionButton
-                  onMouseEnter={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      standardActive: true,
-                    })
-                  }
-                  onMouseLeave={() =>
-                    setIsOpenDescription({
-                      ...isOpenDescription,
-                      standardActive: false,
-                    })
-                  }
+                  onClick={handleClickOpenDescription}
+                  value={"standardActive"}
                 >
                   ?
                 </DescriptionButton>
-                <Description
-                  isOpen={isOpenDescription.standardActive}
-                ></Description>
               </th>
             </tr>
           </thead>

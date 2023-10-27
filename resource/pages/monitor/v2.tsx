@@ -13,7 +13,6 @@ import { MouseEvent, useEffect, useState } from "react";
 import MachineDto from "src/dto/machine/machine.dto";
 import MonitorListDto from "src/dto/monitor/monitorList.dto";
 import { Alert } from "src/modules/alert.module";
-import authInstance from "src/modules/auth.module";
 import MachineViewModel from "src/viewModels/machine/machine.viewModel";
 import MonitorViewModel from "src/viewModels/monitor/monitor.viewModel";
 import styled, { css, keyframes } from "styled-components";
@@ -36,8 +35,6 @@ function Monitoring2View(props: IProps) {
       const monitor: string =
         props.router.query.monitor?.toString() ??
         window.localStorage.getItem("monitor");
-
-      console.log(monitor);
 
       if (monitor) {
         window.localStorage.setItem("monitor", monitor);
@@ -75,48 +72,46 @@ function Monitoring2View(props: IProps) {
       }
     };
 
-    if (authInstance.isLogin()) {
-      initialize();
-    }
+    initialize();
 
     setTimeout(() => {
       location.replace(router.asPath);
     }, 1200000);
 
-    /**
-     * 화면에 데이터가 사라졌는지 확인하는 Interval
-     * 30초 간격으로 설정되어있음
-     */
-    const checkDocument = setInterval(() => {
-      console.log(
-        "%c화면에 데이터가 있는지 찾는중... (30초 간격으로 탐색합니다.)",
-        "color:#ffff00"
-      );
-      const itemCount = document.querySelectorAll(".monitoring_item").length;
-      if (itemCount < 1) {
-        console.log(
-          "%c화면에 데이터 없음 감지\n 5초 이내 데이터가 없으면 새로고침을 작동합니다.",
-          "color:#ff0000"
-        );
-        setTimeout(() => {
-          if (itemCount < 1) {
-            console.log(
-              "%c화면에 데이터 없음 감지\n 5초간 데이터가 없습니다.\n새로고침을 작동합니다.",
-              "color:#ff0000"
-            );
-            location.replace(router.asPath);
-          } else {
-            console.log("%c화면에 데이터가 감지되었습니다.", "color:#00ff00");
-          }
-        }, 5000);
-      } else {
-        console.log("%c화면에 데이터가 감지되었습니다.", "color:#00ff00");
-      }
-    }, 30000);
+    // /**
+    //  * 화면에 데이터가 사라졌는지 확인하는 Interval
+    //  * 30초 간격으로 설정되어있음
+    //  */
+    // const checkDocument = setInterval(() => {
+    //   console.log(
+    //     "%c화면에 데이터가 있는지 찾는중... (30초 간격으로 탐색합니다.)",
+    //     "color:#ffff00"
+    //   );
+    //   const itemCount = document.querySelectorAll(".monitoring_item").length;
+    //   if (itemCount < 1) {
+    //     console.log(
+    //       "%c화면에 데이터 없음 감지\n 5초 이내 데이터가 없으면 새로고침을 작동합니다.",
+    //       "color:#ff0000"
+    //     );
+    //     setTimeout(() => {
+    //       if (itemCount < 1) {
+    //         console.log(
+    //           "%c화면에 데이터 없음 감지\n 5초간 데이터가 없습니다.\n새로고침을 작동합니다.",
+    //           "color:#ff0000"
+    //         );
+    //         location.replace(router.asPath);
+    //       } else {
+    //         console.log("%c화면에 데이터가 감지되었습니다.", "color:#00ff00");
+    //       }
+    //     }, 5000);
+    //   } else {
+    //     console.log("%c화면에 데이터가 감지되었습니다.", "color:#00ff00");
+    //   }
+    // }, 30000);
 
     return () => {
       machineViewModel.socketDisconnect();
-      clearInterval(checkDocument);
+      // clearInterval(checkDocument);
     };
   }, []);
 

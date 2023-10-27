@@ -222,11 +222,26 @@ export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType];
  * 생산이력 설명서
  */
 export const RecordDescription = {
-  planCount: "기능설명\n기계에 입력 한 생산 목표량",
-  partCount: "기능설명\n당일 생산량",
-  achieve: "기능설명\n목표량 대비 생산 비율",
+  planCount: "기계에 입력 한 생산 목표량",
+  partCount: "당일 생산량",
+  achieve: "목표량 대비 생산 비율",
   uptime:
-    "기능설명\n조업시간대비 절삭에 소요된 시간 비율\n- 조업시간 : 관리자페이지 내 스케줄관리에서 입력한 조업시간에서 식사 및 휴게시간을 제외한 시간\n- 절삭시간 : 조업시간 외, 식사/휴게시간 중에 발생한 절삭 시간은 제외함",
+    "조업시간대비 절삭에 소요된 시간 비율\n- 조업시간 : 관리자페이지 내 스케줄관리에서 입력한 조업시간에서 식사 및 휴게시간을 제외한 시간\n- 절삭시간 : 조업시간 외, 식사/휴게시간 중에 발생한 절삭 시간은 제외함",
 } as const;
 export type RecordDescription =
   (typeof RecordDescription)[keyof typeof RecordDescription];
+
+/**
+ * 생산분석 설명서
+ */
+export const ReportDescription = {
+  setting:
+    "- 이전 가공프로그램의 가공 종료 시간부터 현재 가공프로그램에서 마지막 보정이 들어간 가공이 종료된 시간\n- 마지막 보정이 들어간 가공품: 전체 생산량이 5이상이면 3번째 가공품, 5미만이면 첫번째 가공품\n- 세팅시간 산정 시 조업시간 외 이루어진 세팅은 포함\n- 식사/휴게시간에 이루어진 것은 미포함",
+  averageActive: "가공시작부터 종료까지의 평균 시간",
+  averageIdle:
+    "이전 가공품 종료부터 현재 가공품 시작까지의 평균 시간\n- 첫번째 가공품의 준비교체 시간은 세팅시간으로 간주하고 제외함",
+  averageCycle: " 평균 단품 실가공 시간 + 평균 준비교체 시간",
+  standardActive: "단품 가공 시 멈춤 없이 가공했을 때 걸리는 시간",
+} as const;
+export type ReportDescription =
+  (typeof ReportDescription)[keyof typeof ReportDescription];
