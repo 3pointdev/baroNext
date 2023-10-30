@@ -20,7 +20,29 @@ export default class ReportViewModel extends DefaultViewModel {
 
   constructor(props: IDefaultProps) {
     super(props);
-
+    this.products = [
+      plainToInstance(ProductDto, {
+        data: [
+          {
+            avg_active: 1000,
+            avg_idle: 1000,
+            count: 1000,
+            lot: 1000,
+            plan: 1000,
+            setting_time: 1000,
+            std_active: 1000,
+          },
+        ],
+        mid: "MID",
+        mkey: 0,
+        start_time: "08:30",
+        end_time: "17:30",
+        total_time: 1000,
+        work_time: 1000,
+        brk_time: 1000,
+        eat_time: 1000,
+      }),
+    ];
     makeObservable(this, {
       products: observable,
       productModel: observable,

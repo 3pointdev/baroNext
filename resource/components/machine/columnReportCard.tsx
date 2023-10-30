@@ -71,17 +71,41 @@ export default function ColumnReportCard({
               )}, 휴식 ${timeInstance.secToString(data.breakTime)})`}</td>
             </tr>
             <tr>
-              <th>조업시간 내 가동률</th>
+              <th>
+                <p>조업시간 내 가동률</p>
+                <DescriptionButton
+                  onClick={handleClickOpenDescription}
+                  value={"uptimeInTotalTime"}
+                >
+                  ?
+                </DescriptionButton>
+              </th>
               <td>{`${Math.round(
                 (data.workTime / data.totalTime) * 100
               )}%`}</td>
             </tr>
             <tr>
-              <th>조업시간 내 가동시간</th>
+              <th>
+                <p>조업시간 내 가동시간</p>
+                <DescriptionButton
+                  onClick={handleClickOpenDescription}
+                  value={"workTimeInTotalTime"}
+                >
+                  ?
+                </DescriptionButton>
+              </th>
               <td>{timeInstance.secToString(data.workTime)}</td>
             </tr>
             <tr>
-              <th>조업시간 내 비가동시간</th>
+              <th>
+                <p>조업시간 내 비가동시간</p>
+                <DescriptionButton
+                  onClick={handleClickOpenDescription}
+                  value={"downTimeInTotalTime"}
+                >
+                  ?
+                </DescriptionButton>
+              </th>
               <td>
                 {timeInstance.secToString(data.totalTime - data.workTime)}
               </td>
@@ -94,7 +118,15 @@ export default function ColumnReportCard({
           <thead>
             <tr>
               <th colSpan={1}>가공명</th>
-              <th colSpan={2}>시간</th>
+              <th colSpan={2}>
+                <p>시간</p>
+                <DescriptionButton
+                  onClick={handleClickOpenDescription}
+                  value={"lotChangeTime"}
+                >
+                  ?
+                </DescriptionButton>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -269,6 +301,7 @@ const WorkTimeTable = styled.table`
   text-align: left;
 
   & th {
+    position: relative;
     padding-left: 8px;
     border: 1px solid ${StyleColor.HOVER};
     border-bottom: 1px solid ${StyleColor.LIGHT};
@@ -298,6 +331,7 @@ const LotChangeTable = styled.table`
     background: ${StyleColor.HOVER};
     height: 32px;
     width: 300px;
+    position: relative;
 
     &:first-child {
       border-right: 1px solid ${StyleColor.LIGHT};
