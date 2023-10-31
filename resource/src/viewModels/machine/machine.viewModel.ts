@@ -34,6 +34,7 @@ export default class MachineViewModel extends DefaultViewModel {
   public realTimeData: RealTimeDataDto[] = [];
   public processChart: any = false;
   public edgeData: TransmitterDto[] = [];
+  public autoRequestCount: number = 0;
 
   public machineSummary: MachineSummaryDto[] = [];
   public tableHeader: TableModel[] = [];
@@ -183,7 +184,7 @@ export default class MachineViewModel extends DefaultViewModel {
         mkey: this.notiModel.mkey === 0 ? "%" : this.notiModel.mkey,
       })
       .then((result: AxiosResponse<NotificationDto[]>) => {
-        if (result.data.length <= 0) {
+        if (result.data.length <= 0 && this.autoRequestCount <= 14) {
           runInAction(() => {
             this.notiModel = {
               ...this.notiModel,
@@ -194,6 +195,7 @@ export default class MachineViewModel extends DefaultViewModel {
                 .subtract(1, "day")
                 .format("YYYY-MM-DD"),
             };
+            this.autoRequestCount = this.autoRequestCount + 1;
           });
           this.insertListNotification();
         }

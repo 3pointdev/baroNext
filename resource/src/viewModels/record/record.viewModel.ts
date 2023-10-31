@@ -15,6 +15,7 @@ export default class RecordViewModel extends DefaultViewModel {
   public recordModel: RecordModel = new RecordModel();
   public list: RecordDto[] = [];
   public dataFilter: Options[] = [];
+  public autoRequestCount: number = 0;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -118,7 +119,7 @@ export default class RecordViewModel extends DefaultViewModel {
         `report/selectRecord/${this.recordModel.startDay}/${this.recordModel.endDay}`
       )
       .then((result: AxiosResponse) => {
-        if (result.data.length <= 0) {
+        if (result.data.length <= 0 && this.autoRequestCount <= 14) {
           runInAction(() => {
             this.recordModel = {
               ...this.recordModel,
@@ -129,6 +130,7 @@ export default class RecordViewModel extends DefaultViewModel {
                 .subtract(1, "day")
                 .format("YYYY-MM-DD"),
             };
+            this.autoRequestCount = this.autoRequestCount + 1;
           });
           this.getList();
         }

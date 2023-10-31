@@ -17,6 +17,7 @@ export default class ReportViewModel extends DefaultViewModel {
   public products: ProductDto[] = [];
   public productModel: ProductModel = new ProductModel();
   public filterTarget: number = 0;
+  public autoRequestCount: number = 0;
 
   constructor(props: IDefaultProps) {
     super(props);
@@ -66,7 +67,7 @@ export default class ReportViewModel extends DefaultViewModel {
     await this.api
       .get(ServerUrlType.BARO, `/report/${this.productModel.day}`)
       .then((result: AxiosResponse<ProductDto[]>) => {
-        if (result.data.length <= 0) {
+        if (result.data.length <= 0 && this.autoRequestCount <= 14) {
           runInAction(() => {
             this.productModel = {
               ...this.productModel,
@@ -74,6 +75,7 @@ export default class ReportViewModel extends DefaultViewModel {
                 .subtract(1, "day")
                 .format("YYYY-MM-DD"),
             };
+            this.autoRequestCount = this.autoRequestCount + 1;
           });
           this.InsertProductList();
         }
