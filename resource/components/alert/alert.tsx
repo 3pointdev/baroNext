@@ -109,16 +109,16 @@ const ProgressBar = styled.div<{
   left: 0px;
   width: 100%;
   background: ${StyleColor.DISABLE};
-  height: 4px;
-  border-radius: 0 0 4px 4px;
+  height: 6px;
+  border-radius: 0 0 16px 16px;
 
   & span {
     position: absolute;
     bottom: 0px;
     left: 0px;
     width: 0%;
-    height: 4px;
-    border-radius: 0 0 4px 4px;
+    height: 6px;
+    border-radius: 0 0 16px 16px;
     background: ${({ isPositive, background }) =>
       background
         ? background
