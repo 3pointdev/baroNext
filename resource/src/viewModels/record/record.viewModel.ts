@@ -151,7 +151,8 @@ export default class RecordViewModel extends DefaultViewModel {
         );
         runInAction(() => {
           this.list = data;
-          this.setSort(TableFormatType.ALL);
+          this.setSort(this.recordModel.format);
+          this.setFilterOptions(this.recordModel.format);
         });
       })
       .catch((error: AxiosError) => {

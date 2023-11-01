@@ -381,12 +381,12 @@ const LotWrap = styled.div`
 `;
 const TimeWrap = styled.div`
   width: 50%;
-  height: 100px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
-  justify-content: center;
-  padding-left: 16px;
+  justify-content: start;
+  padding: 32px 0 0 16px;
   gap: 8px;
 
   & div {
