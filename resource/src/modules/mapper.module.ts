@@ -185,9 +185,9 @@ class MapperModule {
 
     if (matchData.isChangePalette && matchData.isReceivePartCount) {
       // 파트카운트가 변경되었는데 테이블 멈춤중이었다가 해제되었을 경우
-      // console.log('b ',this.MIDS[mkey].mctTable);
+
       var tbltime = matchData.beforePartCountTime; // 가공이 시작된 테이블코드
-      // console.log('bt ',tbltime);
+
       if (tbltime !== undefined) {
         // 이전에 해당 테이블 코드로 가공시간이 있다면
         matchData.remainTime = tbltime;
@@ -198,7 +198,6 @@ class MapperModule {
       matchData.isReceivePartCount = false;
       matchData.pause = false;
       matchData.isChangePalette = false;
-      console.log(matchData.mid, "isChangePalette", matchData.remainTime);
     } else if (dataArray.includes("execution")) {
       // 업데이트 후 execution이 변경된 경우 다음 조치
       // 1. execution이 active이면서 직전에 partCount가 입력된 경우 남은 작업시간 업데이트
@@ -209,7 +208,6 @@ class MapperModule {
       ) {
         matchData.remainTime = +matchData.activeTime;
         matchData.isReceivePartCount = false;
-        console.log("remainTime : ", matchData.mid, matchData.activeTime);
       }
       matchData.isReceiveMessage = false;
     }
@@ -243,8 +241,6 @@ class MapperModule {
     matchData.execution = MachineExecutionType.STOPPED;
     matchData.doneTime =
       (+dataArray[11] + +dataArray[10]) * (+dataArray[6] - +dataArray[5]);
-
-    console.log("activeTime : ", matchData.mid, dataArray[11]);
 
     return matchData;
   }
