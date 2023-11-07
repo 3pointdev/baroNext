@@ -151,7 +151,6 @@ function Monitoring2View(props: IProps) {
         </Article.Wrap>
         <Footer.Wrap>
           <BarofactorySquare color={StyleColor.DARK} />
-
           <Footer.Notice
             isLongText={machineViewModel.notice.length > 16}
             length={machineViewModel.notice.length}
@@ -346,6 +345,7 @@ const SlideMenu = {
     font-weight: 600;
 
     & .slide_menu {
+      width: calc(100% - 56px);
       height: 120px;
       margin-top: 32px;
       padding-left: 56px;

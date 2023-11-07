@@ -6,6 +6,7 @@ import RealTimeDataDto from "src/dto/machine/realTimeData.dto";
 class MapperModule {
   public currentListMapper(plainData) {
     const mapping = {
+      Period: plainData.active,
       WorkTime: plainData.active,
       ActiveTime: plainData.active_time,
       wait: plainData.wait,
@@ -59,6 +60,7 @@ class MapperModule {
     }
 
     const plainMachineData = {
+      Period: matchData.period,
       Alarm: plainData.Alarm,
       ActiveTime: activeTime,
       remainTime: remainTime,
@@ -233,6 +235,7 @@ class MapperModule {
       matchData.partCount = +dataArray[5];
       matchData.isReceivePartCount = true;
     }
+    matchData.period = +dataArray[9];
     matchData.activeTime = dataArray[11];
     matchData.planCount = +dataArray[6];
     matchData.wait = +dataArray[10];
