@@ -39,7 +39,7 @@
 
 #### 프로젝트 주요 경로
 
-- /local 로컬 도커 셋팅 경로
+- /admin_docker 로컬 도커 셋팅 경로
 - /app_prd.yaml 배포환경설정 파일 (PRD)
 - /app_dev.yaml 배포환경설정 파일 (DEV)
 - /app.js 빌드OUT파일 실행용 NODE
