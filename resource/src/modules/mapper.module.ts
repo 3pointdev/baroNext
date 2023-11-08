@@ -24,6 +24,8 @@ class MapperModule {
       pause: false,
     };
 
+    console.log(plainToInstance(MachineDto, mapping));
+
     return plainToInstance(MachineDto, mapping);
   }
 

@@ -72,7 +72,7 @@ export default function ColumnReportCard({
             </tr>
             <tr>
               <th>
-                <p>조업시간 내 가동률</p>
+                <p>조업시간 내 설비가동률</p>
                 <DescriptionButton
                   onClick={handleClickOpenDescription}
                   value={"uptimeInTotalTime"}
