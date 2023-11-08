@@ -44,24 +44,32 @@ export default class MainViewModel extends DefaultViewModel {
         size: 20,
         subMenu: [],
       },
+      // {
+      //   name: "work",
+      //   path: pageUrlConfig.work,
+      //   title: "작업관리",
+      //   icon: ScheduleIcon,
+      //   size: 22,
+      //   subMenu: [
+      //     {
+      //       name: "program",
+      //       path: pageUrlConfig.workProgram,
+      //       title: "프로그램 관리",
+      //     },
+      //     {
+      //       name: "schedule",
+      //       path: pageUrlConfig.workSchedule,
+      //       title: "스케쥴 관리",
+      //     },
+      //   ],
+      // },
       {
-        name: "work",
-        path: pageUrlConfig.work,
-        title: "작업관리",
+        name: "schedule",
+        path: pageUrlConfig.workSchedule,
+        title: "스케쥴관리",
         icon: ScheduleIcon,
         size: 22,
-        subMenu: [
-          {
-            name: "program",
-            path: pageUrlConfig.workProgram,
-            title: "프로그램 관리",
-          },
-          {
-            name: "machine_info",
-            path: pageUrlConfig.workSchedule,
-            title: "스케쥴 관리",
-          },
-        ],
+        subMenu: [],
       },
       {
         name: "machine_manage",

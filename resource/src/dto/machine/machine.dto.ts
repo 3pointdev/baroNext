@@ -5,7 +5,7 @@ export default class MachineDto {
   public alarm: string = "";
 
   @Expose({ name: "Period" })
-  public period: number = 0;
+  public period?: number = 0;
 
   @Expose({ name: "ActiveTime" })
   public activeTime: string = "";
