@@ -7,7 +7,6 @@ import SquareLogo from "public/images/logo/barofactory-square.svg";
 import defaultUser from "public/images/profile/defaultUser.png";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import pageUrlConfig from "../../config/pageUrlConfig";
 import MenuModel from "../../src/models/menu/menu.model";
 import SubMenuModel from "../../src/models/menu/subMenu.model";
 import MainViewModel from "../../src/viewModels/main/main.viewModel";
@@ -46,17 +45,11 @@ function Header(props: IProps) {
           </Head.Company>
         </Linker>
         {isLocal && (
-          <>
-            <WorkEnvironmentBadge
-              title={`${
-                process.env.NEXT_PUBLIC_APP_MARK
-              }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
-            />
-            <MonitoringWrap>
-              <Linker href={`${pageUrlConfig.monitor2}`}>V2 모티터링</Linker>
-              <Linker href={`${pageUrlConfig.monitor3}13`}>V3 모티터링</Linker>
-            </MonitoringWrap>
-          </>
+          <WorkEnvironmentBadge
+            title={`${
+              process.env.NEXT_PUBLIC_APP_MARK
+            }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
+          />
         )}
 
         <Head.Profile
