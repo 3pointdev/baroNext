@@ -46,10 +46,7 @@ export default function DashBoardMachine({ data }: IProps) {
       )
     );
   }, [
-    data.activeTime,
-    data.wait,
-    data.planCount,
-    data.partCount,
+    data.doneTime,
     data.execution,
     data.mode,
     data.pause,
