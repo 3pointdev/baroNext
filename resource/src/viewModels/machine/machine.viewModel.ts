@@ -14,14 +14,10 @@ import {
   SocketResponseType,
   SortType,
 } from "../../../config/constants";
-import pageUrlConfig from "../../../config/pageUrlConfig";
 import MachineDto from "../../dto/machine/machine.dto";
 import MachineSummaryDto from "../../dto/machine/machineSummary.dto";
 import NotificationDto from "../../dto/machine/notification.dto";
-import RealTimeDataDto from "../../dto/machine/realTimeData.dto";
-import MonitorListDto from "../../dto/monitor/monitorList.dto";
 import MountedDto from "../../dto/monitor/mounted.dto";
-import MonitorNoticeDto from "../../dto/monitor/notice.dto";
 import TransmitterDto from "../../dto/transmitters/transmitters.dto";
 import NotificationModel from "../../models/machine/notification.model";
 import { Alert } from "../../modules/alert.module";
@@ -31,7 +27,6 @@ import DefaultViewModel, { IDefaultProps } from "../default.viewModel";
 
 export default class MachineViewModel extends DefaultViewModel {
   public machines: MachineDto[] = [];
-  public realTimeData: RealTimeDataDto[] = [];
   public processChart: any = false;
   public edgeData: TransmitterDto[] = [];
   public autoRequestCount: number = 0;
@@ -80,7 +75,6 @@ export default class MachineViewModel extends DefaultViewModel {
     ];
     makeObservable(this, {
       machines: observable,
-      realTimeData: observable,
       processChart: observable,
       edgeData: observable,
       machineSummary: observable,
@@ -93,26 +87,10 @@ export default class MachineViewModel extends DefaultViewModel {
 
       onMessage: action,
       getMachineList: action,
-      getMounted: action,
+
       handleClickSort: action,
     });
   }
-
-  getMounted = async (monitorName: string | string[]) => {
-    await this.api
-      .post(ServerUrlType.APIS, "/api/cloud/monitorList", {
-        monitor: monitorName,
-      })
-      .then((result: AxiosResponse<ServerResponse<MountedDto>>) => {
-        runInAction(() => {
-          this.mountedList = plainToInstance(MountedDto, result.data.data);
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
 
   insertInstalledTransmitters = async () => {
     await this.api
@@ -434,75 +412,6 @@ export default class MachineViewModel extends DefaultViewModel {
     );
   };
 
-  getNotice = async (monitorList: MonitorListDto[], monitorName: string) => {
-    const monitorId = monitorList.find(
-      (monitor: MonitorListDto) => monitor.name === monitorName
-    ).id;
-    await this.api
-      .get(ServerUrlType.APIS, `/api/noti/id/${monitorId}`)
-      .then((result: AxiosResponse<MonitorNoticeDto>) => {
-        runInAction(() => {
-          this.notice = result.data[0].noti;
-        });
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  insertBroadcast = async (value: string, type: string) => {
-    const params = {
-      enterprise: this.auth.enterprise,
-      data: {
-        noti: value,
-      },
-    };
-
-    if (type === "monitor") {
-      params.data["monitor"] = this.mountedList.id.toString();
-      params.data["type"] = SocketBroadcastType.NOTICE;
-    } else {
-      params.data["type"] = SocketBroadcastType.RELOAD;
-    }
-
-    await this.api
-      .post(ServerUrlType.EDGE, "/api/edge/broadcast", params)
-      .then((result: AxiosResponse) => {})
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  insertNotice = async (value: string) => {
-    await this.api
-      .post(ServerUrlType.APIS, "/api/noti/", {
-        monitor_id: this.mountedList.id.toString(),
-        noti: value,
-      })
-      .then((result: AxiosResponse) => {
-        this.insertBroadcast(value, "monitor");
-      })
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
-  insertNoticeAll = async (value: string) => {
-    this.insertBroadcast(value, "all");
-    await this.api
-      .post(ServerUrlType.APIS, "/api/noti/al", {
-        noti: value,
-      })
-      .then((result: AxiosResponse) => {})
-      .catch((error: AxiosError) => {
-        console.log("error : ", error);
-        return false;
-      });
-  };
-
   // ********************소켓******************** //
   // ********************소켓******************** //
   // ********************소켓******************** //
@@ -530,15 +439,11 @@ export default class MachineViewModel extends DefaultViewModel {
           const matchDataForNoti = this.machines.find(
             (data) => +data?.id === +dataArray[4]
           );
-          const matchRTDataForNoti = this.realTimeData.find(
-            (data) => +data?.id === +dataArray[4]
-          );
 
           if (matchDataForNoti) {
             const mappingNoti = mapperModule.notiMapper(
               dataArray,
-              matchDataForNoti,
-              matchRTDataForNoti
+              matchDataForNoti
             );
             this.handleNoti(mappingNoti);
           }
@@ -566,30 +471,6 @@ export default class MachineViewModel extends DefaultViewModel {
           }
           break;
         default:
-          // let realTimeData = this.realTimeData;
-          // let updateData: { [key: string]: string } | RealTimeDataDto = {
-          //   Id: dataArray[2],
-          // };
-          // for (let i = 4; i < dataArray.length; i = i + 2) {
-          //   if (["Xact", "Yact", "Zact"].includes(dataArray[i]))
-          //     updateData[dataArray[i]] = dataArray[i + 1];
-          // }
-          // updateData = plainToInstance(RealTimeDataDto, updateData, {
-          //   exposeUnsetFields: false,
-          // });
-
-          // for (let i = 0; i < realTimeData.length; i++) {
-          //   if (realTimeData[i].id === updateData.id) {
-
-          //   }
-          // }
-
-          // if (dataArray[1] === "VC430-2") {
-          //   let dataObject: { [key: string]: string } = {
-          //     company: dataArray[0],
-          //     mid: dataArray[1],
-          //   };
-
           break;
       }
     } else {
@@ -635,23 +516,19 @@ export default class MachineViewModel extends DefaultViewModel {
     });
   };
 
-  handleNoti = (mappingNoti: { machine: MachineDto; rtd: RealTimeDataDto }) => {
+  handleNoti = (mappingNoti: MachineDto) => {
     const newMachinesByNoti: MachineDto[] = [];
-    const newRealTimeDataByNoti: RealTimeDataDto[] = [];
 
     for (let i = 0; i < this.machines.length; i++) {
-      if (this.machines[i].id === mappingNoti.machine.id) {
-        newMachinesByNoti[i] = mappingNoti.machine;
-        newRealTimeDataByNoti[i] = mappingNoti.rtd;
+      if (this.machines[i].id === mappingNoti.id) {
+        newMachinesByNoti[i] = mappingNoti;
       } else {
         newMachinesByNoti[i] = this.machines[i];
-        newRealTimeDataByNoti[i] = this.realTimeData[i];
       }
     }
 
     runInAction(() => {
       this.machines = newMachinesByNoti;
-      this.realTimeData = newRealTimeDataByNoti;
     });
   };
 
@@ -673,26 +550,19 @@ export default class MachineViewModel extends DefaultViewModel {
 
   handleMachineStat = (statArray) => {
     const newMachines: MachineDto[] = [];
-    const newRealTimeData: RealTimeDataDto[] = [];
+
     for (let i = 0; i < statArray.length; i++) {
       const matchData = this.machines.find(
         (data) => +data.id === +statArray[i].Id
       );
       if (matchData) {
         const result = mapperModule.machineStatMapper(statArray[i], matchData);
-        newMachines.push(result.machine);
-        newRealTimeData.push(result.rtd);
+        newMachines.push(result);
       }
     }
 
     runInAction(() => {
       this.machines = newMachines.sort((a, b) => a.machineNo - b.machineNo);
-      this.realTimeData = newRealTimeData.sort(
-        (a, b) => a.machineNo - b.machineNo
-      );
-      if (this.router.pathname === pageUrlConfig.monitor2) {
-        this.setMountByMonitor();
-      }
     });
   };
 
@@ -723,21 +593,5 @@ export default class MachineViewModel extends DefaultViewModel {
       result = false;
     }
     return result;
-  };
-
-  setMountByMonitor = () => {
-    const newMachines = this.mountedList.machines.map((order: number) => {
-      return this.machines.find((machine: MachineDto) => +machine.id === order);
-    });
-    const newRTDatas = this.mountedList.machines.map((order: number) => {
-      return this.realTimeData.find(
-        (machine: RealTimeDataDto) => +machine.id === order
-      );
-    });
-
-    runInAction(() => {
-      this.machines = newMachines;
-      this.realTimeData = newRTDatas;
-    });
   };
 }

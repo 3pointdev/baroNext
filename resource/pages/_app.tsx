@@ -1,5 +1,4 @@
 import Header from "components/header/header";
-import MobileHeader from "components/header/mobileHeader";
 import LoadingIndicator from "components/indicator/loadingIndicator";
 import { UserAgentType } from "config/constants";
 import pageUrlConfig from "config/pageUrlConfig";
@@ -61,26 +60,18 @@ class MyApp extends App<any, any, any> {
 
   render() {
     const { Component, pageProps, headers } = this.props;
-    const notUseHeader = [
-      pageUrlConfig.login,
-      pageUrlConfig.monitor3,
-      pageUrlConfig.monitor2,
-      `${pageUrlConfig.monitor3}10`,
-      `${pageUrlConfig.monitor3}13`,
-      `${pageUrlConfig.monitor3}22`,
-    ];
 
     if (this.state.isMount)
       return (
         <Provider {...this.mobxStore}>
-          {!notUseHeader.includes(this.props.router.pathname) &&
-          this.mobxStore.defaultViewModel.isApp === UserAgentType.DESKTOP ? (
-            <Header mainViewModel={this.mobxStore.mainViewModel} />
-          ) : (
-            !notUseHeader.includes(this.props.router.pathname) && (
-              <MobileHeader mainViewModel={this.mobxStore.mainViewModel} />
-            )
-          )}
+          {pageUrlConfig.login !== this.props.router.pathname &&
+            this.mobxStore.defaultViewModel.isApp === UserAgentType.DESKTOP && (
+              <Header mainViewModel={this.mobxStore.mainViewModel} />
+            )}
+
+          {/* !notUseHeader.includes(this.props.router.pathname) && (
+              <MobileHeader mainViewModel={this.mobxStore.mainViewModel} /> */}
+
           <LoadingIndicator
             indicatorViewModel={this.mobxStore.indicatorViewModel}
           />
