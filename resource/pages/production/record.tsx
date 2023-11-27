@@ -26,6 +26,7 @@ function RecordView(props: IProps) {
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
+    recordViewModel.addHeader(window.localStorage.getItem("enterprise"));
     recordViewModel.getList();
     return () => {};
   }, []);
