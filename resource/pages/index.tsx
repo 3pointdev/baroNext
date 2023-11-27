@@ -62,18 +62,12 @@ function MainView(props: IProps) {
 
 export default inject("machineViewModel")(observer(MainView));
 
-// SSR
-// export async function getServerSideProps(props) {
-// const data = "test";
-//   return { props: { data } };
-// }
-
 const Layout = styled(CardLayout)`
   margin: 0 auto;
   max-width: 1152px;
   width: calc(100% - 64px);
   height: calc(100vh - 224px);
-  alignitems: center;
+  align-items: center;
   gap: 32px;
   padding: 24px;
 
@@ -90,7 +84,6 @@ const SectionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  // justify-content: space-between;
 `;
 
 const MachineWrap = styled.div`

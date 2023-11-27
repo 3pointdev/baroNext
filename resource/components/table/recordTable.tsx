@@ -183,6 +183,8 @@ ${data.tolerance}`,
                   }
 
                   if (isAverage === 3) className = className + " is_average";
+                  if (mergedCells[inkey + 1]?.[key] === 0)
+                    className = className + " is_last";
 
                   return (
                     <td
@@ -277,6 +279,10 @@ const Table = {
 
     & .is_average {
       background: ${StyleColor.EMPHASIS};
+    }
+
+    & .is_last {
+      border-right: 0 !important;
     }
   `,
 };

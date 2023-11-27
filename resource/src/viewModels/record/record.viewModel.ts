@@ -76,14 +76,6 @@ export default class RecordViewModel extends DefaultViewModel {
         rowSpan: true,
         isDescription: true,
       },
-      {
-        title: "LOT완료\n예측시간 오차율",
-        column: "tolerance",
-        align: "center",
-        size: "8",
-        rowSpan: false,
-        isDescription: false,
-      },
     ];
     makeObservable(this, {
       recordModel: observable,
@@ -94,6 +86,25 @@ export default class RecordViewModel extends DefaultViewModel {
       handleChangeDay: action,
     });
   }
+
+  addHeader = (company: string) => {
+    const lotViewableCompany = ["CJPK", "YRHT"];
+    if (lotViewableCompany.includes(company)) {
+      runInAction(() => {
+        this.tableHeader = [
+          ...this.tableHeader,
+          {
+            title: "LOT완료\n예측시간 오차율",
+            column: "tolerance",
+            align: "center",
+            size: "8",
+            rowSpan: false,
+            isDescription: false,
+          },
+        ];
+      });
+    }
+  };
 
   dataReset = () => {
     runInAction(() => {
@@ -239,13 +250,6 @@ export default class RecordViewModel extends DefaultViewModel {
         size: "8",
         rowSpan: true,
       },
-      {
-        title: "LOT완료\n예측시간 오차율",
-        column: "tolerance",
-        align: "center",
-        size: "8",
-        rowSpan: false,
-      },
     ];
     switch (value) {
       case TableFormatType.ALL:
@@ -333,6 +337,7 @@ export default class RecordViewModel extends DefaultViewModel {
         });
         break;
     }
+    this.addHeader(window.localStorage.getItem("enterprise"));
   };
 
   handleClickFilter = (e: MouseEvent<HTMLDivElement>) => {
