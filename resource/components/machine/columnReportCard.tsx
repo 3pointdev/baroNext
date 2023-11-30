@@ -27,6 +27,7 @@ export default function ColumnReportCard({
 }: IProps) {
   const [activeLot, setActiveLot] = useState<number>(0);
   const [timeData, setTimeData] = useState<ITime[]>([]);
+  const [achievementRate, setAchievementRate] = useState<string>("-");
 
   useEffect(() => {
     let timeData: ITime[] = [];
@@ -48,11 +49,28 @@ export default function ColumnReportCard({
     }
 
     setTimeData(timeData);
+    calculatAchievementRates(activeLot);
   }, [data]);
 
   const handleClickLotToggle = (element: MouseEvent<HTMLTableCellElement>) => {
     const { id } = element.currentTarget.dataset;
     setActiveLot(+id);
+    calculatAchievementRates(+id);
+  };
+
+  const calculatAchievementRates = (id: number) => {
+    const hasCountValue = data.data[id].count;
+    const hasPlanValue = data.data[id].plan;
+
+    if (hasCountValue > 0 && hasPlanValue > 0) {
+      const achievement = Math.round(
+        (data.data[id].count / data.data[id].plan) * 100
+      )?.toString();
+
+      setAchievementRate(achievement + "%");
+    } else {
+      setAchievementRate("-");
+    }
   };
 
   return (
@@ -181,12 +199,7 @@ export default function ColumnReportCard({
               <tr>
                 <td>{data.data[activeLot].plan}</td>
                 <td>{data.data[activeLot].count}</td>
-                <td>
-                  {`${Math.round(
-                    (data.data[activeLot].count / data.data[activeLot].plan) *
-                      100
-                  )}%`}
-                </td>
+                <td>{achievementRate}</td>
               </tr>
             </tbody>
           </CountTable>
