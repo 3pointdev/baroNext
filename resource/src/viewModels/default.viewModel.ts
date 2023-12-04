@@ -31,15 +31,16 @@ export default class DefaultViewModel {
   public auth: AuthDto = new AuthDto();
   public socket: SocketModule;
   public router: NextRouter;
-  public isApp: string = UserAgentType.DESKTOP;
+  public userAgent: string = UserAgentType.DESKTOP;
   constructor(props: IDefaultProps) {
-    this.isApp = UserAgentModule.getUserAgent(props.userAgent);
+    this.userAgent = UserAgentModule.getUserAgent(props.userAgent);
     this.api = ApiModule.getInstance(props.indicatorViewModel);
     this.router = props.router;
 
     makeObservable(this, {
       auth: observable,
       socket: observable,
+      userAgent: observable,
 
       popAuth: action,
     });
