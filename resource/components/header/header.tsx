@@ -10,7 +10,6 @@ import styled from "styled-components";
 import MenuModel from "../../src/models/menu/menu.model";
 import SubMenuModel from "../../src/models/menu/subMenu.model";
 import MainViewModel from "../../src/viewModels/main/main.viewModel";
-import WorkEnvironmentBadge from "../badge/workEnvironmentBadge";
 import Logo from "../image/logo";
 import Linker from "../linker/linker";
 import UserModal from "../modal/userModal";
@@ -21,14 +20,12 @@ interface IProps {
 
 function Header(props: IProps) {
   const mainViewModel: MainViewModel = props.mainViewModel;
-  const [isLocal, setIsLocal] = useState(false);
   const [hover, setHover] = useState("");
   const [isOpenUserModal, setIsOpenUserModal] = useState<boolean>(false);
   const router: NextRouter = useRouter();
 
   useEffect(() => {
     mainViewModel.popAuth();
-    setIsLocal(window.location.protocol === "http:");
   }, []);
 
   const handleToggleUserModal = () => {
@@ -44,14 +41,6 @@ function Header(props: IProps) {
             <p>{mainViewModel.auth.name}</p>
           </Head.Company>
         </Linker>
-        {isLocal && (
-          <WorkEnvironmentBadge
-            title={`${
-              process.env.NEXT_PUBLIC_APP_MARK
-            }_${process.env.NEXT_PUBLIC_VERSION.toUpperCase()}`}
-          />
-        )}
-
         <Head.Profile
           src={
             mainViewModel.auth.profileImage

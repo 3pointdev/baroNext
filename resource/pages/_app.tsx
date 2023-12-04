@@ -1,6 +1,5 @@
 import Header from "components/header/header";
 import LoadingIndicator from "components/indicator/loadingIndicator";
-import { UserAgentType } from "config/constants";
 import pageUrlConfig from "config/pageUrlConfig";
 import { Provider } from "mobx-react";
 import App from "next/app";
@@ -64,14 +63,9 @@ class MyApp extends App<any, any, any> {
     if (this.state.isMount)
       return (
         <Provider {...this.mobxStore}>
-          {pageUrlConfig.login !== this.props.router.pathname &&
-            this.mobxStore.defaultViewModel.isApp === UserAgentType.DESKTOP && (
-              <Header mainViewModel={this.mobxStore.mainViewModel} />
-            )}
-
-          {/* !notUseHeader.includes(this.props.router.pathname) && (
-              <MobileHeader mainViewModel={this.mobxStore.mainViewModel} /> */}
-
+          {pageUrlConfig.login !== this.props.router.pathname && (
+            <Header mainViewModel={this.mobxStore.mainViewModel} />
+          )}
           <LoadingIndicator
             indicatorViewModel={this.mobxStore.indicatorViewModel}
           />
