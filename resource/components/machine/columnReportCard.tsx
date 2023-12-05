@@ -131,7 +131,7 @@ export default function ColumnReportCard({
           </tbody>
         </WorkTimeTable>
 
-        <SectionTitle>가공 변경 이력</SectionTitle>
+        <SectionTitle>가공 이력</SectionTitle>
         <LotChangeTable>
           <thead>
             <tr>
