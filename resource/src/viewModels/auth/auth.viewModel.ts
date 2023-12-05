@@ -73,6 +73,75 @@ export default class AuthViewModel extends DefaultViewModel {
   };
 
   insertContact = async (): Promise<boolean> => {
+    if (this.findAccount.inquiry === "password") {
+      return await this.insertFindPw();
+    } else {
+      return await this.insertFindId();
+    }
+  };
+
+  insertFindPw = async () => {
+    return await this.api
+      .post(ServerUrlType.BARO, "/login/findPass", {
+        contact: this.findAccount.contact,
+        sender: window.localStorage.sender,
+        ...this.getNewPassword(),
+      })
+      .then((result: any) => {
+        if (result.data.code === 500) {
+          runInAction(() => {
+            this.alertModel = {
+              isPositive: false,
+              isActive: true,
+              title: "요청하신 계정 또는 연락처를 찾을 수 없습니다.",
+            };
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              this.alertModel = {
+                title: "",
+                isPositive: true,
+                isActive: false,
+              };
+            });
+          }, 3000);
+
+          return false;
+        } else {
+          runInAction(() => {
+            this.alertModel = {
+              isPositive: true,
+              isActive: true,
+              title: "임시비밀번호를 문자메시지로 전송하였습니다.",
+            };
+          });
+          setTimeout(() => {
+            runInAction(() => {
+              this.alertModel = {
+                title: "",
+                isPositive: true,
+                isActive: false,
+              };
+            });
+          }, 3000);
+          return true;
+        }
+      });
+  };
+
+  public getNewPassword() {
+    const length = 4;
+    const characters =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const random = Array.from(
+      { length },
+      () => characters[Math.floor(Math.random() * characters.length)]
+    ).join("");
+    const password = sha256(random);
+    return { random, password };
+  }
+
+  insertFindId = async () => {
     return await this.api
       .post(ServerUrlType.BARO, "/login/findId", {
         ...this.findAccount,
