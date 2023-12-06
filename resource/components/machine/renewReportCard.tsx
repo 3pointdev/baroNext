@@ -257,7 +257,7 @@ export default function RenewReportCard({
                 </DescriptionButton>
               </th>
               <th>
-                <p>표준 가공 시간</p>
+                <p>순수 가공 시간</p>
                 <DescriptionButton
                   onClick={handleClickOpenDescription}
                   value={"standardActive"}
