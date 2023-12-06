@@ -3,7 +3,7 @@ import PageContainer from "components/container/pageContainer";
 import CustomMachineSelector from "components/input/customMachineSelector";
 import CardLayout from "components/layout/cardLayout";
 import LayoutHeader from "components/layout/layoutHeader";
-import ColumnReportCard from "components/machine/columnReportCard";
+import RenewReportCard from "components/machine/renewReportCard";
 import { StyleColor } from "config/color";
 import { ReportDescription } from "config/constants";
 import { inject, observer } from "mobx-react";
@@ -77,12 +77,19 @@ function ReportView(props: IProps) {
               reportViewModel.filterTarget === +product.mkey
             )
               return (
-                <ColumnReportCard
+                <RenewReportCard
                   data={product}
                   handleClickOpenDescription={handleClickOpenDescription}
                   key={`report_card_${product.mid}_${key}`}
                 />
               );
+              // return (
+              //   <ColumnReportCard
+              //     data={product}
+              //     handleClickOpenDescription={handleClickOpenDescription}
+              //     key={`report_card_${product.mid}_${key}`}
+              //   />
+              // );
           })}
         </ReportCardWrap>
       ) : (

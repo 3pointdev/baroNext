@@ -137,6 +137,7 @@ ${data.tolerance}`,
                 key={`table_header_${head.title}_${key}`}
                 align={head.align}
                 style={{ width: `${head.size}%` }}
+                className={head.column === "tolerance" ? 'lot_tolerance': ''}
               >
                 {head.title}
                 {head.isDescription && (
@@ -159,6 +160,7 @@ ${data.tolerance}`,
             return (
               <tr key={`table_body_rows_${key}`}>
                 {header.map((head: TableModel, inkey: number) => {
+                  console.log(head)
                   const thisMergeCount = mergedCells[inkey][key];
 
                   const shoudSkip = head.rowSpan && thisMergeCount === 0;
@@ -180,6 +182,12 @@ ${data.tolerance}`,
                     } else if (target.includes("isNotViewAble")) {
                       target = target.replace(" isNotViewAble", "");
                     }
+                  }
+                  if (head.column === 'date') {
+                    className += 'date_column';
+                  }
+                  if (head.column === 'mid') {
+                    className += 'mid_column';
                   }
 
                   if (isAverage === 3) className = className + " is_average";
@@ -237,7 +245,7 @@ const Table = {
     & tr {
       height: 48px;
       background: ${StyleColor.EMPHASIS};
-      font-size: 14px;
+      font-size: 20px;
       color: ${StyleColor.DARK};
     }
 
@@ -250,12 +258,16 @@ const Table = {
       &:last-child {
         border-right: 1px solid ${StyleColor.DARK};
       }
+
+      &.lot_tolerance {
+        font-size: 18px;
+      }
     }
   `,
   Body: styled.tbody`
     & tr {
       height: 38px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
     }
 
@@ -284,6 +296,13 @@ const Table = {
     & .is_last {
       border-right: 0 !important;
     }
+
+    & .date_column,
+    .mid_column {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
   `,
 };
 

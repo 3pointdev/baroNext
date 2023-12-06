@@ -21,7 +21,7 @@ interface ITime {
   standardActive: string;
 }
 
-export default function ColumnReportCard({
+export default function RenewReportCard({
   data,
   handleClickOpenDescription,
 }: IProps) {
@@ -130,7 +130,8 @@ export default function ColumnReportCard({
             </tr>
           </tbody>
         </WorkTimeTable>
-
+      </SectionWrap>
+      <SectionWrap>
         <SectionTitle className="record">가공 이력</SectionTitle>
         <LotChangeTable>
           <thead>
@@ -187,6 +188,18 @@ export default function ColumnReportCard({
               ? data.data[activeLot].program
               : "Unknown Lot"}
           </p>
+        </LotWrap>
+        <TimeWrap>
+          <div>
+            <div>
+              <p>시작</p>
+              <p>{data.data[activeLot].lotStart}</p>
+            </div>
+            <div>
+              <p>종료</p>
+              <p>{data.data[activeLot].lotEnd}</p>
+            </div>
+          </div>
           <CountTable>
             <thead>
               <tr>
@@ -203,16 +216,6 @@ export default function ColumnReportCard({
               </tr>
             </tbody>
           </CountTable>
-        </LotWrap>
-        <TimeWrap>
-          <div>
-            <p>시작</p>
-            <p>{data.data[activeLot].lotStart}</p>
-          </div>
-          <div>
-            <p>종료</p>
-            <p>{data.data[activeLot].lotEnd}</p>
-          </div>
         </TimeWrap>
         <DataTable>
           <thead>
@@ -286,10 +289,13 @@ const Container = styled(CardLayout)`
 `;
 
 const SectionWrap = styled.div`
-  width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  width: 37%;
+
+  &:first-child {
+    width: 26%;
+  }
 `;
 
 const SectionTitle = styled.p`
@@ -388,8 +394,8 @@ const LotWrap = styled.div`
     font-size: 18px;
     font-weight: 600;
     box-shadow: ${StyleColor.BOXSHADOW};
-    width: 50%;
-    height: 88px;
+    width: 100%;
+    height: 56px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -399,36 +405,43 @@ const LotWrap = styled.div`
   }
 `;
 const TimeWrap = styled.div`
-  width: 50%;
-  height: 100%;
+  width: calc(100% - 8px);
+  
   display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: start;
-  padding: 32px 0 0 16px;
+  padding: 16px 0 16px 8px;
   gap: 8px;
 
-  & div {
+  & > div {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 16px;
+    width: 100%;
 
-    & p:first-child {
-      font-weight: 600;
+    & > div {
+      display: flex;
+      gap: 16px; 
+
+      & p:first-child {
+        font-weight: 600;
+      }
     }
+
   }
 `;
 
 const CountTable = styled.table`
-  width: 50%;
+  width: 100%;
   text-align: center;
   border-spacing: 0;
+  
 
   & th {
     padding-left: 8px;
     border: 1px solid ${StyleColor.HOVER};
     border-right: 1px solid ${StyleColor.LIGHT};
     background: ${StyleColor.HOVER};
-    height: 40px;
+    height: 32px;
     width: 33%;
 
     &:last-child {
@@ -440,6 +453,7 @@ const CountTable = styled.table`
     padding-left: 8px;
     border-bottom: 1px solid ${StyleColor.HOVER};
     border-right: 1px solid ${StyleColor.HOVER};
+    height: 36px;
 
     &:first-child {
       border-left: 1px solid ${StyleColor.HOVER};
@@ -458,7 +472,7 @@ const DataTable = styled.table`
     border: 1px solid ${StyleColor.HOVER};
     border-right: 1px solid ${StyleColor.LIGHT};
     background: ${StyleColor.HOVER};
-    height: 60px;
+    height: 48px;
     width: 20%;
     white-space: pre-line;
     &:last-child {
@@ -467,7 +481,7 @@ const DataTable = styled.table`
   }
 
   & td {
-    height: 100px;
+    height: 48px;
     padding-left: 8px;
     border-bottom: 1px solid ${StyleColor.HOVER};
     border-right: 1px solid ${StyleColor.HOVER};
