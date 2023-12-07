@@ -38,6 +38,10 @@ class MyDocument extends Document {
             name="viewport"
             content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           />
+          <meta
+            name="google-site-verification"
+            content="PrnuDV1GQHqQQeIxjSLms2j9kJX9IOA0u-mbJH4Fh_I"
+          />
         </Head>
         <body>
           <title>바로팩토리</title>
