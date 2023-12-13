@@ -167,6 +167,7 @@ function freeFormat(options: IFreeOptions) {
     confirmButtonText: options.confirm ?? "확인",
     cancelButtonText: options.cancel ?? "취소",
     focusConfirm: false,
+    reverseButtons: true,
     preConfirm: options.callback,
   });
 }
