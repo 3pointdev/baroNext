@@ -4,11 +4,11 @@ import {
   MachineExecutionType,
   MachineTextType,
 } from "config/constants";
+import dayjs from "dayjs";
 import FactoryIcon from "public/images/icons/factoryIcon";
 import { useEffect, useState } from "react";
 import MachineDto from "src/dto/machine/machine.dto";
 import machineStatusModule from "src/modules/machineStatus.module";
-import timeInstance from "src/modules/time.module";
 import styled from "styled-components";
 
 interface IProps {
@@ -21,11 +21,6 @@ export default function DashBoardMachine({ data }: IProps) {
   const [endTime, setEndTime] = useState<string>("-");
 
   useEffect(() => {
-    setEndTime(timeInstance.msToHHMM(data.doneTime));
-    if (data.execution === MachineExecutionType.OFF || data.doneTime <= 0) {
-      setEndTime("-");
-    }
-
     setColor(
       machineStatusModule.ToColorStatus(
         data.execution,
@@ -46,7 +41,6 @@ export default function DashBoardMachine({ data }: IProps) {
       )
     );
   }, [
-    data.doneTime,
     data.execution,
     data.mode,
     data.pause,
@@ -54,6 +48,15 @@ export default function DashBoardMachine({ data }: IProps) {
     data.isReceivePartCount,
     data.isChangePalette,
   ]);
+
+  useEffect(() => {
+    const time = dayjs(data.prdctEnd).format("MM/DD HH:mm");
+    if (time !== "Invalid Date") {
+      setEndTime(time);
+    } else {
+      setEndTime("-");
+    }
+  }, [data.prdctEnd]);
 
   return (
     <Container>
@@ -76,7 +79,7 @@ export default function DashBoardMachine({ data }: IProps) {
             <Item.Desc>{`${data.partCount}/${data.planCount}`}</Item.Desc>
           </Item.Box>
           <Item.Box>
-            <Item.Title>남은시간</Item.Title>
+            <Item.Title>완료예정일</Item.Title>
             <Item.Desc>{endTime}</Item.Desc>
           </Item.Box>
         </Item.Wrap>
@@ -155,7 +158,7 @@ const Item = {
     flex-shrink: 0;
     display: inline-block;
     font-size: 10px;
-    width: 36px;
+    width: 42px;
     color: ${StyleColor.DARKBACKGROUND};
     text-align: justify;
     text-align-last: justify;
