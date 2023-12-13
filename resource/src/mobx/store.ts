@@ -1,6 +1,7 @@
 import { configure } from "mobx";
 import CompareViewModel from "src/viewModels/program/compare.viewModel";
 import ScheduleViewModel from "src/viewModels/schedule/schedule.viewModel";
+import WorkerViewModel from "src/viewModels/worker/worker.viewModel";
 import AuthViewModel from "../viewModels/auth/auth.viewModel";
 import DefaultViewModel, {
   IDefaultProps,
@@ -33,6 +34,7 @@ export class RootStore {
   public compareViewModel: CompareViewModel;
   public monitorViewModel: MonitorViewModel;
   public scheduleViewModel: ScheduleViewModel;
+  public workerViewModel: WorkerViewModel;
 
   constructor(initialData: IDefaultProps) {
     this.indicatorViewModel = new IndicatorViewModel();
@@ -51,6 +53,7 @@ export class RootStore {
     this.compareViewModel = new CompareViewModel(initData);
     this.monitorViewModel = new MonitorViewModel(initData);
     this.scheduleViewModel = new ScheduleViewModel(initData);
+    this.workerViewModel = new WorkerViewModel(initData);
   }
 }
 

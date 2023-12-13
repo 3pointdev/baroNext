@@ -450,6 +450,7 @@ export default class MonitorViewModel extends DefaultViewModel {
       title: "이곳에 보여질 기계를 선택해 주세요",
       input: "select",
       options: machineArray,
+      showCancel: true,
       callback: (result: string) => {
         const targetId = this.machineList[+result].id;
         this.insertMachine(+id, targetId, +index);
@@ -467,6 +468,7 @@ export default class MonitorViewModel extends DefaultViewModel {
       title: "이곳에 보여질 기계를 선택해 주세요",
       input: "select",
       options: machineArray,
+      showCancel: true,
       callback: (result: string) => {
         this.updateMachine(+value, +this.machineList[+result].id);
       },
