@@ -62,7 +62,7 @@ function MonitorSettingView(props: IProps) {
   return (
     <PageContainer>
       <CardLayout style={{ height: "100%" }}>
-        <LayoutTitle>모니터링 관리</LayoutTitle>
+        <LayoutTitle>화면 관리</LayoutTitle>
         <DragWrap>
           {monitorViewModel.list.length > 0 && (
             <DragMonitor.Wrap>

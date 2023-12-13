@@ -59,13 +59,18 @@ function Header(props: IProps) {
                 ? router.asPath === "/"
                 : router.asPath.includes(item.path);
             const isHaveSubMenu = item.subMenu.length > 0;
+            let classString = isActive || hover === item.name ? "active" : "";
+            if (
+              item.name === "worker_manage" ||
+              item.name === "notification_manage"
+            ) {
+              classString = classString + " fill";
+            }
 
             return (
               <Navi.MenuItem
                 key={key}
-                className={
-                  isActive ? "active" : hover === item.name ? "active" : ""
-                }
+                className={classString}
                 isMain={item.path === "/"}
                 onMouseEnter={() => setHover(item.name)}
                 onMouseLeave={() => setHover("")}
@@ -197,6 +202,17 @@ const Navi = {
       path {
         color: ${StyleColor.LIGHT};
         stroke: ${StyleColor.LIGHT};
+      }
+    }
+    &.active.fill {
+      background: ${StyleColor.PRIMARY};
+      border-radius: 8px;
+      box-shadow: ${StyleColor.DEEPSHADOW};
+
+      & svg,
+      p,
+      path {
+        fill: ${StyleColor.LIGHT};
       }
     }
   `,

@@ -1,6 +1,8 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { makeObservable, observable } from "mobx";
 import ListIcon from "public/images/icons/listIcon";
+import NotificationIcon from "public/images/icons/notificationIcon";
+import WorkerIcon from "public/images/icons/workerIcon";
 import pageUrlConfig from "../../../config/pageUrlConfig";
 import HomeIcon from "../../../public/images/icons/homeIcon";
 import MagnifyGlassIcon from "../../../public/images/icons/magnifyGlassIcon";
@@ -44,25 +46,6 @@ export default class MainViewModel extends DefaultViewModel {
         size: 20,
         subMenu: [],
       },
-      // {
-      //   name: "work",
-      //   path: pageUrlConfig.work,
-      //   title: "작업관리",
-      //   icon: ScheduleIcon,
-      //   size: 22,
-      //   subMenu: [
-      //     {
-      //       name: "program",
-      //       path: pageUrlConfig.workProgram,
-      //       title: "프로그램 관리",
-      //     },
-      //     {
-      //       name: "schedule",
-      //       path: pageUrlConfig.workSchedule,
-      //       title: "스케쥴 관리",
-      //     },
-      //   ],
-      // },
       {
         name: "schedule",
         path: pageUrlConfig.workSchedule,
@@ -95,6 +78,22 @@ export default class MainViewModel extends DefaultViewModel {
         path: pageUrlConfig.monitorSetting,
         title: "화면관리",
         icon: MonitorIcon,
+        size: 20,
+        subMenu: [],
+      },
+      {
+        name: "worker_manage",
+        path: pageUrlConfig.worker,
+        title: "작업자관리",
+        icon: WorkerIcon,
+        size: 20,
+        subMenu: [],
+      },
+      {
+        name: "notification_manage",
+        path: pageUrlConfig.notification,
+        title: "공지사항관리",
+        icon: NotificationIcon,
         size: 20,
         subMenu: [],
       },
