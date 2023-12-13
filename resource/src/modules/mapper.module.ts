@@ -12,7 +12,7 @@ class MapperModule {
       Id: plainData.mkey,
       PartCount: plainData.process_count,
       PlanCount: plainData.plan_count,
-
+      prdct_end: plainData.prdct_end,
       Block: plainData.process,
       Program: plainData.process?.includes("(")
         ? plainData.process.split("(")[1].replace(")", "")
@@ -46,7 +46,7 @@ class MapperModule {
     const plainMachineData = {
       Alarm: plainData.Alarm,
       ActiveTime: activeTime,
-
+      prdct_end: matchData.prdctEnd,
       wait: matchData.wait,
       Block: plainData.Block,
       CycleTime: plainData.CycleTime,
