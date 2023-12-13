@@ -477,11 +477,12 @@ export default class MachineViewModel extends DefaultViewModel {
               matchDataForPartCount
             );
             this.handlePartCount(mappingPartCount);
+
+            if (+dataArray[5] > 5 && mappingPartCount.prdctEnd) {
+              this.updateData(matchDataForPartCount);
+            }
           }
 
-          if (+dataArray[5] > 5 && matchDataForPartCount.prdctEnd) {
-            this.updateData(matchDataForPartCount);
-          }
           break;
         case BinaryMessageType.MESSAGE || BinaryMessageType.ALARM:
           const matchDataForMessage = this.machines.find(
