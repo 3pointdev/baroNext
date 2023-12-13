@@ -60,12 +60,10 @@ function Header(props: IProps) {
                 : router.asPath.includes(item.path);
             const isHaveSubMenu = item.subMenu.length > 0;
             let classString = isActive || hover === item.name ? "active" : "";
-            if (
-              item.name === "worker_manage" ||
-              item.name === "notification_manage"
-            ) {
-              classString = classString + " fill";
-            }
+
+            classString = classString + " " + item.name;
+
+            const Icon = item.icon;
 
             return (
               <Navi.MenuItem
@@ -76,7 +74,7 @@ function Header(props: IProps) {
                 onMouseLeave={() => setHover("")}
                 onClick={() => (isHaveSubMenu ? null : router.push(item.path))}
               >
-                <item.icon />
+                <Icon />
                 <p>{item.title}</p>
                 {isHaveSubMenu && <Navi.DropDownIcon icon={faAngleDown} />}
 
@@ -193,6 +191,15 @@ const Navi = {
       height: 32px;
     }
 
+    &.worker_manage svg {
+      width: 30px;
+      height: 30px;
+    }
+    &.notification_manage svg {
+      width: 24px;
+      height: 24px;
+    }
+
     &.active {
       background: ${StyleColor.PRIMARY};
       border-radius: 8px;
@@ -204,7 +211,18 @@ const Navi = {
         stroke: ${StyleColor.LIGHT};
       }
     }
-    &.active.fill {
+    &.active.worker_manage {
+      background: ${StyleColor.PRIMARY};
+      border-radius: 8px;
+      box-shadow: ${StyleColor.DEEPSHADOW};
+
+      & svg,
+      p,
+      path {
+        fill: ${StyleColor.LIGHT};
+      }
+    }
+    &.active.notification_manage {
       background: ${StyleColor.PRIMARY};
       border-radius: 8px;
       box-shadow: ${StyleColor.DEEPSHADOW};

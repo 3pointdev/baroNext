@@ -1,7 +1,4 @@
-import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import SubMenuModel from "./subMenu.model";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import { ReactElement } from "react";
 
 export default class MenuModel {
   public name: string = "";
