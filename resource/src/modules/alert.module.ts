@@ -42,6 +42,9 @@ interface ISelectorOptions {
   inputValue?: any;
   error?: string;
   className?: string;
+  confirm?: string;
+  cancel?: string;
+  showCancel?: boolean;
   callback: (value) => void;
 }
 
@@ -85,6 +88,7 @@ function confirm(options: IConfirmOptions) {
     cancelButtonText: options.cancel ?? "취소",
     showConfirmButton: true,
     showCancelButton: true,
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       options.callback();
@@ -139,6 +143,10 @@ function selector(options: ISelectorOptions) {
     inputValue: options.inputValue,
     inputOptions: options.options,
     customClass: options.className,
+    confirmButtonText: options.confirm ?? "확인",
+    cancelButtonText: options.cancel ?? "취소",
+    showCancelButton: options.showCancel ? true : false,
+    reverseButtons: true,
     inputValidator: (value) => {
       if (!value) {
         return options.error;
