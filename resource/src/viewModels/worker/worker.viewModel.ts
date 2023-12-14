@@ -161,7 +161,7 @@ export default class WorkerViewModel extends DefaultViewModel {
     Alert.freeFormat({
       title: "작업자 변경",
       html:
-        '<input type="text" id="textInput" class="swal2-input" placeholder="기계 이름" value="' +
+        '<input type="text" id="textInput" class="swal2-input" placeholder="작업자 이름" value="' +
         (target.worker === null ? "" : target.worker) +
         '" required>',
       cancel: "취소",
