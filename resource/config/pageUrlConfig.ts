@@ -14,7 +14,7 @@ class PageUrlConfig {
   public machineAlarm = "/machine/notification";
   public machineInfo = "/machine/info";
   public monitorSetting = "/monitor/setting";
-  public notification = "/notification";
+  public notification = "/setting-noti";
   public worker = "/worker";
   public my = "/my";
   public invoices = "/";

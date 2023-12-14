@@ -59,6 +59,7 @@ function Header(props: IProps) {
                 ? router.asPath === "/"
                 : router.asPath.includes(item.path);
             const isHaveSubMenu = item.subMenu.length > 0;
+            console.log(router.asPath, item.path);
             let classString = isActive || hover === item.name ? "active" : "";
 
             classString = classString + " " + item.name;
