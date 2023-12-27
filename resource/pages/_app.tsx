@@ -10,6 +10,9 @@ import authInstance from "src/modules/auth.module";
 import { IDefaultProps } from "src/viewModels/default.viewModel";
 import "styles/globals.css";
 
+/**
+ * init
+ */
 class MyApp extends App<any, any, any> {
   public mobxStore: RootStore;
   public router: NextRouter;
